@@ -1,0 +1,10 @@
+{
+ "specs": [
+    {
+      "title": "The Next DID Method",
+      "spec_directory": "./specs",
+      "output_path": "./dist",
+      "logo": "logo.svg"
+    }
+ ] 
+}
