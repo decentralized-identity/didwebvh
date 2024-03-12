@@ -1,0 +1,11 @@
+{
+  "name": "did-next",
+  "type": "module",
+  "scripts": {
+    "edit": "node -e \"require('spec-up')()\"",
+    "render": "node -e \"require('spec-up')({ nowatch: true })\""
+  },
+  "dependencies": {
+    "spec-up": "github:brianorwhatever/spec-up#fix-ref"
+  }
+}
