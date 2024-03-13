@@ -1,2 +1,8 @@
-# DID Web Next
-DID Web Next
+# DID Best
+
+## How to use
+
+```bash
+bun install
+bun testFlow.ts
+```
