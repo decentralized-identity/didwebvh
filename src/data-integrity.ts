@@ -3,9 +3,19 @@ import didContext from 'did-context';
 import ed25519Ctx from 'ed25519-signature-2020-context';
 import secCtx from '@digitalbazaar/security-context';
 import multikeyContext from '@digitalbazaar/multikey-context';
+import * as Ed25519Multikey from '@digitalbazaar/ed25519-multikey';
 import dataIntegrityCtx from '@digitalbazaar/data-integrity-context';
+import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 import {createHash} from 'node:crypto';
 import {JsonLdDocumentLoader} from 'jsonld-document-loader';
+import { VerificationMethod } from "./interfaces";
+import { canonicalize } from 'json-canonicalize';
+import {cryptosuite as eddsa2022CryptoSuite} from
+  '@digitalbazaar/eddsa-2022-cryptosuite';
+import { createVMID } from "./method";
+import jsigs from 'jsonld-signatures';
+
+const {purposes: {AssertionProofPurpose}} = jsigs;
 
 const jdl = new JsonLdDocumentLoader();
   
@@ -50,5 +60,26 @@ export async function createVerifyData({ document, proof }: any) {
   const c14nDocument = await canonize(document);
   const proofHash = hash(c14nProofOptions);
   const docHash = hash(c14nDocument);
-  return Buffer.concat([proofHash, docHash]).toString('hex');
+  return Buffer.concat([proofHash, docHash]);
+}
+
+export const signDocument = async (doc: any, vm: VerificationMethod) => {
+  const keyPair = await Ed25519Multikey.from({
+    '@context': 'https://w3id.org/security/multikey/v1',
+    type: 'Multikey',
+    controller: doc.id,
+    id: createVMID(doc.id, vm),
+    publicKeyMultibase: vm.publicKeyMultibase,
+    secretKeyMultibase: vm.secretKeyMultibase
+  });
+  const suite = new DataIntegrityProof({
+    signer: keyPair.signer(), cryptosuite: eddsa2022CryptoSuite
+  });
+  
+  const signedDoc = await jsigs.sign(doc, {
+    suite,
+    purpose: new AssertionProofPurpose(),
+    documentLoader
+  });
+  return signedDoc;
 }

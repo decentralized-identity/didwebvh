@@ -6,11 +6,13 @@ export const genKeys = async () => {
   return [
     {
       type: 'authentication',
-      publicKeyMultibase: auth.publicKeyMultibase
+      publicKeyMultibase: auth.publicKeyMultibase,
+      secretKeyMultibase: auth.secretKeyMultibase
     },
     {
       type: 'assertionMethod',
-      publicKeyMultibase: assertion.publicKeyMultibase
+      publicKeyMultibase: assertion.publicKeyMultibase,
+      secretKeyMultibase: auth.secretKeyMultibase
     }
   ]
 }

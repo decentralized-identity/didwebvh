@@ -1,8 +1,11 @@
 declare module '@digitalbazaar/ed25519-multikey';
 declare module '@digitalbazaar/security-context';
+declare module '@digitalbazaar/eddsa-2022-cryptosuite';
 declare module '@digitalbazaar/data-integrity-context';
+declare module '@digitalbazaar/data-integrity';
 declare module '@digitalbazaar/multikey-context';
 declare module 'did-context';
 declare module 'ed25519-signature-2020-context';
 declare module 'jsonld';
 declare module 'jsonld-document-loader';
+declare module 'jsonld-signatures';

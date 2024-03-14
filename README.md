@@ -4,5 +4,5 @@
 
 ```bash
 bun install
-bun testFlow.ts
+bun run start
 ```

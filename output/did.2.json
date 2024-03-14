@@ -1,0 +1,36 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/multikey/v1",
+    "https://w3id.org/security/data-integrity/v2"
+  ],
+  "id": "did:best:4UFfhBKgnK6sBZucceaivTeA",
+  "authentication": [
+    "did:best:4UFfhBKgnK6sBZucceaivTeA#8jVewrkY"
+  ],
+  "assertionMethod": [
+    "did:best:4UFfhBKgnK6sBZucceaivTeA#BcL5GgFk"
+  ],
+  "verificationMethod": [
+    {
+      "id": "did:best:4UFfhBKgnK6sBZucceaivTeA#did:best:4UFfhBKgnK6sBZucceaivTeA#8jVewrkY",
+      "controller": "did:best:4UFfhBKgnK6sBZucceaivTeA",
+      "type": "Multikey",
+      "publicKeyMultibase": "z6Mkhs98FnJzL8oQvPNNBAe5kyixkb6i2v2vK9Vk8jVewrkY"
+    },
+    {
+      "id": "did:best:4UFfhBKgnK6sBZucceaivTeA#did:best:4UFfhBKgnK6sBZucceaivTeA#BcL5GgFk",
+      "controller": "did:best:4UFfhBKgnK6sBZucceaivTeA",
+      "type": "Multikey",
+      "publicKeyMultibase": "z6Mkv2osaFX42JrP3zejxBkoEwFHsC9e8UfS3XSpBcL5GgFk"
+    }
+  ],
+  "proof": {
+    "type": "DataIntegrityProof",
+    "created": "2024-03-14T08:39:03Z",
+    "verificationMethod": "did:best:4UFfhBKgnK6sBZucceaivTeA#8jVewrkY",
+    "cryptosuite": "eddsa-2022",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z2PqbqZKooDWwEeHUMYhhFWhEoqnsoh8nNsy9cdFxHi5Ug1jFiLJwvzVxbCwK72xu5jmhCGYCGD39v4gKvgmY3rhG"
+  }
+}

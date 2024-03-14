@@ -21,12 +21,27 @@ export interface VerificationMethod {
   id?: string;
   type: string;
   controller?: string;
-  publicKeyMultibase?: string;
   publicKeyJWK?: any;
+  publicKeyMultibase?: string;
+  secretKeyMultibase?: string;
+  use?: string;
 }
 
 export interface CreateDIDInterface {
   controller?: string;
   VMs?: VerificationMethod[];
   domains?: string[];
+}
+
+export interface SignDIDDocInterface {
+  document: any;
+  proof: any;
+  verificationMethod: VerificationMethod
+}
+
+export interface UpdateDIDDocInterface {
+  currentDoc: any;
+  newVMs?: VerificationMethod[];
+  newServices?: ServiceEndpoint[];
+  authKey: VerificationMethod
 }
