@@ -22,8 +22,8 @@ export const createDID = async (options: CreateDIDInterface): Promise<{did: stri
   const {doc} = await createDIDDoc(options);
   const {scid} = await createSCID(doc);
   const doc2 = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, scid.slice(-24)));
-  // doc2.versionId = 0;
-  // doc2.previousHash = scid;
+  doc2.versionId = 0;
+  doc2.previousHash = scid;
   const authKey = options.VMs?.find(vm => vm.type === 'authentication');
   const signedDoc = await signDocument(doc2, authKey!);
 
@@ -36,7 +36,8 @@ export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: D
     doc: {
       "@context": [
         "https://www.w3.org/ns/did/v1",
-        "https://w3id.org/security/multikey/v1"
+        "https://w3id.org/security/multikey/v1",
+        {"@vocab": "https://to-be-replaced-vocab.com#"}
       ],
       id: `did:${METHOD}:${PLACEHOLDER}`,
       ...all
@@ -47,13 +48,13 @@ export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: D
 export const updateDIDDoc = async (options: UpdateDIDDocInterface): Promise<{doc: any}> => {
   const {currentDoc, newVMs, newServices, authKey} = options;
   const all = normalizeVMs(currentDoc.id, newVMs);
-  // const {scid} = await createSCID(currentDoc);
+  const {scid} = await createSCID(currentDoc);
   const newDoc = {
     '@context': currentDoc['@context'],
     id: currentDoc.id,
     ...all,
-    // versionId: currentDoc.versionId + 1,
-    // previousHash: scid
+    versionId: currentDoc.versionId + 1,
+    previousHash: scid
   }
   const signedDoc = await signDocument(newDoc, authKey);
 
