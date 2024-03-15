@@ -1,0 +1,42 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/multikey/v1",
+    {
+      "@vocab": "https://to-be-replaced-vocab.com#"
+    },
+    "https://w3id.org/security/data-integrity/v2"
+  ],
+  "id": "did:best:cUXyM5hAmWhqVrgACFXJAM6W",
+  "authentication": [
+    "did:best:cUXyM5hAmWhqVrgACFXJAM6W#YcTr81Zq"
+  ],
+  "assertionMethod": [
+    "did:best:cUXyM5hAmWhqVrgACFXJAM6W#b5bKDdcB"
+  ],
+  "verificationMethod": [
+    {
+      "id": "did:best:cUXyM5hAmWhqVrgACFXJAM6W#YcTr81Zq",
+      "controller": "did:best:cUXyM5hAmWhqVrgACFXJAM6W",
+      "type": "Multikey",
+      "publicKeyMultibase": "z6MksuzxSLn1smzZhGQ2xdXvZ5bBurtj2YpkZVe4YcTr81Zq"
+    },
+    {
+      "id": "did:best:cUXyM5hAmWhqVrgACFXJAM6W#b5bKDdcB",
+      "controller": "did:best:cUXyM5hAmWhqVrgACFXJAM6W",
+      "type": "Multikey",
+      "publicKeyMultibase": "z6Mkeq7CDHXcbZhqEJqaokNSNCo3J2deeAM9yQXab5bKDdcB"
+    }
+  ],
+  "versionId": 10,
+  "previousHash": "zb2rhgE3S8V3YFeaviSBMQsUfC2ZjiEcS4so6Q8ud1BYjawa8",
+  "proof": {
+    "type": "DataIntegrityProof",
+    "created": "2024-03-15T17:58:21Z",
+    "verificationMethod": "did:best:cUXyM5hAmWhqVrgACFXJAM6W#YcTr81Zq",
+    "cryptosuite": "eddsa-2022",
+    "proofPurpose": "authentication",
+    "challenge": "zb2rhgE3S8V3YFeaviSBMQsUfC2ZjiEcS4so6Q8ud1BYjawa8",
+    "proofValue": "ziR1C7KvDrSK2ZCAZfBTCjesMH7ZQxtEHveoXhbjWEpdw9cY9268px24tSCxTjLnaB5ehpbZhSur6vY1xjLNexFo"
+  }
+}

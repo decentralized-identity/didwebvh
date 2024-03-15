@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "start": "tsx watch ./src/testFlow.ts"
+    "start": "tsx watch ./src/testFlow.ts",
+    "resolver": "bun --watch index.ts"
   },
   "devDependencies": {
     "bun-types": "latest",
@@ -25,6 +26,7 @@
     "credentials-context": "^2.0.0",
     "did-context": "^3.1.1",
     "ed25519-signature-2020-context": "^1.1.0",
+    "elysia": "^0.8.17",
     "json-canonicalize": "^1.0.6",
     "jsonld": "^8.3.2",
     "jsonld-document-loader": "^2.0.0",

@@ -22,7 +22,7 @@ export const createDID = async (options: CreateDIDInterface): Promise<{did: stri
   const {doc} = await createDIDDoc(options);
   const {scid} = await createSCID(doc);
   const doc2 = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, scid.slice(-24)));
-  doc2.versionId = 0;
+  doc2.versionId = 1;
   doc2.previousHash = scid;
   const authKey = options.VMs?.find(vm => vm.type === 'authentication');
   const signedDoc = await signDocument(doc2, authKey!);
@@ -37,7 +37,8 @@ export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: D
       "@context": [
         "https://www.w3.org/ns/did/v1",
         "https://w3id.org/security/multikey/v1",
-        {"@vocab": "https://to-be-replaced-vocab.com#"}
+        {"@vocab": "https://to-be-replaced-vocab.com#"},
+        "https://w3id.org/security/data-integrity/v2"
       ],
       id: `did:${METHOD}:${PLACEHOLDER}`,
       ...all
@@ -93,7 +94,7 @@ export const normalizeVMs = (did: string, verificationMethod: VerificationMethod
   }
   if(verificationMethod && verificationMethod.length > 0) {
     all.verificationMethod = verificationMethod?.map(vm => ({
-      id: `${did}#${createVMID(did, vm)}`,
+      id: createVMID(did, vm),
       controller: did,
       type: 'Multikey',
       publicKeyMultibase: vm.publicKeyMultibase

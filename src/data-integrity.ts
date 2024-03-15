@@ -9,13 +9,12 @@ import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 import {createHash} from 'node:crypto';
 import {JsonLdDocumentLoader} from 'jsonld-document-loader';
 import { VerificationMethod } from "./interfaces";
-import { canonicalize } from 'json-canonicalize';
 import {cryptosuite as eddsa2022CryptoSuite} from
   '@digitalbazaar/eddsa-2022-cryptosuite';
-import { createVMID } from "./method";
+import { createSCID, createVMID } from "./method";
 import jsigs from 'jsonld-signatures';
 
-const {purposes: {AssertionProofPurpose}} = jsigs;
+const {purposes: {AuthenticationProofPurpose}} = jsigs;
 
 const jdl = new JsonLdDocumentLoader();
   
@@ -78,8 +77,47 @@ export const signDocument = async (doc: any, vm: VerificationMethod) => {
   
   const signedDoc = await jsigs.sign(doc, {
     suite,
-    purpose: new AssertionProofPurpose(),
+    purpose: new AuthenticationProofPurpose({challenge: doc.previousHash}),
     documentLoader
   });
   return signedDoc;
+}
+
+export const verifyDocument = async (doc: any, previousHash: string | null = null) => {
+  const errors = [];
+  if(doc.versionId === 1) {
+    let genesis = JSON.parse(JSON.stringify(doc));
+    delete genesis.versionId;
+    delete genesis.proof;
+    delete genesis.previousHash;
+    const id = genesis.id.split(':').at(-1);
+    genesis = JSON.parse(JSON.stringify(genesis).replaceAll(id, '{{SCID}}'));
+    const {scid} = await createSCID(genesis);
+    previousHash = scid;
+    if(scid.slice(-24) !== id) {
+      errors.push(`Invalid Genesis Document`);
+    }
+  }
+  const authKey = doc.authentication[0];
+  const vm = doc.verificationMethod.find((vm: VerificationMethod) => vm.id === authKey);
+  const keyPair = await Ed25519Multikey.from(vm);
+  jdl.addStatic(vm.id, vm);
+  jdl.addStatic(doc.id, doc);
+  const docLoader = jdl.build();
+  const suite = new DataIntegrityProof({
+    verifier: keyPair.verifier(), cryptosuite: eddsa2022CryptoSuite
+  });
+  if (doc.previousHash != previousHash) {
+    errors.push(`Document hash chain broken at versionId: ${doc.versionId}.`)
+  }
+  const result = await jsigs.verify(doc, {
+    suite,
+    purpose: new AuthenticationProofPurpose({challenge: doc.previousHash}),
+    documentLoader: docLoader
+  })
+  if (!result.verified) {
+    errors.push(...result.results.map((r: { error: any; }) => r.error.message))
+  }
+  const {scid: docHash} = await createSCID(doc);
+  return {verified: errors.length === 0, errors, docHash}
 }
