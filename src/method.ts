@@ -54,13 +54,13 @@ export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: D
 export const updateDIDDoc = async (options: UpdateDIDDocInterface): Promise<{doc: any, patch: any[]}> => {
   const {currentDoc, newVMs, newServices, authKey} = options;
   const all = normalizeVMs(currentDoc.id, newVMs);
-  const {scid} = await createSCID(currentDoc);
+  const {cid} = await deriveCID(currentDoc);
   const newDoc = {
     '@context': currentDoc['@context'],
     id: currentDoc.id,
     ...all,
     versionId: currentDoc.versionId + 1,
-    previousHash: scid
+    previousHash: cid.toString()
   }
   const signedDoc = await signDocument(newDoc, authKey);
   const patch = jsonpatch.compare(currentDoc, signedDoc);

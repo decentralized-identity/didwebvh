@@ -6,19 +6,18 @@ console.log(chalk.blue(`Starting Flow...\n\n`))
 
 console.log(chalk.yellow(`Generating Keys...\n`))
 
-// let VMs = [
-//   {
-//     type: 'authentication',
-//     publicKeyMultibase: 'z6MkpM2PEcqPZgGW5RUc3bB7iNUd9XD9BgoSRu8y8QJqnPFF',
-//     secretKeyMultibase: 'zrv4TX25xCGYTKg17dPHL4zbLLWmFoSdDeoxR9mkgoBwkASLbWFcz4VXVVc3mhdaKMWne8QmEzZehA3mGNPFBpeTRCV'
-//   },
-//   {
-//     type: 'assertionMethod',
-//     publicKeyMultibase: 'z6MksudZk7NtBD9Tn2kMCAX68LmQCWiTsVnWJrUPmQiQDj7U',
-//     secretKeyMultibase: 'zrv4TX25xCGYTKg17dPHL4zbLLWmFoSdDeoxR9mkgoBwkASLbWFcz4VXVVc3mhdaKMWne8QmEzZehA3mGNPFBpeTRCV'
-//   }
-// ];
-let VMs = await genKeys();
+let VMs = [
+  {
+    type: 'authentication',
+    publicKeyMultibase: 'z6MkpM2PEcqPZgGW5RUc3bB7iNUd9XD9BgoSRu8y8QJqnPFF',
+    secretKeyMultibase: 'zrv4TX25xCGYTKg17dPHL4zbLLWmFoSdDeoxR9mkgoBwkASLbWFcz4VXVVc3mhdaKMWne8QmEzZehA3mGNPFBpeTRCV'
+  },
+  {
+    type: 'assertionMethod',
+    publicKeyMultibase: 'z6MksudZk7NtBD9Tn2kMCAX68LmQCWiTsVnWJrUPmQiQDj7U',
+    secretKeyMultibase: 'zrv4TX25xCGYTKg17dPHL4zbLLWmFoSdDeoxR9mkgoBwkASLbWFcz4VXVVc3mhdaKMWne8QmEzZehA3mGNPFBpeTRCV'
+  }
+];
 
 console.log(VMs, '\n')
 
