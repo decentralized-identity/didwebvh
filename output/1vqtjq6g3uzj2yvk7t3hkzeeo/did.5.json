@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#HzBFkhm1"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ioHY589L"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Z1c5ydRt"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#i6faRPcA"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#HzBFkhm1",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ioHY589L",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkhzNgHLQAYeumrAbsrWnpsC7fBELpKhEz5BgNHzBFkhm1"
+      "publicKeyMultibase": "z6MkhKcGwtHw4Zd3Um8WQXeAYebxZ4i72wURTiBKioHY589L"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Z1c5ydRt",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#i6faRPcA",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkeuDnpgFNTrNR7W6qT56JbTfkmfMUd2i7J4DKZ1c5ydRt"
+      "publicKeyMultibase": "z6MkouuXDCDTmChxY4H2A63i54K3WmZ2tutiQPpyi6faRPcA"
     }
   ],
   "versionId": 5,
-  "previousHash": "baga6yaqsecutscvdnmc75xbwnmnnhfbv265xg7sj5dwiwybgpaixqakjhoqss",
+  "previousHash": "baga6yaqsecgtrm6w2umrr2mlxcwrfb7bcyoku7jtlhh3olxusprtvd6l7t7lq",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#HzBFkhm1",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ioHY589L",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsecutscvdnmc75xbwnmnnhfbv265xg7sj5dwiwybgpaixqakjhoqss",
-    "proofValue": "z5NmnbrNqrZ4PwMA3zYoNQY4sCci8WrZx7yytHxbEYLX7TzLA57oLjyb6Sq5xU9gxr3bnMCtf4sYnKbN575GuEwNB"
+    "challenge": "baga6yaqsecgtrm6w2umrr2mlxcwrfb7bcyoku7jtlhh3olxusprtvd6l7t7lq",
+    "proofValue": "z2JVjFDDqNMetYbHsSpMKuNd9U6rA8oMTTJQjcFAbE5jVXGUdN9sZdmvrxg14xAMqQKFMKkbes25UrdbYznMuSWVz"
   }
 }

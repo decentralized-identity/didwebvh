@@ -28,7 +28,7 @@ export const createDID = async (options: CreateDIDInterface): Promise<{did: stri
   const {scid} = await createSCID(cid);
   const doc2 = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, scid));
   doc2.versionId = 1;
-  doc2.previousHash = scid;
+  doc2.previousHash = cid.toString();
   const authKey = options.VMs?.find(vm => vm.type === 'authentication');
   const signedDoc = await signDocument(doc2, authKey!);
   const patch = jsonpatch.compare(doc, signedDoc)

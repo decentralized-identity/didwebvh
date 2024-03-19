@@ -29,14 +29,14 @@
     }
   ],
   "versionId": 1,
-  "previousHash": "1vqtjq6g3uzj2yvk7t3hkzeeo",
+  "previousHash": "baga6yaqsecleq5cymdzmfnyypgy7dh6l47mxtvqtjq6g3uzj2yvk7t3hkzeeo",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
+    "created": "2024-03-19T17:58:34Z",
     "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#8QJqnPFF",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "1vqtjq6g3uzj2yvk7t3hkzeeo",
-    "proofValue": "z2bwSW5vRqHGbuiaBe2KcZxmGoFQD6Bsbv5Xn4RfveBELPbZ1GRQ8EwBbGe5grcCPyDPHhnaa17fTvXnQpR1axRVg"
+    "challenge": "baga6yaqsecleq5cymdzmfnyypgy7dh6l47mxtvqtjq6g3uzj2yvk7t3hkzeeo",
+    "proofValue": "z5dSEhL58hY87dLG7iW6VKtRDvjmpDtiYmCL7Jhx2zVf3VY3AdPZdNnSUNd5zEULuPfKnxPhx3siEE1tjSBbgQkfM"
   }
 }

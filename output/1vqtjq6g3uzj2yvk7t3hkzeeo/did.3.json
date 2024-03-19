@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#TGpyzgEa"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Q5GWmaEF"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#WVt96Mfr"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#YsyoZwqb"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#TGpyzgEa",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Q5GWmaEF",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkoHiULKNQEi9EituVYZ8afEYDVmt22k65yqSETGpyzgEa"
+      "publicKeyMultibase": "z6MksbEeGwdFwnY3g9md4B7USAmi21EV52sGdFbBQ5GWmaEF"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#WVt96Mfr",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#YsyoZwqb",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkhjFtvLmaSdPC3Muv9AQamYRjibnULQwighXYWVt96Mfr"
+      "publicKeyMultibase": "z6MktyXtJ4n7zLqZR6mz6NokkzXeCy6kSisyLsa4YsyoZwqb"
     }
   ],
   "versionId": 3,
-  "previousHash": "baga6yaqsedfs3l33bbv5dhgymn6xhxr57ws2huu5q2vocsxatlclqolzxgjos",
+  "previousHash": "baga6yaqsea3podd3fckleue4uh7aiddoc5y2zj7we6uq2tssjc5wzd5y26yyi",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#TGpyzgEa",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Q5GWmaEF",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsedfs3l33bbv5dhgymn6xhxr57ws2huu5q2vocsxatlclqolzxgjos",
-    "proofValue": "z2TPhtjAQK2P4SxLWxSnPYQUxNi689Y64jaqCK7ye9EQ4khr5EFrPtF2F4SZteY93rLuiRjn2RG1D7r6Z7VeC1dva"
+    "challenge": "baga6yaqsea3podd3fckleue4uh7aiddoc5y2zj7we6uq2tssjc5wzd5y26yyi",
+    "proofValue": "z4LMwrSSY75X2aseNA5ZxMAe53qyiqLUpFKiGeXKA9isw9CVUiiKEy1qxST9uvAsS6n7uRoMGsn6oApNQzbE9yc47"
   }
 }

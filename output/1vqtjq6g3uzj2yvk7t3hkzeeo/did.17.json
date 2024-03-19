@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Z7hSMS4r"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Az5Vz1JY"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#TuRsSPa5"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#sfki8kRH"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Z7hSMS4r",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Az5Vz1JY",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkhEPT42QkzUjEzzQ4uj8BefPkgWQ8zJzWGcxiZ7hSMS4r"
+      "publicKeyMultibase": "z6MksGSa1YeLScDoRi1L9Q63qpkRpatwM5WhDJYeAz5Vz1JY"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#TuRsSPa5",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#sfki8kRH",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkfBWtcFdB61tH3aZhZjPdQqj5Z6EGg8GFaveeTuRsSPa5"
+      "publicKeyMultibase": "z6MkodL7c6cQnjXCrWE9M9ipoPmQbwNNP1Xs1eaEsfki8kRH"
     }
   ],
   "versionId": 17,
-  "previousHash": "baga6yaqseamreacrdbczpcujbq7x3r4fmyjvzjom2ylot2wazzisnjw2ct542",
+  "previousHash": "baga6yaqsealaoet55x76v4ynjeoohzn5qshgxvz77ge2jun2begmqg6hdzqrk",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Z7hSMS4r",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Az5Vz1JY",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqseamreacrdbczpcujbq7x3r4fmyjvzjom2ylot2wazzisnjw2ct542",
-    "proofValue": "zFEoPoUMPgENaDDfUYN3xkjN6LRLH3D2cPh7Pj3ef9Q3JEZsA4mbqesz5PpFTiscvMHgVZ1XjEBxwHuCCXuvfixM"
+    "challenge": "baga6yaqsealaoet55x76v4ynjeoohzn5qshgxvz77ge2jun2begmqg6hdzqrk",
+    "proofValue": "zu22ESWJw6qWaYrdbeh9crraWQFQAtmS35FKWkNtNHUxokXo6v9UUpdFPaM9BgZ716UfyEoFSMpzgbMNdrREFahN"
   }
 }

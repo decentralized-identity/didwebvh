@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#CPM3dUFr"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#YDLV87GR"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#UD5Q1qKR"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#pHZ42gdc"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#CPM3dUFr",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#YDLV87GR",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkhPSLPeNotMykdxJiwRu77iGwQ3Bqphfo8zcjCPM3dUFr"
+      "publicKeyMultibase": "z6MknE1yxSzVfhgcqk2kQLAtddmQQxhQCEwwSHHFYDLV87GR"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#UD5Q1qKR",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#pHZ42gdc",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkpUVNnCDk51HVAseVJDf9QdqeKPvsLK56vgyPUD5Q1qKR"
+      "publicKeyMultibase": "z6Mkg5v3XXqcKXCHPpXyuAP1QSVAZd8uKs6jCP3wpHZ42gdc"
     }
   ],
   "versionId": 11,
-  "previousHash": "baga6yaqsebdr27f3jatstaqkgryol6nl5drcbswgvcqbxyxlhskbe7oph3pqq",
+  "previousHash": "baga6yaqsecl7d3wjvkvtgekvqkvykgtukxnekt7uqxwcongrasqmmd6cuhkiy",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#CPM3dUFr",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#YDLV87GR",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsebdr27f3jatstaqkgryol6nl5drcbswgvcqbxyxlhskbe7oph3pqq",
-    "proofValue": "z4zwmLRVGvzi4SFZee7NScPRHA6jmSTWhVWENg1SGcGkj86RxzVpdVkC7J3gfAdJvQoQLdZTQUd6giCWXCcSKQ3zz"
+    "challenge": "baga6yaqsecl7d3wjvkvtgekvqkvykgtukxnekt7uqxwcongrasqmmd6cuhkiy",
+    "proofValue": "z5vwDHdo9q5JDcj2MPQxQ6fD7hiFUjkSc6h2e6VDxcuFpJqBa3nFf7QSEdQLX1LqscgYFLZsMTNm5rGqMNjytMztj"
   }
 }

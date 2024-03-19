@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#A9oCvNZM"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#7FDiXDQd"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#mKYHFjBo"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#J88pdHqR"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#A9oCvNZM",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#7FDiXDQd",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6Mktyd4FLkPg8vVRMuD1zwbKuttDZJkeYYXwhPVA9oCvNZM"
+      "publicKeyMultibase": "z6MkpLRsoy6Mdi7tze1RH4CHZ6KrzF56cN7ikVQv7FDiXDQd"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#mKYHFjBo",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#J88pdHqR",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkirGE3rHDfP8qfYNhJetbkBe3CXVm19yeTRmemKYHFjBo"
+      "publicKeyMultibase": "z6Mki1qXcu1VHFTGBB5stkTqiruXVsXVSxrpbZxDJ88pdHqR"
     }
   ],
   "versionId": 14,
-  "previousHash": "baga6yaqseaj5mcbgbycchb2q4edbycb3b4f5slevzqwgcl2k2payugb7tutpq",
+  "previousHash": "baga6yaqsedrnh2adtpjoc7heo7cssuvyxescwq76owochkru5ys3gagsfo4jq",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#A9oCvNZM",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#7FDiXDQd",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqseaj5mcbgbycchb2q4edbycb3b4f5slevzqwgcl2k2payugb7tutpq",
-    "proofValue": "zzn8EYwaQ2DbwWQg5w81MvcYon17o9UbTsxrd74gaSTtLgps7NGJGjz39ZsFPLvHz8xpvDsK6wvojxbMxgooTV1m"
+    "challenge": "baga6yaqsedrnh2adtpjoc7heo7cssuvyxescwq76owochkru5ys3gagsfo4jq",
+    "proofValue": "z3swF4xEFc6E7jiaKgtD1YhQJLLTMvpjUfRk4wBLGUEghJtKw9q44z63UZByNerf5DFrqwboWZuaqSXxXu3B289zJ"
   }
 }

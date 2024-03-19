@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Pq5e6Yy2"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#qLMxWYhQ"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#d1yT43Tg"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#9oqer9iq"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Pq5e6Yy2",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#qLMxWYhQ",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkrAFHM8FYjCbBTb2tpk6e794nU18quobH8H7tPq5e6Yy2"
+      "publicKeyMultibase": "z6MkqYZFR2hS2awaRXSqQ1PHMhWdS5KUM7XMoGH2qLMxWYhQ"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#d1yT43Tg",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#9oqer9iq",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MknAxkosFJ7JytjpVxHGZf5MKhcTB175y63gtpd1yT43Tg"
+      "publicKeyMultibase": "z6MkrSdzcnRLjbovdstnKtYJ751ywCWJBykDk6Nd9oqer9iq"
     }
   ],
   "versionId": 15,
-  "previousHash": "baga6yaqsea7pv5t2jwvvlp5lojnqztocdjh6w57bde5cp7v6pvnkrvesdirde",
+  "previousHash": "baga6yaqsecwxoqxdjvca7qhb3dehch3g232yuz2kwxeupmuinlug7uxdb7f4y",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#Pq5e6Yy2",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#qLMxWYhQ",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsea7pv5t2jwvvlp5lojnqztocdjh6w57bde5cp7v6pvnkrvesdirde",
-    "proofValue": "z8cxeVdjTymgYAJD3xscMKoaJaEdCghu8eLZosESjjrgZbMJ2xVwyVmTNRaq521e2yEgjd33FL1aejxUU4ScwAUk"
+    "challenge": "baga6yaqsecwxoqxdjvca7qhb3dehch3g232yuz2kwxeupmuinlug7uxdb7f4y",
+    "proofValue": "z5kyx2TbKAAZ7DN2grwX5fo9DEAiBbSp5FNursgQTR4BNYAvd853FABF7FJ5PCZhH21cRoqFf3vE7o3dBSpj22vuQ"
   }
 }

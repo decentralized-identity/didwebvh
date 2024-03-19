@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#4CoUzAgk"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#93vkT3wa"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#UtwPKCBk"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#2sFoQK2g"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#4CoUzAgk",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#93vkT3wa",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MknxHuA7LtRjrev3SjpanyDYVXWiD5dBe7fF1g4CoUzAgk"
+      "publicKeyMultibase": "z6Mkj1uDHCBQo1ANxxU26fMCGi6AbyEsKGQLqGxg93vkT3wa"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#UtwPKCBk",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#2sFoQK2g",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6Mkg5fmBWtXPn9cGkoWosKDfzh9whQPm6ZDnjS2UtwPKCBk"
+      "publicKeyMultibase": "z6MkhDg9gdPEfxShEwZ7GHGJGHk31E4PsbhhW5kY2sFoQK2g"
     }
   ],
   "versionId": 8,
-  "previousHash": "baga6yaqseamqwreqzxggsrgh4jpbk5xkqox2yil4ohsjfmfc56luvmwgb4746",
+  "previousHash": "baga6yaqsedszgond2ab433xmo6bcdvbzap2r2yuxeb3t4ouqfvhe4rrhizrkc",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#4CoUzAgk",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#93vkT3wa",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqseamqwreqzxggsrgh4jpbk5xkqox2yil4ohsjfmfc56luvmwgb4746",
-    "proofValue": "z3NPyVR7PbcmrASDpZ1jy1AX5k2JSw2XEdt9y3sTiQ7egFcMGkYE8wzHz7ERHTft5UKbsQjy9rqkggMStJhZxzHE1"
+    "challenge": "baga6yaqsedszgond2ab433xmo6bcdvbzap2r2yuxeb3t4ouqfvhe4rrhizrkc",
+    "proofValue": "z64qa6aDiQgaxWFAABy4r3hPR6J52gYGv7wqvvALFo6hSKD8uxVdaE3KCWViKRryX7YXJe546z7kidP7gHUAbeuG8"
   }
 }

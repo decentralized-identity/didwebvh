@@ -11,7 +11,7 @@ import {JsonLdDocumentLoader} from 'jsonld-document-loader';
 import { VerificationMethod } from "./interfaces";
 import {cryptosuite as eddsa2022CryptoSuite} from
   '@digitalbazaar/eddsa-2022-cryptosuite';
-import { createSCID, createVMID } from "./method";
+import { createSCID, createVMID, deriveCID } from "./method";
 import jsigs from 'jsonld-signatures';
 
 const {purposes: {AuthenticationProofPurpose}} = jsigs;
@@ -92,9 +92,10 @@ export const verifyDocument = async (doc: any, previousHash: string | null = nul
     delete genesis.previousHash;
     const id = genesis.id.split(':').at(-1);
     genesis = JSON.parse(JSON.stringify(genesis).replaceAll(id, '{{SCID}}'));
-    const {scid} = await createSCID(genesis);
-    previousHash = scid;
-    if(scid.slice(-24) !== id) {
+    const {cid} = await deriveCID(genesis);
+    const {scid} = await createSCID(cid);
+    previousHash = cid.toString()
+    if(scid !== id) {
       errors.push(`Invalid Genesis Document`);
     }
   }
@@ -118,6 +119,6 @@ export const verifyDocument = async (doc: any, previousHash: string | null = nul
   if (!result.verified) {
     errors.push(...result.results.map((r: { error: any; }) => r.error.message))
   }
-  const {scid: docHash} = await createSCID(doc);
-  return {verified: errors.length === 0, errors, docHash}
+  const {cid: cid2} = await deriveCID(doc);
+  return {verified: errors.length === 0, errors, docHash: cid2.toString()}
 }

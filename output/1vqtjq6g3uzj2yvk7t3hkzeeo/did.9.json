@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#aqL3gVRh"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#H7MMrz1y"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#uzCGwfjv"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#LzzyQ7y7"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#aqL3gVRh",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#H7MMrz1y",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkuwAqopZkamspVDHLZqHcV6vdRNrgRKzXbGkfaqL3gVRh"
+      "publicKeyMultibase": "z6Mkw1GGhakYr12xoa2euEBabFsBQN6S9nT7Nu7SH7MMrz1y"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#uzCGwfjv",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#LzzyQ7y7",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkpeS7qd727ZGuM2FcK2awgp6T7J4h3i2fK8pnuzCGwfjv"
+      "publicKeyMultibase": "z6MkuMKVJHxKZKio8BwMEnFiQs6h46Byzz8h2uEeLzzyQ7y7"
     }
   ],
   "versionId": 9,
-  "previousHash": "baga6yaqsea2bauhkizyiwyuhenfaxa2gltxgcx4p4ea6clehjiay5j6vqvvru",
+  "previousHash": "baga6yaqsedkkfvwyuvzazzkhwp7va3xs4ut4sl2cot7rfbukgipjodn3zn2zc",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#aqL3gVRh",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#H7MMrz1y",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsea2bauhkizyiwyuhenfaxa2gltxgcx4p4ea6clehjiay5j6vqvvru",
-    "proofValue": "zB4pqkU8xwP91S5UXEPT3ToHTKdg7j9GSb1YkXNDanHU65aMHuD8rdfiSWnC8nyFZVyxQkp8ZP7MxmcDqVPCGCHN"
+    "challenge": "baga6yaqsedkkfvwyuvzazzkhwp7va3xs4ut4sl2cot7rfbukgipjodn3zn2zc",
+    "proofValue": "zPTTQLfwtu6Kv1msdAAoB8xm7hZRUvSaAgFgXWP3JmBb3ya4zWukVNW1HkNJVZeN913ZxbUJz1Hv73EHBYirGp8L"
   }
 }

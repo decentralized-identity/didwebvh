@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#WE2Jh8HS"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ufAyy8Dp"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#LZEvEVgX"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#kEDywBpd"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#WE2Jh8HS",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ufAyy8Dp",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkuNEaD2WUZBWubGcBUaVeQy7BDDJvRBRz13prWE2Jh8HS"
+      "publicKeyMultibase": "z6Mkg4KX6czzygg1dDKzqJVT12yUiK5YnzBmDYimufAyy8Dp"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#LZEvEVgX",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#kEDywBpd",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6Mkm7vJddU7iNEm4wx1pKDiZhSbACaTwGy8bxEcLZEvEVgX"
+      "publicKeyMultibase": "z6MkuEaiieyV9cjUBaphuau6sZ5CUTc18Vx5ccoJkEDywBpd"
     }
   ],
   "versionId": 6,
-  "previousHash": "baga6yaqsecwxmke3egehpoxva5trngj4v6uqzlztyz6stpkdldf4g6qwkzovq",
+  "previousHash": "baga6yaqsedz6v4bmjnh63rvepby3g2n6chgxvrkf2iic4b6mzlxptdf5s7nhg",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#WE2Jh8HS",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ufAyy8Dp",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsecwxmke3egehpoxva5trngj4v6uqzlztyz6stpkdldf4g6qwkzovq",
-    "proofValue": "zRKCPDCAszX5ZLtQxjmYbK3rkFh95tsQtEYaRpfX7c4AMXwyWSDg2c7D4zpFm4qyH5jhyEqsmNnJaUdH3bxYKqfL"
+    "challenge": "baga6yaqsedz6v4bmjnh63rvepby3g2n6chgxvrkf2iic4b6mzlxptdf5s7nhg",
+    "proofValue": "zp1yLYLKnDHzvrrMjXsMPtp8xA3RB8qJiEgDrq3UMDMyZgFoXSNDWURcqx1zBf1W2WyMZTikrBskUkroJsbUiuV6"
   }
 }

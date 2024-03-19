@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#jdkGrZHi"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#j3tc8nAS"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#StgUyFqq"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#8tT3fhkv"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#jdkGrZHi",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#j3tc8nAS",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6Mkt1radS45gDABMfG9cHU934SskNezb4nZEbdijdkGrZHi"
+      "publicKeyMultibase": "z6MkuzW1ZfzujCKZGDRYp5LXfJzXAvrp6XjXhHp1j3tc8nAS"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#StgUyFqq",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#8tT3fhkv",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkobiSwMAkToy4jYmAFrwQXY14rW1orhAXn4ycStgUyFqq"
+      "publicKeyMultibase": "z6Mkfu6hGxY3spcR4Aihm8HVMFXBV1YcLKC876uN8tT3fhkv"
     }
   ],
   "versionId": 16,
-  "previousHash": "baga6yaqsebvpeyvafxqs26ogxgikhzla5ypwbai2z7wx7av6hrrc72wme6a6e",
+  "previousHash": "baga6yaqsecocavk5uwqfpmf4akdjomztlyh6k7k4qynb5zaq7pdnyhfeeqozu",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#jdkGrZHi",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#j3tc8nAS",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsebvpeyvafxqs26ogxgikhzla5ypwbai2z7wx7av6hrrc72wme6a6e",
-    "proofValue": "z646ibJySs26RpywnkJhezPJbK57fucMbc5icLFgjQfEYusncvXWrubzEmwCptUtdgvVsXXTNRAVVsSXMpEGApAWg"
+    "challenge": "baga6yaqsecocavk5uwqfpmf4akdjomztlyh6k7k4qynb5zaq7pdnyhfeeqozu",
+    "proofValue": "zRzzaAuLnhNzroc5eWDudwVvRoEYaNvAhhaoMHEhjeqp8ZRms3NnU53vw1ZDBKxprBBsy1C44VopypBNxaShadNg"
   }
 }

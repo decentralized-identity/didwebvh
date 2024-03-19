@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#nSJdJeE7"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#T5UwxH9t"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#WQE3UFje"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#jX2rbMY7"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#nSJdJeE7",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#T5UwxH9t",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MktmX9b8jVH1kttr3dx6G2fDMgvifXxDURRzQGnSJdJeE7"
+      "publicKeyMultibase": "z6MkmS7bqgpqSN7MaxNKzi49SxsK2usSC7wyF9xWT5UwxH9t"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#WQE3UFje",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#jX2rbMY7",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkkRHWFvpEkKjV9A9Ygw6VREVotNtxgaip9c5LWQE3UFje"
+      "publicKeyMultibase": "z6MkvhZuFP9FyJc2AEvm3rgXnYnYzzcPXRXAaHF9jX2rbMY7"
     }
   ],
   "versionId": 7,
-  "previousHash": "baga6yaqsedyjwoiif4t3eacv3azdqh6rnk7up2kh5flsed6jysmuva6fgqpn2",
+  "previousHash": "baga6yaqsebqb52yusmilny4nvs2spiqdahdpdbj5m4sig7tkjrmuhkoe2ix6a",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#nSJdJeE7",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#T5UwxH9t",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsedyjwoiif4t3eacv3azdqh6rnk7up2kh5flsed6jysmuva6fgqpn2",
-    "proofValue": "z559bNBm2g3DAFXFUePMRajqpa2mpXdxn32NpXep34ktLuiF6arA7keMMGZEmKMdhTPKnz48LmCs6cX2Q75Egzoj"
+    "challenge": "baga6yaqsebqb52yusmilny4nvs2spiqdahdpdbj5m4sig7tkjrmuhkoe2ix6a",
+    "proofValue": "z3mxx5askcGVxxFCyxnuRHgJAKp8689ZeMEnjTochQ4d3YyTZstEAifMn39WdTkxSFwxj8jKuUv7vvhoChhVnBg8M"
   }
 }

@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#wpNZzAhS"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#HiQridrF"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#xtbDwE5K"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ny59Ao38"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#wpNZzAhS",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#HiQridrF",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MktHiDLeC8yDPTujGhbDSC7JYU4BQTGj1xMdgHwpNZzAhS"
+      "publicKeyMultibase": "z6Mkt58wfdcs2do2efY4pcaHeW6N4hUBCjkDqc7QHiQridrF"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#xtbDwE5K",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ny59Ao38",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkuXKcGoKcZ3Gjm9uGxdewEb5AQiZkYt4bCbtCxtbDwE5K"
+      "publicKeyMultibase": "z6Mkq134LhVABgD9TzKe7dJiEGCrMWuJ1fNY7U66ny59Ao38"
     }
   ],
   "versionId": 2,
-  "previousHash": "baga6yaqseaatp7pdxrldtdqpcm6k6p4gdnfaeun6iqhdriu7qes3hc4hozfkg",
+  "previousHash": "baga6yaqsecguede7ui3xfzx4f6is6extz5foc4peq3ldxekzmwidndo5uw3jq",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#wpNZzAhS",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#HiQridrF",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqseaatp7pdxrldtdqpcm6k6p4gdnfaeun6iqhdriu7qes3hc4hozfkg",
-    "proofValue": "z2tBNRKmyXKMFZNRsewGTdoUYfXNT8qEAyRWAes1tzksLj4ngqZT1hjkLsjRHXFADavaqMdfbEAYNmZwQ6Sd7vEUk"
+    "challenge": "baga6yaqsecguede7ui3xfzx4f6is6extz5foc4peq3ldxekzmwidndo5uw3jq",
+    "proofValue": "z2k58dA52kzn7fHEhRuzBEhgYzSrKaXt2nt3QzKrtDUuwSkD7E7YMuDtey2uFkjreQCiSrGeo8KzWUY47miYRyPqm"
   }
 }

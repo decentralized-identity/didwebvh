@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#UchGJbSN"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#YgpoCwmn"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#s4ZVAmKe"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#SsBTj2oy"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#UchGJbSN",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#YgpoCwmn",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkvszW1RrGp38NZS5pxp54o9AiqCvEmtfFF3fsUchGJbSN"
+      "publicKeyMultibase": "z6Mkp1LwnpWsTocDf13vz6JfKeR3N7Vr21E1uXAkYgpoCwmn"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#s4ZVAmKe",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#SsBTj2oy",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6Mkj3iWVPU3YCYSamQCnovYragYkzzoj6uhJz8is4ZVAmKe"
+      "publicKeyMultibase": "z6MkfutGXbpYfbvmVstwv4KgRbUc12fADKa94yuASsBTj2oy"
     }
   ],
   "versionId": 13,
-  "previousHash": "baga6yaqsecjouqx24s5k7qyba4wj6vy77f4kwsaifnckqhzuyko2225kat642",
+  "previousHash": "baga6yaqsecyzffgi3zpundt6yybqqegnyfgv5jyylfosdr276226nmybnnruy",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#UchGJbSN",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#YgpoCwmn",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsecjouqx24s5k7qyba4wj6vy77f4kwsaifnckqhzuyko2225kat642",
-    "proofValue": "z2brpoqUE1rj6bgVQi5ZWRghgJJdpoqAenAg136qSqiTDEA8mDRfPvc5LBQUZTZhAJqQ8RUXbWVoqa6epcZMLxpar"
+    "challenge": "baga6yaqsecyzffgi3zpundt6yybqqegnyfgv5jyylfosdr276226nmybnnruy",
+    "proofValue": "z4aq5eczrD6LuvGXurKu6xNQyoTopyrMxXukgnebMf6sFmiGAto5FdaKDunGjnMz4VwsjH1NaZKjbjnk96znKajku"
   }
 }

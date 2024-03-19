@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#rDv9wwMB"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#CXB47qep"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#P26w2vEy"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#wKsQqFCx"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#rDv9wwMB",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#CXB47qep",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6Mkja2c7qaEUHcVtc1kJUaRHFyY3oBHfUwaw71LrDv9wwMB"
+      "publicKeyMultibase": "z6Mkss7jY2KBxcmBAYoEj7qkNs5CHy5ZsmynbvHLCXB47qep"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#P26w2vEy",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#wKsQqFCx",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkmgUJ6q8KTiqbSVAiJMW6BPw8YEQ9iTBqdjgfP26w2vEy"
+      "publicKeyMultibase": "z6Mkknzxr3ttTXm1zvPhyeYgFgCLBD99bGreenpkwKsQqFCx"
     }
   ],
   "versionId": 19,
-  "previousHash": "baga6yaqsea2mpzog465evvfvwfwbzecliujizk47edqxmmkgk7z6gsn5twcnq",
+  "previousHash": "baga6yaqsebnweauygfeck4cxcefda6gr2sfvrohscapamlvsgm6dgdq2lopx4",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#rDv9wwMB",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#CXB47qep",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsea2mpzog465evvfvwfwbzecliujizk47edqxmmkgk7z6gsn5twcnq",
-    "proofValue": "z2D9pwTi5TSS7QLDA9CD1FyULX2WEUKXbGNTV1Rap1q1xYUgqC2yGnxauKQ7DE52PtKnKfnueVnaDHwDaeLURW8T7"
+    "challenge": "baga6yaqsebnweauygfeck4cxcefda6gr2sfvrohscapamlvsgm6dgdq2lopx4",
+    "proofValue": "z5oA2vyizgd564WFiVb1pA3GNBaqKDZvexhj4bZaF5kYJGNjNR6bKZK19K3XofjDxD7q1NzZDjz1vQTF3oxe4VoKK"
   }
 }

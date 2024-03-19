@@ -9,34 +9,34 @@
   ],
   "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
   "authentication": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#aoGRqGE5"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#BD3FQPUh"
   ],
   "assertionMethod": [
-    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#RFuoZbSg"
+    "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ozo5mvUt"
   ],
   "verificationMethod": [
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#aoGRqGE5",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#BD3FQPUh",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkmCqkvHaXf4Q1WPBeJEdz1QTgggHA4vMLh2u5aoGRqGE5"
+      "publicKeyMultibase": "z6MkuEzGm2JyMYxSq2y1iDPNXoLEFPxekQ7xXiFfBD3FQPUh"
     },
     {
-      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#RFuoZbSg",
+      "id": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#ozo5mvUt",
       "controller": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo",
       "type": "Multikey",
-      "publicKeyMultibase": "z6MkkGhANkmyN71ARx6uGag9akcKCY7HmWaQj73JRFuoZbSg"
+      "publicKeyMultibase": "z6MkrXMU17wFJ3M1gnQzxJ8nUyP8YHuokQ4nnjL3ozo5mvUt"
     }
   ],
   "versionId": 18,
-  "previousHash": "baga6yaqsedm7sytu2e2bt4ihv2mrietuotjnfrogqhwwpqoqpkc63laqkfzuq",
+  "previousHash": "baga6yaqsedye3gsjnxdfitqtp4u7xmhrtknqklbritr774cup6dq6fsingmls",
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-19T17:32:59Z",
-    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#aoGRqGE5",
+    "created": "2024-03-19T17:58:34Z",
+    "verificationMethod": "did:best:1vqtjq6g3uzj2yvk7t3hkzeeo#BD3FQPUh",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "baga6yaqsedm7sytu2e2bt4ihv2mrietuotjnfrogqhwwpqoqpkc63laqkfzuq",
-    "proofValue": "z3DPj8fohuFQTYiQR6oMcsvt7FjuijsGQWxaoLGj5jeqcchyHa1K5uwoDFWpz9jBTuB5A5ChVAwsmmzY48ZZk9YKe"
+    "challenge": "baga6yaqsedye3gsjnxdfitqtp4u7xmhrtknqklbritr774cup6dq6fsingmls",
+    "proofValue": "z3xPvBd8Yp1NYQm2Qk4Qq7CSJm4bSujYXzS1gwFqucvUxUpWnA6Do7SKjbtvDYaHwGz9ox6CQgmJxGywEMrV6fXfs"
   }
 }
