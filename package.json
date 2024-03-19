@@ -27,6 +27,7 @@
     "did-context": "^3.1.1",
     "ed25519-signature-2020-context": "^1.1.0",
     "elysia": "^0.8.17",
+    "fast-json-patch": "^3.1.1",
     "json-canonicalize": "^1.0.6",
     "jsonld": "^8.3.2",
     "jsonld-document-loader": "^2.0.0",

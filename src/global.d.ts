@@ -9,3 +9,4 @@ declare module 'ed25519-signature-2020-context';
 declare module 'jsonld';
 declare module 'jsonld-document-loader';
 declare module 'jsonld-signatures';
+declare module 'fast-json-patch/index.mjs';

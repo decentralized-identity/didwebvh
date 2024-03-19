@@ -2,32 +2,37 @@ import { CreateDIDInterface, DIDDoc, SignDIDDocInterface, UpdateDIDDocInterface,
 import { nanoid } from 'nanoid';
 import { sha256 } from 'multiformats/hashes/sha2';
 import { base58btc } from "multiformats/bases/base58";
+import { base32 } from 'multiformats/bases/base32';
 import { CID } from 'multiformats/cid';
 import * as raw from 'multiformats/codecs/raw';
 import { canonicalize } from 'json-canonicalize';
 import { signDocument } from "./data-integrity";
+import * as jsonpatch from 'fast-json-patch/index.mjs';
 
 const PLACEHOLDER = "{{SCID}}";
 const METHOD = "best";
 
-export const createSCID = async (doc: any): Promise<{scid: string}> => {
-  delete doc['proof'];
-  const data = canonicalize(doc);
-  const hash = await sha256.digest(Buffer.from(data));
-  const cid = CID.create(1, raw.code, hash);
-  return {scid: cid.toString(base58btc.encoder)};
+export const createSCID = async (cid: CID): Promise<{scid: string}> => {
+  return {scid: `1${cid.toString(base32.encoder).slice(-24)}`};
 }
 
-export const createDID = async (options: CreateDIDInterface): Promise<{did: string, doc: any}> => {
+export const deriveCID = async (doc: any): Promise<{cid: CID}> => {
+  const data = canonicalize(doc);
+  const hash = await sha256.digest(Buffer.from(data));
+  return {cid: CID.create(1, 46593, hash)}
+}
+
+export const createDID = async (options: CreateDIDInterface): Promise<{did: string, doc: any, patch: any[]}> => {
   const {doc} = await createDIDDoc(options);
-  const {scid} = await createSCID(doc);
-  const doc2 = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, scid.slice(-24)));
+  const {cid} = await deriveCID(doc);
+  const {scid} = await createSCID(cid);
+  const doc2 = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, scid));
   doc2.versionId = 1;
   doc2.previousHash = scid;
   const authKey = options.VMs?.find(vm => vm.type === 'authentication');
   const signedDoc = await signDocument(doc2, authKey!);
-
-  return {did: doc2.id, doc: signedDoc}
+  const patch = jsonpatch.compare(doc, signedDoc)
+  return {did: doc2.id, doc: signedDoc, patch}
 }
 
 export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: DIDDoc}> => {
@@ -46,7 +51,7 @@ export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: D
   };
 }
 
-export const updateDIDDoc = async (options: UpdateDIDDocInterface): Promise<{doc: any}> => {
+export const updateDIDDoc = async (options: UpdateDIDDocInterface): Promise<{doc: any, patch: any[]}> => {
   const {currentDoc, newVMs, newServices, authKey} = options;
   const all = normalizeVMs(currentDoc.id, newVMs);
   const {scid} = await createSCID(currentDoc);
@@ -58,8 +63,8 @@ export const updateDIDDoc = async (options: UpdateDIDDocInterface): Promise<{doc
     previousHash: scid
   }
   const signedDoc = await signDocument(newDoc, authKey);
-
-  return {doc: signedDoc}
+  const patch = jsonpatch.compare(currentDoc, signedDoc);
+  return {doc: signedDoc, patch}
 }
 
 export const normalizeVMs = (did: string, verificationMethod: VerificationMethod[] | undefined) => {
