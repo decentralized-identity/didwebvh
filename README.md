@@ -9,7 +9,7 @@ bun install
 ## To run a test DID lifecycle
 
 ```bash
-bun run start
+bun test
 ```
 
 ## To run a resolver
