@@ -35,7 +35,6 @@ export const createLogEntryHash = async (input: any): Promise<{logEntryHash: str
 
 export const createDID = async (options: CreateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {
   let {doc} = await createDIDDoc(options);
-  fs.writeFileSync('./created.json', JSON.stringify(doc, null, 2));
 
   const {logEntryHash} = await createLogEntryHash(doc);
   const {scid} = await createSCID(logEntryHash);
@@ -121,7 +120,6 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
       if (did.split(':').at(-1) !== scid) {
         throw new Error(`SCID '${scid}' not found in DID '${did}'`);
       }
-      fs.writeFileSync('./resolved.json', JSON.stringify(JSON.parse(JSON.stringify(doc).replaceAll(scid, PLACEHOLDER)), null, 2));
       const {logEntryHash} = await createLogEntryHash(
         JSON.parse(JSON.stringify(newDoc).replaceAll(scid, PLACEHOLDER))
       );
