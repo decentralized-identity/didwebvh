@@ -1,0 +1,27 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/multikey/v1"
+  ],
+  "id": "did:tdw:mxK7ZzHRWaF3seULxR6T5Vym",
+  "authentication": [
+    "did:tdw:mxK7ZzHRWaF3seULxR6T5Vym#iU1rw2dx"
+  ],
+  "assertionMethod": [
+    "did:tdw:mxK7ZzHRWaF3seULxR6T5Vym#dBxNfgrQ"
+  ],
+  "verificationMethod": [
+    {
+      "id": "did:tdw:mxK7ZzHRWaF3seULxR6T5Vym#iU1rw2dx",
+      "controller": "did:tdw:mxK7ZzHRWaF3seULxR6T5Vym",
+      "type": "Multikey",
+      "publicKeyMultibase": "z6MkugKEvvj4KqKhwuuKn8kJG64Lv5aSbZd79R26iU1rw2dx"
+    },
+    {
+      "id": "did:tdw:mxK7ZzHRWaF3seULxR6T5Vym#dBxNfgrQ",
+      "controller": "did:tdw:mxK7ZzHRWaF3seULxR6T5Vym",
+      "type": "Multikey",
+      "publicKeyMultibase": "z6MktwC1PPHWmRsEfwkFbkycFipygux5P57bTVvrdBxNfgrQ"
+    }
+  ]
+}
