@@ -114,7 +114,7 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
     }
 
     // doc patches & proof
-    const newDoc = jsonpatch.applyPatch(doc, entry[3], false).newDocument;
+    const newDoc = jsonpatch.applyPatch(doc, entry[3], false, false).newDocument;
     if (versionId === 1) {
       did = newDoc.id;
       if (did.split(':').at(-1) !== scid) {
@@ -127,14 +127,22 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
       if (!logEntryHash.includes(scid)) {
         throw new Error(`SCID '${scid}' not found in logEntryHash '${logEntryHash}'`);
       }
-      // TODO VERIFY PROOF
+      const authKey = newDoc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[4].verificationMethod);
+      const valid = isDocumentStateValid(authKey, {...newDoc, proof: entry[4]});
+      if (!valid) {
+        throw new Error(`version ${versionId} failed verification of the proof.`)
+      }
     } else {
       const {logEntryHash} = await createLogEntryHash([previousLogEntryHash, entry[1], entry[2], entry[3]]);
       previousLogEntryHash = logEntryHash;
       if (logEntryHash !== entry[0]) {
         throw new Error(`Hash chain broken at '${versionId}'`);
       }
-      // TODO VERIFY PROOF
+      const authKey = doc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[4].verificationMethod);
+      const valid = isDocumentStateValid(authKey, {...newDoc, proof: entry[4]});
+      if (!valid) {
+        throw new Error(`version ${versionId} failed verification of the proof.`)
+      }
     }
     doc = newDoc;
   }
@@ -155,11 +163,10 @@ export const updateDID = async (options: UpdateDIDInterface): Promise<{did: stri
   const patch = jsonpatch.compare(doc, newDoc);
   const logEntry = [meta.previousLogEntryHash, meta.versionId, meta.updated, clone(patch)];
   const {logEntryHash} = await createLogEntryHash(logEntry);
-  // if(!authKey) {
-  //   throw new Error(`No auth key`)
-  // }
-  // const signedDoc = await signDocument(newDoc, authKey, cid.toString());
-  const proof = {} // TODO real proof
+  if(!authKey) {
+    throw new Error(`No auth key`);
+  }
+  const signedDoc = await signDocument(newDoc, authKey, logEntryHash);
   return {
     did,
     doc: newDoc,
@@ -171,7 +178,7 @@ export const updateDID = async (options: UpdateDIDInterface): Promise<{did: stri
     },
     log: [
       ...clone(log),
-      [logEntryHash, meta.versionId, meta.updated, clone(patch), proof]
+      [logEntryHash, meta.versionId, meta.updated, patch, signedDoc.proof]
     ]
   };
 }
@@ -242,53 +249,50 @@ export const signDocument = async (doc: any, vm: VerificationMethod, challenge: 
   return signedDoc;
 }
 
-export const isDocumentStateValid = async (previousDoc: any, doc: any): Promise<boolean> => {
-  // const authKeys = previousDoc.authentication;
-  // const vm = 
-  // console.log(previousDoc.verificationMethod, authKeys)
-  // previousDoc.
-  jdl.addStatic(previousDoc.id, previousDoc);
+export const isDocumentStateValid = async (authKey: VerificationMethod, doc: any): Promise<boolean> => {
+  // TODO verify key is allowed to update
   jdl.addStatic(doc.id, doc);
+  jdl.addStatic(doc.proof.verificationMethod, authKey);
   const docLoader = jdl.build();
-  const keyPairDoc = await docLoader(doc.proof.verificationMethod)
+  const {document: keyPairDoc} = await docLoader(authKey.id);
   const keyPair = await Ed25519Multikey.from(keyPairDoc);
   
   const suite = new DataIntegrityProof({
     verifier: keyPair.verifier(), cryptosuite: eddsa2022CryptoSuite
   });
-  const verified = await jsigs.verify(doc, {
+  const {verified} = await jsigs.verify(doc, {
     suite,
-    purpose: new AuthenticationProofPurpose({challenge: doc.previousHash}),
+    purpose: new AuthenticationProofPurpose({challenge: doc.proof.challenge}),
     documentLoader: docLoader
   });
-  return true; // Placeholder, replace with actual logic
+  return verified;
 }
 
-export const applyLogEntriesAndValidate = async (doc: any, logEntries: DIDOperation[][]): Promise<{latest: DIDDoc, errors: string[]}> => {
-  let errors = [];
-  let verifiedEntries = 0;
-  for (const entry of logEntries) {
-    for (const operation of entry) {
-      const originalDoc = JSON.parse(JSON.stringify(doc)); // Deep clone the document before modification for potential rollback
-      const result = jsonpatch.applyPatch(doc, [operation], true); // Apply operation
-      if (result.newDocument && await isDocumentStateValid(originalDoc, result.newDocument)) {
-        doc = result.newDocument; // Accept the new document if valid
-      } else {
-        errors.push(`Operation resulted in invalid document state: ${JSON.stringify(operation)}`)
-        doc = originalDoc; // Rollback to the original document
-      }
-    }
-    verifiedEntries++;
-  }
-  // if (doc.previousHash != previousHash) {
-  //   errors.push(`Document hash chain broken at versionId: ${doc.versionId}.`)
-  // }
-  console.log(`verified ${verifiedEntries} log entries`)
-  return { latest: doc, errors};
-}
+// export const applyLogEntriesAndValidate = async (doc: any, logEntries: DIDOperation[][]): Promise<{latest: DIDDoc, errors: string[]}> => {
+//   let errors = [];
+//   let verifiedEntries = 0;
+//   for (const entry of logEntries) {
+//     for (const operation of entry) {
+//       const originalDoc = JSON.parse(JSON.stringify(doc)); // Deep clone the document before modification for potential rollback
+//       const result = jsonpatch.applyPatch(doc, [operation], true); // Apply operation
+//       if (result.newDocument && await isDocumentStateValid(originalDoc, result.newDocument)) {
+//         doc = result.newDocument; // Accept the new document if valid
+//       } else {
+//         errors.push(`Operation resulted in invalid document state: ${JSON.stringify(operation)}`)
+//         doc = originalDoc; // Rollback to the original document
+//       }
+//     }
+//     verifiedEntries++;
+//   }
+//   // if (doc.previousHash != previousHash) {
+//   //   errors.push(`Document hash chain broken at versionId: ${doc.versionId}.`)
+//   // }
+//   console.log(`verified ${verifiedEntries} log entries`)
+//   return { latest: doc, errors};
+// }
 
-export const verifyDocument = async (doc: any, log: DIDOperation[][]) => {
-  const {latest, errors} = await applyLogEntriesAndValidate(doc, log);
-  // console.log(chalk.green(JSON.parse(latest)))
-  return {verified: errors.length === 0, errors, latest}
-}
+// export const verifyDocument = async (doc: any, log: DIDOperation[][]) => {
+//   const {latest, errors} = await applyLogEntriesAndValidate(doc, log);
+//   // console.log(chalk.green(JSON.parse(latest)))
+//   return {verified: errors.length === 0, errors, latest}
+// }

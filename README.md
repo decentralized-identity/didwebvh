@@ -17,8 +17,3 @@ bun test
 ```bash
 bun run server
 ```
-
-## Test resolver
-
-```bash
-cd 
