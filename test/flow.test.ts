@@ -4,13 +4,18 @@ import fs from 'node:fs';
 
 let docFile: string, logFile: string;
 let did: string;
-let availableKeys: VerificationMethod[];
+let availableKeys: { ed25519: (VerificationMethod | null)[]; x25519: (VerificationMethod | null)[]};
+
+const verboseMode = Bun.env['LOG_RESOLVES'] === 'true';
 
 const writeFilesToDisk = (_log: DIDLog, _doc: any, version: number) => {
-  const id = _doc.id.split(':').at(-1);
-  docFile = `./out/${id}/did.${version}.json`;
-  logFile = `./out/${id}/log.${version}.txt`;
-  fs.mkdirSync(`./out/${id}`, {recursive: true});
+  let id = _doc.id.split(':').at(-1);
+  if (verboseMode) {
+    id = 'test-run';
+  }
+  docFile = `./test/logs/${id}/did${verboseMode ? '.' + version : ''}.json`;
+  logFile = `./test/logs/${id}/did${verboseMode ? '.' + version : ''}.log`;
+  fs.mkdirSync(`./test/logs/${id}`, {recursive: true});
   fs.writeFileSync(docFile, JSON.stringify(_doc, null, 2));
   fs.writeFileSync(logFile, JSON.stringify(_log.shift()) + '\n');
   for (const entry of _log) {
@@ -18,9 +23,8 @@ const writeFilesToDisk = (_log: DIDLog, _doc: any, version: number) => {
   }
 }
 
-const readFilesFromDisk = (version: number) => {
+const readFilesFromDisk = () => {
   return {
-    doc: JSON.parse(fs.readFileSync(docFile, 'utf8')),
     log: fs.readFileSync(logFile, 'utf8').trim().split('\n').map(l => JSON.parse(l))
   }
 }
@@ -29,18 +33,31 @@ const readKeysFromDisk = () => {
   return {keys: fs.readFileSync('./in/keys.json', 'utf8')}
 }
 
+const testResolveVersion = async (versionId: number) => {
+  const {log: didLog} = readFilesFromDisk();
+  const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(didLog);
+  
+  if(verboseMode) {
+    console.log(`Resolved DID Document: ${versionId}`, resolvedDoc);
+  }
+  
+  expect(resolvedDID).toBe(resolvedDoc.id);
+  expect(resolvedDoc.id).toBe(did);
+  expect(meta.versionId).toBe(versionId);
+}
+
 let currentAuthKey: VerificationMethod | null = null;
 
 beforeAll(async () => {
   const {keys} = readKeysFromDisk();
   availableKeys = JSON.parse(keys);
-  currentAuthKey = {type: 'authentication', ...availableKeys.shift()};
+  currentAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
 });
 
-test("Create DID", async () => {
+test("Create DID (2 keys)", async () => {
   const {did: newDID, doc: newDoc, meta, log: newLog} = await createDID({VMs: [
     currentAuthKey!,
-    {type: 'assertionMethod', ...availableKeys.shift()},
+    {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
   ]});
   did = newDID;
 
@@ -64,7 +81,7 @@ test("Create DID", async () => {
 });
 
 test("Resolve DID", async () => {
-  const {log: didLog, doc: any} = readFilesFromDisk(1);
+  const {log: didLog} = readFilesFromDisk();
   const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(didLog);
   
   expect(resolvedDID).toBe(resolvedDoc.id);
@@ -72,16 +89,33 @@ test("Resolve DID", async () => {
   expect(meta.versionId).toBe(1);
 });
 
-test("Update DID", async () => {
-  const nextAuthKey = {type: 'authentication', ...availableKeys.shift()};
-  const {log: didLog, doc: any} = readFilesFromDisk(1);
+test("Update DID (2 keys, 1 service)", async () => {
+  const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
+  const {log: didLog} = readFilesFromDisk();
+  const context = ["https://identity.foundation/linked-vp/contexts/v1"];
 
   const {did: updatedDID, doc: updatedDoc, meta, log: updatedLog} =
-    await updateDID({log: didLog, authKey: currentAuthKey!, newVMs: [
-      nextAuthKey,
-      {type: 'assertionMethod', ...availableKeys.shift()},
-    ]});
+    await updateDID({
+      log: didLog,
+      authKey: currentAuthKey!,
+      context,
+      vms: [
+        nextAuthKey,
+        {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
+      ],
+      services: [
+        {
+          "id": `${did}#whois`,
+          "type": "LinkedVerifiablePresentation",
+          "serviceEndpoint": [`https://example.com/docs/${did}/whois.json`]
+        }
+      ]
+    });
   expect(updatedDID).toBe(did);
+  expect(updatedDoc.service.length).toBe(1);
+  expect(updatedDoc.service[0].id).toBe(`${did}#whois`);
+  expect(updatedDoc.service[0].type).toBe('LinkedVerifiablePresentation');
+  expect(updatedDoc.service[0].serviceEndpoint).toContain(`https://example.com/docs/${did}/whois.json`);
   expect(meta.versionId).toBe(2);
 
   writeFilesToDisk(updatedLog, updatedDoc, 2);
@@ -89,24 +123,45 @@ test("Update DID", async () => {
 });
 
 test("Resolve DID", async () => {
-  const {log: didLog, doc: any} = readFilesFromDisk(2);
-  const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(didLog);
-  
-  expect(resolvedDID).toBe(resolvedDoc.id);
-  expect(resolvedDoc.id).toBe(did);
-  expect(meta.versionId).toBe(2);
+  testResolveVersion(2);
 });
 
-test("Update DID again", async () => {
-  const nextAuthKey = {type: 'authentication', ...availableKeys.shift()};
-  const {log: didLog, doc: any} = readFilesFromDisk(2);
+test("Update DID (3 keys, 2 services)", async () => {
+  const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
+  const {log: didLog} = readFilesFromDisk();
+  const {doc} = await resolveDID(didLog);
 
   const {did: updatedDID, doc: updatedDoc, meta, log: updatedLog} =
-    await updateDID({log: didLog, authKey: currentAuthKey!, newVMs: [
-      nextAuthKey,
-      {type: 'assertionMethod', ...availableKeys.shift()},
-    ]});
+    await updateDID({
+      log: didLog,
+      authKey: currentAuthKey!,
+      context: [...doc['@context'], 'https://didcomm.org/messaging/v2'],
+      vms: [
+        nextAuthKey,
+        {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
+        {type: 'keyAgreement', ...availableKeys.x25519.shift()}
+      ],
+      services: [
+        ...doc.service,
+        {
+          id: `${did}#didcomm`,
+          type: 'DIDCommMessaging',
+          serviceEndpoint: {
+            "uri": "https://example.com/didcomm",
+            "accept": [
+                "didcomm/v2",
+                "didcomm/aip2;env=rfc587"
+            ],
+            "routingKeys": ["did:example:somemediator#somekey"]
+          }
+        }
+      ]});
   expect(updatedDID).toBe(did);
+  expect(updatedDoc.keyAgreement.length).toBe(1)
+  expect(updatedDoc.service.length).toBe(2);
+  expect(updatedDoc.service[1].id).toBe(`${did}#didcomm`);
+  expect(updatedDoc.service[1].type).toBe('DIDCommMessaging');
+  expect(updatedDoc.service[1].serviceEndpoint.uri).toContain(`https://example.com/didcomm`);
   expect(meta.versionId).toBe(3);
 
   writeFilesToDisk(updatedLog, updatedDoc, 3);
@@ -114,24 +169,29 @@ test("Update DID again", async () => {
 });
 
 test("Resolve DID", async () => {
-  const {log: didLog, doc: any} = readFilesFromDisk(3);
-  const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(didLog);
-  
-  expect(resolvedDID).toBe(resolvedDoc.id);
-  expect(resolvedDoc.id).toBe(did);
-  expect(meta.versionId).toBe(3);
+  testResolveVersion(3);
 });
 
-test("Update DID again again", async () => {
-  const nextAuthKey = {type: 'authentication', ...availableKeys.shift()};
-  const {log: didLog, doc: any} = readFilesFromDisk(3);
+test("Update DID (add alsoKnownAs)", async () => {
+  const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
+  const {log: didLog} = readFilesFromDisk();
+  const {doc} = await resolveDID(didLog);
 
   const {did: updatedDID, doc: updatedDoc, meta, log: updatedLog} =
-    await updateDID({log: didLog, authKey: currentAuthKey!, newVMs: [
-      nextAuthKey,
-      {type: 'assertionMethod', ...availableKeys.shift()},
-    ]});
+    await updateDID({
+      log: didLog,
+      authKey: currentAuthKey!,
+      context: doc['@context'],
+      vms: [
+        nextAuthKey,
+        {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
+        {type: 'keyAgreement', ...availableKeys.x25519.shift()},
+      ],
+      services: doc.service,
+      alsoKnownAs: ['did:web:example.com']
+    });
   expect(updatedDID).toBe(did);
+  expect(updatedDoc.alsoKnownAs).toContain('did:web:example.com')
   expect(meta.versionId).toBe(4);
 
   writeFilesToDisk(updatedLog, updatedDoc, 4);
@@ -139,10 +199,5 @@ test("Update DID again again", async () => {
 });
 
 test("Resolve DID", async () => {
-  const {log: didLog, doc: any} = readFilesFromDisk(4);
-  const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(didLog);
-  
-  expect(resolvedDID).toBe(resolvedDoc.id);
-  expect(resolvedDoc.id).toBe(did);
-  expect(meta.versionId).toBe(4);
+  testResolveVersion(4);
 });

@@ -18,6 +18,25 @@ jdl.addStatic(secCtx.SECURITY_CONTEXT_V1_URL, secCtx.contexts.get(secCtx.SECURIT
 jdl.addStatic(secCtx.SECURITY_CONTEXT_V2_URL, secCtx.contexts.get(secCtx.SECURITY_CONTEXT_V2_URL));
 jdl.addStatic(dataIntegrityCtx.CONTEXT_URL, dataIntegrityCtx.CONTEXT);
 jdl.addStatic(multikeyContext.CONTEXT_URL, multikeyContext.CONTEXT);
+jdl.addStatic(`https://identity.foundation/linked-vp/contexts/v1`, {
+  "@context": [
+    {
+      "@version": 1.1,
+      "@protected": true,
+      "LinkedVerifiablePresentation": "https://identity.foundation/linked-vp/contexts/v1#LinkedVerifiablePresentation"
+    }
+  ]
+});
+jdl.addStatic(`https://didcomm.org/messaging/v2`, {
+  "@context":{
+     "@version":1.1,
+     "@protected":true,
+     "DIDCommMessaging":"https://didcomm.org/messaging/v2/#DIDCommMessaging",
+     "accept":"https://didcomm.org/messaging/v2/#accept",
+     "routingKeys":"https://didcomm.org/messaging/v2/#routingKeys",
+     "uri":"https://didcomm.org/messaging/v2/#uri",
+  }
+})
 
 export const documentLoader = jdl.build();
 

@@ -1,5 +1,6 @@
 {
   "@context": [
+    "https://identity.foundation/linked-vp/contexts/v1",
     "https://www.w3.org/ns/did/v1",
     "https://w3id.org/security/multikey/v1",
     "https://w3id.org/security/data-integrity/v2"
@@ -25,13 +26,22 @@
       "publicKeyMultibase": "z6MkuocstfAaHsJgRnQgfQdtJiECuWEMDAbQV61aCpsUrTh3"
     }
   ],
+  "service": [
+    {
+      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#whois",
+      "type": "LinkedVerifiablePresentation",
+      "serviceEndpoint": [
+        "https://example.com/docs/did:tdw:34YXd7K684HBpPPBJfBDBV2E/whois.json"
+      ]
+    }
+  ],
   "proof": {
     "type": "DataIntegrityProof",
-    "created": "2024-03-26T08:01:31Z",
+    "created": "2024-03-27T05:20:42Z",
     "verificationMethod": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#FFhXVfsx",
     "cryptosuite": "eddsa-2022",
     "proofPurpose": "authentication",
-    "challenge": "zAEr2aaDWDNK88YL1qN8vETkbtPTu9pjLFWvi3bsKMvkt",
-    "proofValue": "zh1nX656A9yKtn1BkFJSMA6yEg2CaXC4oNBJ7E1L7cZSEVAhudLg7GGEKHUWiyJ6MoPmm5EXeBy9NmQFVyxz9k8s"
+    "challenge": "zDz1PFr6yx4FmoQPLEGQe3Y6v6DBr47GiPaSCzEVsLJg8",
+    "proofValue": "z272UgikVvR8SxZYGSoANDg5LR2bfvvLLgfFjeTh4npDrtJaaBurB82pKhDcph4puKTh237QJ21wmmD1WGJQzfgNq"
   }
 }

@@ -21,6 +21,7 @@ export const METHOD = "tdw";
 export const PROTOCOL = `did:${METHOD}:1`;
 export const LOG_FORMAT = `history:1`;
 
+const CONTEXT = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1"];
 const {purposes: {AuthenticationProofPurpose}} = jsigs;
 
 export const createSCID = async (logEntryHash: string): Promise<{scid: string}> => {
@@ -150,13 +151,15 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
 }
 
 export const updateDID = async (options: UpdateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {
-  const {log, authKey, newVMs, newServices} = options;
+  const {log, authKey, context, vms, services, alsoKnownAs} = options;
   let {did, doc, meta} = await resolveDID(log);
-  const {all} = normalizeVMs(did, newVMs);
+  const {all} = normalizeVMs(did, vms);
   const newDoc = {
-    '@context': doc['@context'],
+    ...(context ? {'@context': Array.from(new Set([...context, ...CONTEXT]))} : {'@context': CONTEXT}),
     id: did,
-    ...all
+    ...all,
+    ...(services ? {service: services} : {}),
+    ...(alsoKnownAs ? {alsoKnownAs} : {})
   }
   meta.versionId++;
   meta.updated = (new Date).toISOString().slice(0,-5)+'Z';
@@ -229,24 +232,29 @@ export const createVMID = (did: string, vm: VerificationMethod) => {
 }
 
 export const signDocument = async (doc: any, vm: VerificationMethod, challenge: string) => {
-  const keyPair = await Ed25519Multikey.from({
-    '@context': 'https://w3id.org/security/multikey/v1',
-    type: 'Multikey',
-    controller: doc.id,
-    id: createVMID(doc.id, vm),
-    publicKeyMultibase: vm.publicKeyMultibase,
-    secretKeyMultibase: vm.secretKeyMultibase
-  });
-  const suite = new DataIntegrityProof({
-    signer: keyPair.signer(), cryptosuite: eddsa2022CryptoSuite
-  });
-  
-  const signedDoc = await jsigs.sign(doc, {
-    suite,
-    purpose: new AuthenticationProofPurpose({challenge}),
-    documentLoader
-  });
-  return signedDoc;
+  try {
+    const keyPair = await Ed25519Multikey.from({
+      '@context': 'https://w3id.org/security/multikey/v1',
+      type: 'Multikey',
+      controller: doc.id,
+      id: createVMID(doc.id, vm),
+      publicKeyMultibase: vm.publicKeyMultibase,
+      secretKeyMultibase: vm.secretKeyMultibase
+    });
+    const suite = new DataIntegrityProof({
+      signer: keyPair.signer(), cryptosuite: eddsa2022CryptoSuite
+    });
+    
+    const signedDoc = await jsigs.sign(doc, {
+      suite,
+      purpose: new AuthenticationProofPurpose({challenge}),
+      documentLoader
+    });
+    return signedDoc;
+  } catch (e: any) {
+    console.error(e.details)
+    return null;
+  }
 }
 
 export const isDocumentStateValid = async (authKey: VerificationMethod, doc: any): Promise<boolean> => {

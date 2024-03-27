@@ -1,3 +1,4 @@
+declare module '@digitalbazaar/x25519-key-agreement-key-2020';
 declare module '@digitalbazaar/ed25519-multikey';
 declare module '@digitalbazaar/security-context';
 declare module '@digitalbazaar/eddsa-2022-cryptosuite';

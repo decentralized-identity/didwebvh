@@ -50,6 +50,7 @@ interface VerificationMethod {
 
 interface CreateDIDInterface {
   controller?: string;
+  context?: string | string[];
   VMs?: VerificationMethod[];
   domains?: string[];
 }
@@ -63,6 +64,8 @@ interface SignDIDDocInterface {
 interface UpdateDIDInterface {
   log: DIDLog;
   authKey: VerificationMethod;
-  newVMs?: VerificationMethod[];
-  newServices?: ServiceEndpoint[];
+  context?: string[];
+  vms?: VerificationMethod[];
+  services?: ServiceEndpoint[];
+  alsoKnownAs?: string[];
 }
