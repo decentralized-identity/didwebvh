@@ -44,6 +44,7 @@ const testResolveVersion = async (versionId: number) => {
   expect(resolvedDID).toBe(resolvedDoc.id);
   expect(resolvedDoc.id).toBe(did);
   expect(meta.versionId).toBe(versionId);
+  expect(resolvedDoc.proof).toBeUndefined();
 }
 
 let currentAuthKey: VerificationMethod | null = null;
@@ -81,12 +82,7 @@ test("Create DID (2 keys)", async () => {
 });
 
 test("Resolve DID", async () => {
-  const {log: didLog} = readFilesFromDisk();
-  const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(didLog);
-  
-  expect(resolvedDID).toBe(resolvedDoc.id);
-  expect(resolvedDoc.id).toBe(did);
-  expect(meta.versionId).toBe(1);
+  testResolveVersion(1);
 });
 
 test("Update DID (2 keys, 1 service)", async () => {

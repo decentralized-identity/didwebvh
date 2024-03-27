@@ -1,10 +1,9 @@
 {
   "@context": [
-    "https://identity.foundation/linked-vp/contexts/v1",
     "https://www.w3.org/ns/did/v1",
     "https://w3id.org/security/multikey/v1",
-    "https://didcomm.org/messaging/v2",
-    "https://w3id.org/security/data-integrity/v2"
+    "https://identity.foundation/linked-vp/contexts/v1",
+    "https://didcomm.org/messaging/v2"
   ],
   "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
   "authentication": [
@@ -61,14 +60,5 @@
   ],
   "alsoKnownAs": [
     "did:web:example.com"
-  ],
-  "proof": {
-    "type": "DataIntegrityProof",
-    "created": "2024-03-27T05:19:02Z",
-    "verificationMethod": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#gJqvqaYD",
-    "cryptosuite": "eddsa-2022",
-    "proofPurpose": "authentication",
-    "challenge": "zJ7vpRcb5qc6jczKe2BT5pNH1SbNVHqA9MD6PXivkpcSQ",
-    "proofValue": "z3yoxxxELgqWW1XV7FkkR6Eh6mu1R4dK7HimkctBBXwzvRShBHRNuQ7Aj1Nit13nvThVNcQDcGkPK9anqTAtZBYXq"
-  }
+  ]
 }
