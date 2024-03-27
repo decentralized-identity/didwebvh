@@ -1,12 +1,18 @@
 import { test, expect, beforeAll } from "bun:test";
 import { createDID, LOG_FORMAT, PROTOCOL, resolveDID, updateDID } from "../src/method";
 import fs from 'node:fs';
+import { readLogFromDisk, readKeysFromDisk } from "./utils";
 
 let docFile: string, logFile: string;
 let did: string;
 let availableKeys: { ed25519: (VerificationMethod | null)[]; x25519: (VerificationMethod | null)[]};
+let currentAuthKey: VerificationMethod | null = null;
 
 const verboseMode = Bun.env['LOG_RESOLVES'] === 'true';
+
+const logFilePath =
+  (id: string, version?: number) =>
+    `./test/logs/${id}/did${verboseMode && version ? '.' + version : ''}.log`;
 
 const writeFilesToDisk = (_log: DIDLog, _doc: any, version: number) => {
   let id = _doc.id.split(':').at(-1);
@@ -14,7 +20,7 @@ const writeFilesToDisk = (_log: DIDLog, _doc: any, version: number) => {
     id = 'test-run';
   }
   docFile = `./test/logs/${id}/did${verboseMode ? '.' + version : ''}.json`;
-  logFile = `./test/logs/${id}/did${verboseMode ? '.' + version : ''}.log`;
+  logFile = logFilePath(id, version);
   fs.mkdirSync(`./test/logs/${id}`, {recursive: true});
   fs.writeFileSync(docFile, JSON.stringify(_doc, null, 2));
   fs.writeFileSync(logFile, JSON.stringify(_log.shift()) + '\n');
@@ -23,19 +29,10 @@ const writeFilesToDisk = (_log: DIDLog, _doc: any, version: number) => {
   }
 }
 
-const readFilesFromDisk = () => {
-  return {
-    log: fs.readFileSync(logFile, 'utf8').trim().split('\n').map(l => JSON.parse(l))
-  }
-}
-
-const readKeysFromDisk = () => {
-  return {keys: fs.readFileSync('./in/keys.json', 'utf8')}
-}
 
 const testResolveVersion = async (versionId: number) => {
-  const {log: didLog} = readFilesFromDisk();
-  const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(didLog);
+  const log = readLogFromDisk(logFile);
+  const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(log);
   
   if(verboseMode) {
     console.log(`Resolved DID Document: ${versionId}`, resolvedDoc);
@@ -46,8 +43,6 @@ const testResolveVersion = async (versionId: number) => {
   expect(meta.versionId).toBe(versionId);
   expect(resolvedDoc.proof).toBeUndefined();
 }
-
-let currentAuthKey: VerificationMethod | null = null;
 
 beforeAll(async () => {
   const {keys} = readKeysFromDisk();
@@ -82,12 +77,12 @@ test("Create DID (2 keys)", async () => {
 });
 
 test("Resolve DID", async () => {
-  testResolveVersion(1);
+  await testResolveVersion(1);
 });
 
 test("Update DID (2 keys, 1 service)", async () => {
   const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
-  const {log: didLog} = readFilesFromDisk();
+  const didLog = readLogFromDisk(logFile);
   const context = ["https://identity.foundation/linked-vp/contexts/v1"];
 
   const {did: updatedDID, doc: updatedDoc, meta, log: updatedLog} =
@@ -119,12 +114,12 @@ test("Update DID (2 keys, 1 service)", async () => {
 });
 
 test("Resolve DID", async () => {
-  testResolveVersion(2);
+  await testResolveVersion(2);
 });
 
 test("Update DID (3 keys, 2 services)", async () => {
   const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
-  const {log: didLog} = readFilesFromDisk();
+  const didLog = readLogFromDisk(logFilePath(did.split(':').at(-1)!));
   const {doc} = await resolveDID(didLog);
 
   const {did: updatedDID, doc: updatedDoc, meta, log: updatedLog} =
@@ -165,12 +160,12 @@ test("Update DID (3 keys, 2 services)", async () => {
 });
 
 test("Resolve DID", async () => {
-  testResolveVersion(3);
+  await testResolveVersion(3);
 });
 
 test("Update DID (add alsoKnownAs)", async () => {
   const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
-  const {log: didLog} = readFilesFromDisk();
+  const didLog = readLogFromDisk(logFile);
   const {doc} = await resolveDID(didLog);
 
   const {did: updatedDID, doc: updatedDoc, meta, log: updatedLog} =
@@ -195,5 +190,5 @@ test("Update DID (add alsoKnownAs)", async () => {
 });
 
 test("Resolve DID", async () => {
-  testResolveVersion(4);
+  await testResolveVersion(4);
 });

@@ -15,6 +15,7 @@ import chalk from "chalk";
 import { base58btc } from "multiformats/bases/base58";
 import fs from 'node:fs';
 import { clone } from "./utils";
+import { error } from "elysia";
 
 export const PLACEHOLDER = "{{SCID}}";
 export const METHOD = "tdw";
@@ -129,9 +130,9 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
         throw new Error(`SCID '${scid}' not found in logEntryHash '${logEntryHash}'`);
       }
       const authKey = newDoc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[4].verificationMethod);
-      const valid = isDocumentStateValid(authKey, {...newDoc, proof: entry[4]});
-      if (!valid) {
-        throw new Error(`version ${versionId} failed verification of the proof.`)
+      const result = await isDocumentStateValid(authKey, {...newDoc, proof: entry[4]}, newDoc);
+      if (!result.verified) {
+        throw new Error(`version ${versionId} failed verification of the proof.`, {cause: result})
       }
     } else {
       const {logEntryHash} = await createLogEntryHash([previousLogEntryHash, entry[1], entry[2], entry[3]]);
@@ -140,9 +141,9 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
         throw new Error(`Hash chain broken at '${versionId}'`);
       }
       const authKey = doc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[4].verificationMethod);
-      const valid = isDocumentStateValid(authKey, {...newDoc, proof: entry[4]});
-      if (!valid) {
-        throw new Error(`version ${versionId} failed verification of the proof.`)
+      const result = await isDocumentStateValid(authKey, {...newDoc, proof: entry[4]}, doc);
+      if (!result.verified) {
+        throw new Error(`version ${versionId} failed verification of the proof.`, {cause: {result, currentDoc: doc}})
       }
     }
     doc = newDoc;
@@ -253,13 +254,15 @@ export const signDocument = async (doc: any, vm: VerificationMethod, challenge: 
     return signedDoc;
   } catch (e: any) {
     console.error(e.details)
-    return null;
+    throw new Error(`Document signing failure: ${e.details}`)
   }
 }
 
-export const isDocumentStateValid = async (authKey: VerificationMethod, doc: any): Promise<boolean> => {
-  // TODO verify key is allowed to update
-  jdl.addStatic(doc.id, doc);
+export const isDocumentStateValid = async (authKey: VerificationMethod, doc: any, prevDoc: any) => {
+  if (!isKeyAuthorized(authKey, prevDoc)) {
+    throw new Error(`key ${authKey.id} is not authorized to update.`)
+  }
+  jdl.addStatic(prevDoc.id, prevDoc);
   jdl.addStatic(doc.proof.verificationMethod, authKey);
   const docLoader = jdl.build();
   const {document: keyPairDoc} = await docLoader(authKey.id);
@@ -268,10 +271,15 @@ export const isDocumentStateValid = async (authKey: VerificationMethod, doc: any
   const suite = new DataIntegrityProof({
     verifier: keyPair.verifier(), cryptosuite: eddsa2022CryptoSuite
   });
-  const {verified} = await jsigs.verify(doc, {
+  const verification = await jsigs.verify(doc, {
     suite,
     purpose: new AuthenticationProofPurpose({challenge: doc.proof.challenge}),
     documentLoader: docLoader
   });
-  return verified;
+  return verification;
+}
+
+
+export const isKeyAuthorized = (authKey: VerificationMethod, prevDoc: any) => {
+  return prevDoc.authentication.some((kId: string) => kId === authKey.id);
 }
