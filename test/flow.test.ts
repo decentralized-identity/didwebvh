@@ -92,7 +92,7 @@ test("Update DID (2 keys, 1 service)", async () => {
         {
           "id": `${did}#whois`,
           "type": "LinkedVerifiablePresentation",
-          "serviceEndpoint": [`https://example.com/docs/${did}/whois.json`]
+          "serviceEndpoint": [`https://example.com/docs/${did.split(':').at(-1)}/whois.json`]
         }
       ]
     });
@@ -100,7 +100,7 @@ test("Update DID (2 keys, 1 service)", async () => {
   expect(updatedDoc.service.length).toBe(1);
   expect(updatedDoc.service[0].id).toBe(`${did}#whois`);
   expect(updatedDoc.service[0].type).toBe('LinkedVerifiablePresentation');
-  expect(updatedDoc.service[0].serviceEndpoint).toContain(`https://example.com/docs/${did}/whois.json`);
+  expect(updatedDoc.service[0].serviceEndpoint).toContain(`https://example.com/docs/${did.split(':').at(-1)}/whois.json`);
   expect(meta.versionId).toBe(2);
 
   writeFilesToDisk(updatedLog, updatedDoc, 2);
@@ -185,4 +185,42 @@ test("Update DID (add alsoKnownAs)", async () => {
 
 test("Resolve DID", async () => {
   await testResolveVersion(4);
+});
+
+test("Update DID (add external controller)", async () => {
+  const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
+  const didLog = readLogFromDisk(logFile);
+  const {doc} = await resolveDID(didLog);
+  const externalAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
+  externalAuthKey.controller = `did:key:${externalAuthKey.publicKeyMultibase}`;
+
+  const {did: updatedDID, doc: updatedDoc, meta, log: updatedLog} =
+    await updateDID({
+      log: didLog,
+      authKey: currentAuthKey!,
+      context: doc['@context'],
+      controller: [externalAuthKey.controller],
+      vms: [
+        nextAuthKey,
+        externalAuthKey,
+        {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
+        {type: 'keyAgreement', ...availableKeys.x25519.shift()},
+      ],
+      services: doc.service,
+      alsoKnownAs: ['did:web:example.com']
+    });
+
+  expect(updatedDID).toBe(did);
+  expect(updatedDoc.controller).toContain(externalAuthKey.controller);
+  expect(updatedDoc.authentication[1].slice(-6)).toBe(externalAuthKey.controller.slice(-6));
+  expect(updatedDoc.verificationMethod[1].controller).toBe(externalAuthKey.controller);
+
+  expect(meta.versionId).toBe(5);
+
+  writeFilesToDisk(updatedLog, updatedDoc, 5);
+  currentAuthKey = nextAuthKey;
+});
+
+test("Resolve DID", async () => {
+  await testResolveVersion(5);
 });

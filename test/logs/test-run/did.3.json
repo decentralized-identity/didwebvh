@@ -6,7 +6,9 @@
     "https://didcomm.org/messaging/v2"
   ],
   "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
-  "controller": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  "controller": [
+    "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S"
+  ],
   "authentication": [
     "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#gJqvqaYD"
   ],
@@ -41,7 +43,7 @@
       "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#whois",
       "type": "LinkedVerifiablePresentation",
       "serviceEndpoint": [
-        "https://example.com/docs/did:tdw:jNQ4MKr87HBoox9iXKjRKt3S/whois.json"
+        "https://example.com/docs/jNQ4MKr87HBoox9iXKjRKt3S/whois.json"
       ]
     },
     {

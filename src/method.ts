@@ -151,13 +151,13 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
 }
 
 export const updateDID = async (options: UpdateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {
-  const {log, authKey, context, vms, services, alsoKnownAs} = options;
+  const {log, authKey, context, vms, services, alsoKnownAs, controller} = options;
   let {did, doc, meta} = await resolveDID(log);
   const {all} = normalizeVMs(vms, did);
   const newDoc = {
     ...(context ? {'@context': Array.from(new Set([...CONTEXT, ...context]))} : {'@context': CONTEXT}),
     id: did,
-    controller: doc.controller,
+    ...(controller ? {controller: Array.from(new Set([did, ...controller]))} : {controller:[did]}),
     ...all,
     ...(services ? {service: services} : {}),
     ...(alsoKnownAs ? {alsoKnownAs} : {})
@@ -220,7 +220,7 @@ export const normalizeVMs = (verificationMethod: VerificationMethod[] | undefine
   if(verificationMethod && verificationMethod.length > 0) {
     all.verificationMethod = verificationMethod?.map(vm => ({
       id: createVMID(vm, did),
-      ...(did ? {controller: did} : {}),
+      ...(did ? {controller: vm.controller ?? did} : {}),
       type: 'Multikey',
       publicKeyMultibase: vm.publicKeyMultibase
     }))

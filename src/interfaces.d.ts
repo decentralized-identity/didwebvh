@@ -66,6 +66,7 @@ interface UpdateDIDInterface {
   log: DIDLog;
   authKey: VerificationMethod;
   context?: string[];
+  controller?: string[];
   vms?: VerificationMethod[];
   services?: ServiceEndpoint[];
   alsoKnownAs?: string[];
