@@ -53,7 +53,6 @@ interface CreateDIDInterface {
   controller?: string;
   context?: string | string[];
   VMs?: VerificationMethod[];
-  domains?: string[];
 }
 
 interface SignDIDDocInterface {
@@ -70,4 +69,5 @@ interface UpdateDIDInterface {
   vms?: VerificationMethod[];
   services?: ServiceEndpoint[];
   alsoKnownAs?: string[];
+  domain?: string;
 }

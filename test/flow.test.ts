@@ -1,5 +1,5 @@
-import { test, expect, beforeAll } from "bun:test";
-import { createDID, METHOD, PROTOCOL, resolveDID, updateDID } from "../src/method";
+import { test, expect, beforeAll, afterEach } from "bun:test";
+import { createDID, createVMID, METHOD, PROTOCOL, resolveDID, updateDID } from "../src/method";
 import fs from 'node:fs';
 import { readLogFromDisk, readKeysFromDisk } from "./utils";
 
@@ -35,11 +35,10 @@ const testResolveVersion = async (versionId: number) => {
   const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(log);
   
   if(verboseMode) {
-    console.log(`Resolved DID Document: ${versionId}`, resolvedDoc);
+    console.log(`Resolved DID Document: ${versionId}`, resolvedDID, resolvedDoc);
   }
-  
-  expect(resolvedDID).toBe(resolvedDoc.id);
-  expect(resolvedDoc.id).toBe(did);
+
+  expect(resolvedDoc.id).toBe(resolvedDID);
   expect(meta.versionId).toBe(versionId);
   expect(resolvedDoc.proof).toBeUndefined();
 }
@@ -74,7 +73,7 @@ test("Resolve DID", async () => {
   await testResolveVersion(1);
 });
 
-test("Update DID (2 keys, 1 service)", async () => {
+test("Update DID (2 keys, 1 service, add domain)", async () => {
   const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
   const didLog = readLogFromDisk(logFile);
   const context = ["https://identity.foundation/linked-vp/contexts/v1"];
@@ -84,6 +83,7 @@ test("Update DID (2 keys, 1 service)", async () => {
       log: didLog,
       authKey: currentAuthKey!,
       context,
+      domain: 'example.com',
       vms: [
         nextAuthKey,
         {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
@@ -96,7 +96,7 @@ test("Update DID (2 keys, 1 service)", async () => {
         }
       ]
     });
-  expect(updatedDID).toBe(did);
+  expect(updatedDID).toContain('example.com');
   expect(updatedDoc.service.length).toBe(1);
   expect(updatedDoc.service[0].id).toBe(`${did}#whois`);
   expect(updatedDoc.service[0].type).toBe('LinkedVerifiablePresentation');
@@ -104,6 +104,7 @@ test("Update DID (2 keys, 1 service)", async () => {
   expect(meta.versionId).toBe(2);
 
   writeFilesToDisk(updatedLog, updatedDoc, 2);
+  did = updatedDID;
   currentAuthKey = nextAuthKey;
 });
 

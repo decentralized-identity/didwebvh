@@ -50,11 +50,12 @@ export const createDID = async (options: CreateDIDInterface): Promise<{did: stri
   ]
   const {logEntryHash} = await deriveHash(logEntry);
   logEntry[0] = logEntryHash;
-  const authKey = options.VMs?.find(vm => vm.type === 'authentication');
+  let authKey = {...options.VMs?.find(vm => vm.type === 'authentication')};
   if (!authKey) {
     throw new Error('Auth key not supplied')
   }
-  const signedDoc = await signDocument(doc, authKey, logEntryHash);
+  authKey.id = createVMID({...authKey, type: 'authentication'}, doc.id);
+  const signedDoc = await signDocument(doc, {...authKey, type: 'authentication'}, logEntryHash);
   logEntry.push(signedDoc.proof);
   return {
     did: doc.id!,
@@ -113,7 +114,6 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
     if (versionId === 1) {
       created = entry[2];
       newDoc = entry[4].value;
-      did = newDoc.id;
       const {scid} = entry[3];
       const {logEntryHash} = await deriveHash(
         JSON.parse(JSON.stringify(newDoc).replaceAll(scid, PLACEHOLDER))
@@ -129,6 +129,7 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
         throw new Error(`version ${versionId} failed verification of the proof.`, {cause: result})
       }
     } else {
+      // versionId > 1
       if (Object.keys(entry[4]).some((k: string) => k === 'value')) {
         newDoc = entry[4].value;
       } else {
@@ -140,19 +141,26 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
         throw new Error(`Hash chain broken at '${versionId}'`);
       }
       const authKey = doc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[5].verificationMethod);
+      if (!authKey) {
+        throw new Error(`Auth key '${entry[5].verificationMethod}' not found in previous document`);
+      }
       const result = await isDocumentStateValid(authKey, {...newDoc, proof: entry[5]}, doc);
       if (!result.verified) {
         throw new Error(`version ${versionId} failed verification of the proof.`, {cause: {result, currentDoc: doc}})
       }
     }
-    doc = newDoc;
+    doc = clone(newDoc);
+    did = doc.id;
   }
   return {did, doc, meta: {versionId, created, updated, previousLogEntryHash}}
 }
 
 export const updateDID = async (options: UpdateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {
-  const {log, authKey, context, vms, services, alsoKnownAs, controller} = options;
+  const {log, authKey, context, vms, services, alsoKnownAs, controller, domain} = options;
   let {did, doc, meta} = await resolveDID(log);
+  if (domain) {
+    did = `did:${METHOD}:${domain}:${log[0][3].scid}`;
+  }
   const {all} = normalizeVMs(vms, did);
   const newDoc = {
     ...(context ? {'@context': Array.from(new Set([...CONTEXT, ...context]))} : {'@context': CONTEXT}),
@@ -170,6 +178,7 @@ export const updateDID = async (options: UpdateDIDInterface): Promise<{did: stri
   if(!authKey) {
     throw new Error(`No auth key`);
   }
+  authKey.id = authKey.id ?? createVMID({...authKey, type: 'authentication'}, doc.id);
   const signedDoc = await signDocument(newDoc, authKey, logEntryHash);
   return {
     did,
@@ -238,7 +247,7 @@ export const signDocument = async (doc: any, vm: VerificationMethod, challenge: 
       '@context': 'https://w3id.org/security/multikey/v1',
       type: 'Multikey',
       controller: doc.id,
-      id: createVMID(vm, doc.id),
+      id: vm.id,
       publicKeyMultibase: vm.publicKeyMultibase,
       secretKeyMultibase: vm.secretKeyMultibase
     });
