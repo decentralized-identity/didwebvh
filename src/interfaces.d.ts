@@ -27,10 +27,11 @@ type DIDLogEntry = [
   logEntryHash: string,
   versionId: number,
   timestamp: string,
-  patch: DIDOperation[],
-  proof: any
+  params: {method?: string},
+  data: {value: any} | {path: DIDOperation[]},
+  proof?: any
 ];
-type DIDLog = (DIDLogHeader | DIDLogEntry)[];
+type DIDLog = DIDLogEntry[];
 
 interface ServiceEndpoint {
   id?: string;

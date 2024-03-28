@@ -20,7 +20,6 @@ import { error } from "elysia";
 export const PLACEHOLDER = "{{SCID}}";
 export const METHOD = "tdw";
 export const PROTOCOL = `did:${METHOD}:1`;
-export const LOG_FORMAT = `history:1`;
 
 const CONTEXT = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1"];
 const {purposes: {AuthenticationProofPurpose}} = jsigs;
@@ -37,24 +36,25 @@ export const createLogEntryHash = async (input: any): Promise<{logEntryHash: str
 
 export const createDID = async (options: CreateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {
   let {doc} = await createDIDDoc(options);
-
-  const {logEntryHash} = await createLogEntryHash(doc);
-  const {scid} = await createSCID(logEntryHash);
-  const logHeader: DIDLogHeader = [LOG_FORMAT, PROTOCOL, scid, {}];
-  doc = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, scid));
+  const {logEntryHash: genesisDocHash} = await createLogEntryHash(doc);
+  const {scid} = await createSCID(genesisDocHash);
+  doc = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, `did:${METHOD}:${scid}`));
+  doc.id = `did:${METHOD}:${scid}`;
+  doc.controller = doc.id;
+  const logEntry: DIDLogEntry = [
+    genesisDocHash,
+    1,
+    (new Date).toISOString().slice(0,-5)+'Z',
+    {method: PROTOCOL},
+    {value: doc}
+  ]
+  const {logEntryHash} = await createLogEntryHash(logEntry)
   const authKey = options.VMs?.find(vm => vm.type === 'authentication');
   if (!authKey) {
     throw new Error('Auth key not supplied')
   }
-  const patch = jsonpatch.compare({}, doc);
   const signedDoc = await signDocument(doc, authKey, logEntryHash);
-  const logEntry: DIDLogEntry = [
-    logEntryHash,
-    1,
-    (new Date).toISOString().slice(0,-5)+'Z',
-    patch,
-    signedDoc.proof
-  ];
+  logEntry.push(signedDoc.proof);
   return {
     did: doc.id!,
     doc,
@@ -64,21 +64,22 @@ export const createDID = async (options: CreateDIDInterface): Promise<{did: stri
       updated: logEntry[2]
     },
     log: [
-      logHeader,
       logEntry
     ]
   }
 }
 
 export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: DIDDoc}> => {
-  const {all} = normalizeVMs(`did:${METHOD}:${PLACEHOLDER}`, options.VMs);
+  const {all} = normalizeVMs(options.VMs, PLACEHOLDER);
+  const did = `did:${METHOD}:${PLACEHOLDER}`;
   return {
     doc: {
       "@context": [
         "https://www.w3.org/ns/did/v1",
         "https://w3id.org/security/multikey/v1"
       ],
-      id: `did:${METHOD}:${PLACEHOLDER}`,
+      id: did,
+      controller: did,
       ...all
     }
   };
@@ -86,10 +87,7 @@ export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: D
 
 export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, meta: any}> => {
   const resolutionLog = clone(log);
-  const [logFormat, protocol, scid, extensions] = (resolutionLog as any).shift();
-  if(logFormat !== LOG_FORMAT) {
-    throw new Error(`'${logFormat}' log format unknown.`);
-  }
+  const protocol = resolutionLog[0][3].method;
   if(protocol !== PROTOCOL) {
     throw new Error(`'${protocol}' protocol unknown.`);
   }
@@ -100,48 +98,47 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
   let updated = '';
   let previousLogEntryHash = '';
   for (const entry of resolutionLog) {
-    // versionId
     if (entry[1] !== versionId + 1) {
       throw new Error(`versionId '${entry[1]}' in log doesn't match expected '${versionId}'.`);
     }
     versionId = entry[1];
-
-    // created & updated
     if (entry[2]) {
       // TODO check timestamps make sense
     }
     updated = entry[2];
-    if(versionId === 1) {
-      created = entry[2];
-    }
 
     // doc patches & proof
-    const newDoc = jsonpatch.applyPatch(doc, entry[3], false, false).newDocument;
+    let newDoc;
     if (versionId === 1) {
+      created = entry[2];
+      newDoc = entry[4].value;
       did = newDoc.id;
-      if (did.split(':').at(-1) !== scid) {
-        throw new Error(`SCID '${scid}' not found in DID '${did}'`);
-      }
       const {logEntryHash} = await createLogEntryHash(
-        JSON.parse(JSON.stringify(newDoc).replaceAll(scid, PLACEHOLDER))
+        JSON.parse(JSON.stringify(newDoc).replaceAll(did, PLACEHOLDER))
       );
+      const {scid} = await createSCID(logEntryHash);
       previousLogEntryHash = logEntryHash;
       if (!logEntryHash.includes(scid)) {
         throw new Error(`SCID '${scid}' not found in logEntryHash '${logEntryHash}'`);
       }
-      const authKey = newDoc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[4].verificationMethod);
-      const result = await isDocumentStateValid(authKey, {...newDoc, proof: entry[4]}, newDoc);
+      const authKey = newDoc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[5].verificationMethod);
+      const result = await isDocumentStateValid(authKey, {...newDoc, proof: entry[5]}, newDoc);
       if (!result.verified) {
         throw new Error(`version ${versionId} failed verification of the proof.`, {cause: result})
       }
     } else {
-      const {logEntryHash} = await createLogEntryHash([previousLogEntryHash, entry[1], entry[2], entry[3]]);
+      if (Object.keys(entry[4]).some((k: string) => k === 'value')) {
+        newDoc = entry[4].value;
+      } else {
+        newDoc = jsonpatch.applyPatch(doc, entry[4].patch, false, false).newDocument;
+      }
+      const {logEntryHash} = await createLogEntryHash([previousLogEntryHash, entry[1], entry[2], entry[3], entry[4]]);
       previousLogEntryHash = logEntryHash;
       if (logEntryHash !== entry[0]) {
         throw new Error(`Hash chain broken at '${versionId}'`);
       }
-      const authKey = doc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[4].verificationMethod);
-      const result = await isDocumentStateValid(authKey, {...newDoc, proof: entry[4]}, doc);
+      const authKey = doc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[5].verificationMethod);
+      const result = await isDocumentStateValid(authKey, {...newDoc, proof: entry[5]}, doc);
       if (!result.verified) {
         throw new Error(`version ${versionId} failed verification of the proof.`, {cause: {result, currentDoc: doc}})
       }
@@ -154,10 +151,11 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
 export const updateDID = async (options: UpdateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {
   const {log, authKey, context, vms, services, alsoKnownAs} = options;
   let {did, doc, meta} = await resolveDID(log);
-  const {all} = normalizeVMs(did, vms);
+  const {all} = normalizeVMs(vms, did);
   const newDoc = {
     ...(context ? {'@context': Array.from(new Set([...CONTEXT, ...context]))} : {'@context': CONTEXT}),
     id: did,
+    controller: doc.controller,
     ...all,
     ...(services ? {service: services} : {}),
     ...(alsoKnownAs ? {alsoKnownAs} : {})
@@ -165,7 +163,7 @@ export const updateDID = async (options: UpdateDIDInterface): Promise<{did: stri
   meta.versionId++;
   meta.updated = (new Date).toISOString().slice(0,-5)+'Z';
   const patch = jsonpatch.compare(doc, newDoc);
-  const logEntry = [meta.previousLogEntryHash, meta.versionId, meta.updated, clone(patch)];
+  const logEntry = [meta.previousLogEntryHash, meta.versionId, meta.updated, {}, {patch: clone(patch)}];
   const {logEntryHash} = await createLogEntryHash(logEntry);
   if(!authKey) {
     throw new Error(`No auth key`);
@@ -182,45 +180,45 @@ export const updateDID = async (options: UpdateDIDInterface): Promise<{did: stri
     },
     log: [
       ...clone(log),
-      [logEntryHash, meta.versionId, meta.updated, patch, signedDoc.proof]
+      [logEntryHash, meta.versionId, meta.updated, {}, {patch: clone(patch)}, signedDoc.proof]
     ]
   };
 }
 
-export const normalizeVMs = (did: string, verificationMethod: VerificationMethod[] | undefined) => {
+export const normalizeVMs = (verificationMethod: VerificationMethod[] | undefined, did: string | null = null) => {
   if (!verificationMethod) {
     return {};
   }
   const all: any = {};
   const authentication = verificationMethod
-    ?.filter(vm => vm.type === 'authentication').map(vm => createVMID(did, vm))
+    ?.filter(vm => vm.type === 'authentication').map(vm => createVMID(vm, did))
   if (authentication && authentication?.length > 0) {
     all.authentication = authentication;
   }
   const assertionMethod = verificationMethod
-    ?.filter(vm => vm.type === 'assertionMethod').map(vm => createVMID(did, vm))
+    ?.filter(vm => vm.type === 'assertionMethod').map(vm => createVMID(vm, did))
   if (assertionMethod && assertionMethod?.length > 0) {
     all.assertionMethod = assertionMethod;
   }
   const keyAgreement = verificationMethod
-    ?.filter(vm => vm.type === 'keyAgreement').map(vm => createVMID(did, vm));
+    ?.filter(vm => vm.type === 'keyAgreement').map(vm => createVMID(vm, did));
   if (keyAgreement && keyAgreement?.length > 0) {
     all.keyAgreement = keyAgreement;
   }
   const capabilityDelegation = verificationMethod
-    ?.filter(vm => vm.type === 'capabilityDelegation').map(vm => createVMID(did, vm));
+    ?.filter(vm => vm.type === 'capabilityDelegation').map(vm => createVMID(vm, did));
   if (capabilityDelegation && capabilityDelegation?.length > 0) {
     all.capabilityDelegation = capabilityDelegation;
   }
   const capabilityInvocation = verificationMethod
-  ?.filter(vm => vm.type === 'capabilityInvocation').map(vm => createVMID(did, vm));
+  ?.filter(vm => vm.type === 'capabilityInvocation').map(vm => createVMID(vm, did));
   if (capabilityInvocation && capabilityInvocation?.length > 0) {
     all.capabilityInvocation = capabilityInvocation;
   }
   if(verificationMethod && verificationMethod.length > 0) {
     all.verificationMethod = verificationMethod?.map(vm => ({
-      id: createVMID(did, vm),
-      controller: did,
+      id: createVMID(vm, did),
+      ...(did ? {controller: did} : {}),
       type: 'Multikey',
       publicKeyMultibase: vm.publicKeyMultibase
     }))
@@ -228,8 +226,8 @@ export const normalizeVMs = (did: string, verificationMethod: VerificationMethod
   return {all};
 }
 
-export const createVMID = (did: string, vm: VerificationMethod) => {
-  return `${did}#${vm.publicKeyMultibase?.slice(-8) || nanoid(8)}`
+export const createVMID = (vm: VerificationMethod, did: string | null) => {
+  return `${did ?? ''}#${vm.publicKeyMultibase?.slice(-8) || nanoid(8)}`
 }
 
 export const signDocument = async (doc: any, vm: VerificationMethod, challenge: string) => {
@@ -238,7 +236,7 @@ export const signDocument = async (doc: any, vm: VerificationMethod, challenge: 
       '@context': 'https://w3id.org/security/multikey/v1',
       type: 'Multikey',
       controller: doc.id,
-      id: createVMID(doc.id, vm),
+      id: createVMID(vm, doc.id),
       publicKeyMultibase: vm.publicKeyMultibase,
       secretKeyMultibase: vm.secretKeyMultibase
     });

@@ -1,5 +1,5 @@
 import { test, expect, beforeAll } from "bun:test";
-import { createDID, LOG_FORMAT, PROTOCOL, resolveDID, updateDID } from "../src/method";
+import { createDID, METHOD, PROTOCOL, resolveDID, updateDID } from "../src/method";
 import fs from 'node:fs';
 import { readLogFromDisk, readKeysFromDisk } from "./utils";
 
@@ -61,17 +61,11 @@ test("Create DID (2 keys)", async () => {
   expect(newDID.split(':').at(-1)?.length).toBe(24);
   expect(newDoc.verificationMethod.length).toBe(2);
   expect(newDoc.id).toBe(newDID);
-  expect(newLog.length).toBe(2);
+  expect(newLog.length).toBe(1);
   
-  // header
-  expect(newLog[0][0]).toBe(LOG_FORMAT as any);
-  expect(newLog[0][1]).toBe(PROTOCOL as any);
-  expect(newLog[0][2]).toBe(newDID.split(':').at(-1) as any);
-
-  // entry
-  expect(newLog[1][1]).toBe(meta.versionId);
-  expect(newLog[1][2]).toBe(meta.created);
-  expect(Object.entries(newLog[1][3]).length).toBe(5);
+  expect(newLog[0][1]).toBe(meta.versionId);
+  expect(newLog[0][2]).toBe(meta.created);
+  expect(newLog[0][3].method).toBe(`did:${METHOD}:1`);
 
   writeFilesToDisk(newLog, newDoc, 1);
 });
@@ -119,7 +113,7 @@ test("Resolve DID", async () => {
 
 test("Update DID (3 keys, 2 services)", async () => {
   const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
-  const didLog = readLogFromDisk(logFilePath(did.split(':').at(-1)!));
+  const didLog = readLogFromDisk(logFile);
   const {doc} = await resolveDID(didLog);
 
   const {did: updatedDID, doc: updatedDoc, meta, log: updatedLog} =

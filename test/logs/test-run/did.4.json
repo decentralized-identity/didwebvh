@@ -1,51 +1,51 @@
 {
   "@context": [
-    "https://identity.foundation/linked-vp/contexts/v1",
     "https://www.w3.org/ns/did/v1",
     "https://w3id.org/security/multikey/v1",
-    "https://didcomm.org/messaging/v2",
-    "https://w3id.org/security/data-integrity/v2"
+    "https://identity.foundation/linked-vp/contexts/v1",
+    "https://didcomm.org/messaging/v2"
   ],
-  "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+  "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+  "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
   "authentication": [
-    "did:tdw:34YXd7K684HBpPPBJfBDBV2E#9vYyiXiJ"
+    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#9vYyiXiJ"
   ],
   "assertionMethod": [
-    "did:tdw:34YXd7K684HBpPPBJfBDBV2E#kkHS31Z4"
+    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#kkHS31Z4"
   ],
   "keyAgreement": [
-    "did:tdw:34YXd7K684HBpPPBJfBDBV2E#CAHUs8cU"
+    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CAHUs8cU"
   ],
   "verificationMethod": [
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#9vYyiXiJ",
-      "controller": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#9vYyiXiJ",
+      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
       "type": "Multikey",
       "publicKeyMultibase": "z6Mkr2D4ixckmQx8tAVvXEhMuaMhzahxe61qJt7G9vYyiXiJ"
     },
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#kkHS31Z4",
-      "controller": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#kkHS31Z4",
+      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
       "type": "Multikey",
       "publicKeyMultibase": "z6MkjnDzaWSBfQFmzyPvhcaABbEBQiuCBRdyQNq5kkHS31Z4"
     },
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#CAHUs8cU",
-      "controller": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CAHUs8cU",
+      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
       "type": "Multikey",
       "publicKeyMultibase": "z6LSh1TgaytstJw2EnB8gRTZjJaHRVrUQ9K3SAofCAHUs8cU"
     }
   ],
   "service": [
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#whois",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#whois",
       "type": "LinkedVerifiablePresentation",
       "serviceEndpoint": [
-        "https://example.com/docs/did:tdw:34YXd7K684HBpPPBJfBDBV2E/whois.json"
+        "https://example.com/docs/did:tdw:brbKTbftpLNdQHBwbtWC2b9r/whois.json"
       ]
     },
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#didcomm",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#didcomm",
       "type": "DIDCommMessaging",
       "serviceEndpoint": {
         "uri": "https://example.com/didcomm",
@@ -61,14 +61,5 @@
   ],
   "alsoKnownAs": [
     "did:web:example.com"
-  ],
-  "proof": {
-    "type": "DataIntegrityProof",
-    "created": "2024-03-27T05:20:42Z",
-    "verificationMethod": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#gJqvqaYD",
-    "cryptosuite": "eddsa-2022",
-    "proofPurpose": "authentication",
-    "challenge": "z4ExTJeLH35FFmB9FGJ1VNjbAwH3Mhstjc9gL7eJEhAqa",
-    "proofValue": "z27xcQoDhidQoi1rthncC41Yd3ouwFTVLvjwPyKi2a2ZeZCxCPR7RAVPNQKoi5EVhun3RenTJRfgGKiBhAcVuV46M"
-  }
+  ]
 }

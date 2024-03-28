@@ -3,23 +3,24 @@
     "https://www.w3.org/ns/did/v1",
     "https://w3id.org/security/multikey/v1"
   ],
-  "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+  "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+  "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
   "authentication": [
-    "did:tdw:34YXd7K684HBpPPBJfBDBV2E#FFhXVfsx"
+    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#FFhXVfsx"
   ],
   "assertionMethod": [
-    "did:tdw:34YXd7K684HBpPPBJfBDBV2E#CPixwJ8x"
+    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CPixwJ8x"
   ],
   "verificationMethod": [
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#FFhXVfsx",
-      "controller": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#FFhXVfsx",
+      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
       "type": "Multikey",
       "publicKeyMultibase": "z6MkkXKMSiE7mXvGcR2KUpeJXwT7MPXZSBC6HZw9FFhXVfsx"
     },
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#CPixwJ8x",
-      "controller": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CPixwJ8x",
+      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
       "type": "Multikey",
       "publicKeyMultibase": "z6Mkg8FdKNRt4NLXm5YSUZVGWzK8vvS3DJByxAqHCPixwJ8x"
     }

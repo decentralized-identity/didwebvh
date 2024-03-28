@@ -1,47 +1,38 @@
 {
   "@context": [
-    "https://identity.foundation/linked-vp/contexts/v1",
     "https://www.w3.org/ns/did/v1",
     "https://w3id.org/security/multikey/v1",
-    "https://w3id.org/security/data-integrity/v2"
+    "https://identity.foundation/linked-vp/contexts/v1"
   ],
-  "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+  "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+  "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
   "authentication": [
-    "did:tdw:34YXd7K684HBpPPBJfBDBV2E#5b48Zj6B"
+    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#5b48Zj6B"
   ],
   "assertionMethod": [
-    "did:tdw:34YXd7K684HBpPPBJfBDBV2E#CpsUrTh3"
+    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CpsUrTh3"
   ],
   "verificationMethod": [
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#5b48Zj6B",
-      "controller": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#5b48Zj6B",
+      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
       "type": "Multikey",
       "publicKeyMultibase": "z6Mkw1KSvGWNAwSwWbcpwPgFARX4vKPa1xvcDMsJ5b48Zj6B"
     },
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#CpsUrTh3",
-      "controller": "did:tdw:34YXd7K684HBpPPBJfBDBV2E",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CpsUrTh3",
+      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
       "type": "Multikey",
       "publicKeyMultibase": "z6MkuocstfAaHsJgRnQgfQdtJiECuWEMDAbQV61aCpsUrTh3"
     }
   ],
   "service": [
     {
-      "id": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#whois",
+      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#whois",
       "type": "LinkedVerifiablePresentation",
       "serviceEndpoint": [
-        "https://example.com/docs/did:tdw:34YXd7K684HBpPPBJfBDBV2E/whois.json"
+        "https://example.com/docs/did:tdw:brbKTbftpLNdQHBwbtWC2b9r/whois.json"
       ]
     }
-  ],
-  "proof": {
-    "type": "DataIntegrityProof",
-    "created": "2024-03-27T05:20:42Z",
-    "verificationMethod": "did:tdw:34YXd7K684HBpPPBJfBDBV2E#FFhXVfsx",
-    "cryptosuite": "eddsa-2022",
-    "proofPurpose": "authentication",
-    "challenge": "zDz1PFr6yx4FmoQPLEGQe3Y6v6DBr47GiPaSCzEVsLJg8",
-    "proofValue": "z272UgikVvR8SxZYGSoANDg5LR2bfvvLLgfFjeTh4npDrtJaaBurB82pKhDcph4puKTh237QJ21wmmD1WGJQzfgNq"
-  }
+  ]
 }
