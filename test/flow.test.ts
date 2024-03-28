@@ -33,7 +33,7 @@ const writeFilesToDisk = (_log: DIDLog, _doc: any, version: number) => {
 const testResolveVersion = async (versionId: number) => {
   const log = readLogFromDisk(logFile);
   const {did: resolvedDID, doc: resolvedDoc, meta} = await resolveDID(log);
-  
+
   if(verboseMode) {
     console.log(`Resolved DID Document: ${versionId}`, resolvedDID, resolvedDoc);
   }
@@ -49,14 +49,19 @@ beforeAll(async () => {
   currentAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
 });
 
-test("Create DID (2 keys)", async () => {
-  const {did: newDID, doc: newDoc, meta, log: newLog} = await createDID({VMs: [
-    currentAuthKey!,
-    {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
-  ]});
+test("Create DID (2 keys + domain)", async () => {
+  const {did: newDID, doc: newDoc, meta, log: newLog} = await createDID({
+    domain: 'example.com',
+    VMs: [
+      currentAuthKey!,
+      {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
+    ]});
   did = newDID;
+  currentAuthKey!.controller = did;
+  currentAuthKey!.id = createVMID(currentAuthKey!, did);
 
-  expect(newDID.split(':').length).toBe(3);
+  expect(newDID).toContain('example.com');
+  expect(newDID.split(':').length).toBe(4);
   expect(newDID.split(':').at(-1)?.length).toBe(24);
   expect(newDoc.verificationMethod.length).toBe(2);
   expect(newDoc.id).toBe(newDID);
@@ -73,7 +78,7 @@ test("Resolve DID", async () => {
   await testResolveVersion(1);
 });
 
-test("Update DID (2 keys, 1 service, add domain)", async () => {
+test("Update DID (2 keys, 1 service, change domain)", async () => {
   const nextAuthKey = {type: 'authentication', ...availableKeys.ed25519.shift()};
   const didLog = readLogFromDisk(logFile);
   const context = ["https://identity.foundation/linked-vp/contexts/v1"];
@@ -83,7 +88,7 @@ test("Update DID (2 keys, 1 service, add domain)", async () => {
       log: didLog,
       authKey: currentAuthKey!,
       context,
-      domain: 'example.com',
+      domain: 'migrated.example.com',
       vms: [
         nextAuthKey,
         {type: 'assertionMethod', ...availableKeys.ed25519.shift()},
@@ -96,7 +101,8 @@ test("Update DID (2 keys, 1 service, add domain)", async () => {
         }
       ]
     });
-  expect(updatedDID).toContain('example.com');
+
+  expect(updatedDID).toContain('migrated.example.com');
   expect(updatedDoc.service.length).toBe(1);
   expect(updatedDoc.service[0].id).toBe(`${did}#whois`);
   expect(updatedDoc.service[0].type).toBe('LinkedVerifiablePresentation');

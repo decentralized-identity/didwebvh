@@ -35,12 +35,11 @@ export const deriveHash = async (input: any): Promise<{logEntryHash: string}> =>
 }
 
 export const createDID = async (options: CreateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {
-  let {doc} = await createDIDDoc({...options, controller: `did:${METHOD}:${PLACEHOLDER}`});
+  const controller = `did:${METHOD}:${options.domain}:${PLACEHOLDER}`
+  let {doc} = await createDIDDoc({...options, controller});
   const {logEntryHash: genesisDocHash} = await deriveHash(doc);
   const {scid} = await createSCID(genesisDocHash);
   doc = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, scid));
-  doc.id = `did:${METHOD}:${scid}`;
-  doc.controller = doc.id;
   const logEntry: DIDLogEntry = [
     genesisDocHash,
     1,
@@ -54,7 +53,7 @@ export const createDID = async (options: CreateDIDInterface): Promise<{did: stri
   if (!authKey) {
     throw new Error('Auth key not supplied')
   }
-  authKey.id = createVMID({...authKey, type: 'authentication'}, doc.id);
+  authKey.id = createVMID({...authKey, type: 'authentication'}, doc.id!);
   const signedDoc = await signDocument(doc, {...authKey, type: 'authentication'}, logEntryHash);
   logEntry.push(signedDoc.proof);
   return {
@@ -262,7 +261,7 @@ export const signDocument = async (doc: any, vm: VerificationMethod, challenge: 
     });
     return signedDoc;
   } catch (e: any) {
-    console.error(e.details)
+    console.error(e)
     throw new Error(`Document signing failure: ${e.details}`)
   }
 }

@@ -50,6 +50,7 @@ interface VerificationMethod {
 }
 
 interface CreateDIDInterface {
+  domain: string;
   controller?: string;
   context?: string | string[];
   VMs?: VerificationMethod[];
