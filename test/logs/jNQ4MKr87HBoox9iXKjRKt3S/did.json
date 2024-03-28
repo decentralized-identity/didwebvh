@@ -5,47 +5,47 @@
     "https://identity.foundation/linked-vp/contexts/v1",
     "https://didcomm.org/messaging/v2"
   ],
-  "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+  "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  "controller": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
   "authentication": [
-    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#9vYyiXiJ"
+    "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#9vYyiXiJ"
   ],
   "assertionMethod": [
-    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#kkHS31Z4"
+    "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#kkHS31Z4"
   ],
   "keyAgreement": [
-    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CAHUs8cU"
+    "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CAHUs8cU"
   ],
   "verificationMethod": [
     {
-      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#9vYyiXiJ",
-      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#9vYyiXiJ",
+      "controller": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       "type": "Multikey",
       "publicKeyMultibase": "z6Mkr2D4ixckmQx8tAVvXEhMuaMhzahxe61qJt7G9vYyiXiJ"
     },
     {
-      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#kkHS31Z4",
-      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#kkHS31Z4",
+      "controller": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       "type": "Multikey",
       "publicKeyMultibase": "z6MkjnDzaWSBfQFmzyPvhcaABbEBQiuCBRdyQNq5kkHS31Z4"
     },
     {
-      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CAHUs8cU",
-      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CAHUs8cU",
+      "controller": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       "type": "Multikey",
       "publicKeyMultibase": "z6LSh1TgaytstJw2EnB8gRTZjJaHRVrUQ9K3SAofCAHUs8cU"
     }
   ],
   "service": [
     {
-      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#whois",
+      "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#whois",
       "type": "LinkedVerifiablePresentation",
       "serviceEndpoint": [
-        "https://example.com/docs/did:tdw:brbKTbftpLNdQHBwbtWC2b9r/whois.json"
+        "https://example.com/docs/did:tdw:jNQ4MKr87HBoox9iXKjRKt3S/whois.json"
       ]
     },
     {
-      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#didcomm",
+      "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#didcomm",
       "type": "DIDCommMessaging",
       "serviceEndpoint": {
         "uri": "https://example.com/didcomm",

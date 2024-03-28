@@ -27,7 +27,7 @@ type DIDLogEntry = [
   logEntryHash: string,
   versionId: number,
   timestamp: string,
-  params: {method?: string},
+  params: {method?: string, scid?: string},
   data: {value: any} | {path: DIDOperation[]},
   proof?: any
 ];

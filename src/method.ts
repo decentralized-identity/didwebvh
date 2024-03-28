@@ -28,27 +28,28 @@ export const createSCID = async (logEntryHash: string): Promise<{scid: string}> 
   return {scid: `${logEntryHash.slice(-24)}`};
 }
 
-export const createLogEntryHash = async (input: any): Promise<{logEntryHash: string}> => {
+export const deriveHash = async (input: any): Promise<{logEntryHash: string}> => {
   const data = canonicalize(input);
   const hash = await sha256.digest(Buffer.from(data));
   return {logEntryHash: base58btc.encode(hash.digest)};
 }
 
 export const createDID = async (options: CreateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {
-  let {doc} = await createDIDDoc(options);
-  const {logEntryHash: genesisDocHash} = await createLogEntryHash(doc);
+  let {doc} = await createDIDDoc({...options, controller: `did:${METHOD}:${PLACEHOLDER}`});
+  const {logEntryHash: genesisDocHash} = await deriveHash(doc);
   const {scid} = await createSCID(genesisDocHash);
-  doc = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, `did:${METHOD}:${scid}`));
+  doc = JSON.parse(JSON.stringify(doc).replaceAll(PLACEHOLDER, scid));
   doc.id = `did:${METHOD}:${scid}`;
   doc.controller = doc.id;
   const logEntry: DIDLogEntry = [
     genesisDocHash,
     1,
     (new Date).toISOString().slice(0,-5)+'Z',
-    {method: PROTOCOL},
+    {method: PROTOCOL, scid},
     {value: doc}
   ]
-  const {logEntryHash} = await createLogEntryHash(logEntry)
+  const {logEntryHash} = await deriveHash(logEntry);
+  logEntry[0] = logEntryHash;
   const authKey = options.VMs?.find(vm => vm.type === 'authentication');
   if (!authKey) {
     throw new Error('Auth key not supplied')
@@ -70,16 +71,16 @@ export const createDID = async (options: CreateDIDInterface): Promise<{did: stri
 }
 
 export const createDIDDoc = async (options: CreateDIDInterface): Promise<{doc: DIDDoc}> => {
-  const {all} = normalizeVMs(options.VMs, PLACEHOLDER);
-  const did = `did:${METHOD}:${PLACEHOLDER}`;
+  const {controller} = options;
+  const {all} = normalizeVMs(options.VMs, controller);
   return {
     doc: {
       "@context": [
         "https://www.w3.org/ns/did/v1",
         "https://w3id.org/security/multikey/v1"
       ],
-      id: did,
-      controller: did,
+      id: controller,
+      controller,
       ...all
     }
   };
@@ -113,13 +114,14 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
       created = entry[2];
       newDoc = entry[4].value;
       did = newDoc.id;
-      const {logEntryHash} = await createLogEntryHash(
-        JSON.parse(JSON.stringify(newDoc).replaceAll(did, PLACEHOLDER))
+      const {scid} = entry[3];
+      const {logEntryHash} = await deriveHash(
+        JSON.parse(JSON.stringify(newDoc).replaceAll(scid, PLACEHOLDER))
       );
-      const {scid} = await createSCID(logEntryHash);
+      const {scid: derivedScid} = await createSCID(logEntryHash);
       previousLogEntryHash = logEntryHash;
-      if (!logEntryHash.includes(scid)) {
-        throw new Error(`SCID '${scid}' not found in logEntryHash '${logEntryHash}'`);
+      if (scid !== derivedScid) {
+        throw new Error(`SCID '${scid}' not derived from logEntryHash '${logEntryHash}' (scid ${derivedScid})`);
       }
       const authKey = newDoc.verificationMethod.find((vm: VerificationMethod) => vm.id === entry[5].verificationMethod);
       const result = await isDocumentStateValid(authKey, {...newDoc, proof: entry[5]}, newDoc);
@@ -132,7 +134,7 @@ export const resolveDID = async (log: DIDLog): Promise<{did: string, doc: any, m
       } else {
         newDoc = jsonpatch.applyPatch(doc, entry[4].patch, false, false).newDocument;
       }
-      const {logEntryHash} = await createLogEntryHash([previousLogEntryHash, entry[1], entry[2], entry[3], entry[4]]);
+      const {logEntryHash} = await deriveHash([previousLogEntryHash, entry[1], entry[2], entry[3], entry[4]]);
       previousLogEntryHash = logEntryHash;
       if (logEntryHash !== entry[0]) {
         throw new Error(`Hash chain broken at '${versionId}'`);
@@ -164,7 +166,7 @@ export const updateDID = async (options: UpdateDIDInterface): Promise<{did: stri
   meta.updated = (new Date).toISOString().slice(0,-5)+'Z';
   const patch = jsonpatch.compare(doc, newDoc);
   const logEntry = [meta.previousLogEntryHash, meta.versionId, meta.updated, {}, {patch: clone(patch)}];
-  const {logEntryHash} = await createLogEntryHash(logEntry);
+  const {logEntryHash} = await deriveHash(logEntry);
   if(!authKey) {
     throw new Error(`No auth key`);
   }

@@ -4,34 +4,34 @@
     "https://w3id.org/security/multikey/v1",
     "https://identity.foundation/linked-vp/contexts/v1"
   ],
-  "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+  "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  "controller": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
   "authentication": [
-    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#5b48Zj6B"
+    "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#5b48Zj6B"
   ],
   "assertionMethod": [
-    "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CpsUrTh3"
+    "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CpsUrTh3"
   ],
   "verificationMethod": [
     {
-      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#5b48Zj6B",
-      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#5b48Zj6B",
+      "controller": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       "type": "Multikey",
       "publicKeyMultibase": "z6Mkw1KSvGWNAwSwWbcpwPgFARX4vKPa1xvcDMsJ5b48Zj6B"
     },
     {
-      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CpsUrTh3",
-      "controller": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CpsUrTh3",
+      "controller": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       "type": "Multikey",
       "publicKeyMultibase": "z6MkuocstfAaHsJgRnQgfQdtJiECuWEMDAbQV61aCpsUrTh3"
     }
   ],
   "service": [
     {
-      "id": "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#whois",
+      "id": "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#whois",
       "type": "LinkedVerifiablePresentation",
       "serviceEndpoint": [
-        "https://example.com/docs/did:tdw:brbKTbftpLNdQHBwbtWC2b9r/whois.json"
+        "https://example.com/docs/did:tdw:jNQ4MKr87HBoox9iXKjRKt3S/whois.json"
       ]
     }
   ]

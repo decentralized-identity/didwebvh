@@ -1,96 +1,96 @@
 bun test v1.0.26 (c75e768a)
 
 test/flow.test.ts:
-(pass) Create DID (2 keys) [14.80ms]
+(pass) Create DID (2 keys) [12.87ms]
 Resolved DID Document: 1 {
   "@context": [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1"
   ],
-  id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  authentication: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#FFhXVfsx" ],
-  assertionMethod: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CPixwJ8x" ],
+  id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  authentication: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#FFhXVfsx" ],
+  assertionMethod: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CPixwJ8x" ],
   verificationMethod: [
     {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#FFhXVfsx",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#FFhXVfsx",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6MkkXKMSiE7mXvGcR2KUpeJXwT7MPXZSBC6HZw9FFhXVfsx",
     }, {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CPixwJ8x",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CPixwJ8x",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6Mkg8FdKNRt4NLXm5YSUZVGWzK8vvS3DJByxAqHCPixwJ8x",
     }
   ],
 }
-(pass) Resolve DID [4.61ms]
-(pass) Update DID (2 keys, 1 service) [4.11ms]
+(pass) Resolve DID [5.22ms]
+(pass) Update DID (2 keys, 1 service) [4.70ms]
 Resolved DID Document: 2 {
   "@context": [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1",
     "https://identity.foundation/linked-vp/contexts/v1"
   ],
-  id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  authentication: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#5b48Zj6B" ],
-  assertionMethod: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CpsUrTh3" ],
+  id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  authentication: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#5b48Zj6B" ],
+  assertionMethod: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CpsUrTh3" ],
   verificationMethod: [
     {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#5b48Zj6B",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#5b48Zj6B",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6Mkw1KSvGWNAwSwWbcpwPgFARX4vKPa1xvcDMsJ5b48Zj6B",
     }, {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CpsUrTh3",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CpsUrTh3",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6MkuocstfAaHsJgRnQgfQdtJiECuWEMDAbQV61aCpsUrTh3",
     }
   ],
   service: [
     {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#whois",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#whois",
       type: "LinkedVerifiablePresentation",
-      serviceEndpoint: [ "https://example.com/docs/did:tdw:brbKTbftpLNdQHBwbtWC2b9r/whois.json"
+      serviceEndpoint: [ "https://example.com/docs/did:tdw:jNQ4MKr87HBoox9iXKjRKt3S/whois.json"
       ],
     }
   ],
 }
-(pass) Resolve DID [3.38ms]
-(pass) Update DID (3 keys, 2 services) [7.99ms]
+(pass) Resolve DID [3.49ms]
+(pass) Update DID (3 keys, 2 services) [7.00ms]
 Resolved DID Document: 3 {
   "@context": [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1",
     "https://identity.foundation/linked-vp/contexts/v1", "https://didcomm.org/messaging/v2"
   ],
-  id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  authentication: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#gJqvqaYD" ],
-  assertionMethod: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CZSeAWLE" ],
+  id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  authentication: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#gJqvqaYD" ],
+  assertionMethod: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CZSeAWLE" ],
   verificationMethod: [
     {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#gJqvqaYD",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#gJqvqaYD",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6MksNvDtgMutKMzjezRqj8JbYuCHNjHR5HBaF2ogJqvqaYD",
     }, {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CZSeAWLE",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CZSeAWLE",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6Mkq7Qoa2LCvLCUiq9W2J9vXH1ooDqSX2ehWGUzCZSeAWLE",
     }, {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#qnYZ6fWH",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#qnYZ6fWH",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6LSdYjdAE7ZY1Gh5VPAxDJdgbg45Lq6im3N9o6HqnYZ6fWH",
     }
   ],
   service: [
     {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#whois",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#whois",
       type: "LinkedVerifiablePresentation",
-      serviceEndpoint: [ "https://example.com/docs/did:tdw:brbKTbftpLNdQHBwbtWC2b9r/whois.json"
+      serviceEndpoint: [ "https://example.com/docs/did:tdw:jNQ4MKr87HBoox9iXKjRKt3S/whois.json"
       ],
     }, {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#didcomm",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#didcomm",
       type: "DIDCommMessaging",
       serviceEndpoint: {
         uri: "https://example.com/didcomm",
@@ -99,44 +99,44 @@ Resolved DID Document: 3 {
       },
     }
   ],
-  keyAgreement: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#qnYZ6fWH" ],
+  keyAgreement: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#qnYZ6fWH" ],
 }
-(pass) Resolve DID [5.80ms]
-(pass) Update DID (add alsoKnownAs) [6.26ms]
+(pass) Resolve DID [4.91ms]
+(pass) Update DID (add alsoKnownAs) [7.56ms]
 Resolved DID Document: 4 {
   "@context": [ "https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1",
     "https://identity.foundation/linked-vp/contexts/v1", "https://didcomm.org/messaging/v2"
   ],
-  id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
-  authentication: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#9vYyiXiJ" ],
-  assertionMethod: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#kkHS31Z4" ],
+  id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
+  authentication: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#9vYyiXiJ" ],
+  assertionMethod: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#kkHS31Z4" ],
   verificationMethod: [
     {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#9vYyiXiJ",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#9vYyiXiJ",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6Mkr2D4ixckmQx8tAVvXEhMuaMhzahxe61qJt7G9vYyiXiJ",
     }, {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#kkHS31Z4",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#kkHS31Z4",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6MkjnDzaWSBfQFmzyPvhcaABbEBQiuCBRdyQNq5kkHS31Z4",
     }, {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CAHUs8cU",
-      controller: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CAHUs8cU",
+      controller: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S",
       type: "Multikey",
       publicKeyMultibase: "z6LSh1TgaytstJw2EnB8gRTZjJaHRVrUQ9K3SAofCAHUs8cU",
     }
   ],
   service: [
     {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#whois",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#whois",
       type: "LinkedVerifiablePresentation",
-      serviceEndpoint: [ "https://example.com/docs/did:tdw:brbKTbftpLNdQHBwbtWC2b9r/whois.json"
+      serviceEndpoint: [ "https://example.com/docs/did:tdw:jNQ4MKr87HBoox9iXKjRKt3S/whois.json"
       ],
     }, {
-      id: "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#didcomm",
+      id: "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#didcomm",
       type: "DIDCommMessaging",
       serviceEndpoint: {
         uri: "https://example.com/didcomm",
@@ -145,15 +145,15 @@ Resolved DID Document: 4 {
       },
     }
   ],
-  keyAgreement: [ "did:tdw:brbKTbftpLNdQHBwbtWC2b9r#CAHUs8cU" ],
+  keyAgreement: [ "did:tdw:jNQ4MKr87HBoox9iXKjRKt3S#CAHUs8cU" ],
   alsoKnownAs: [ "did:web:example.com" ],
 }
-(pass) Resolve DID [2.89ms]
+(pass) Resolve DID [3.52ms]
 
 test/sad.test.ts:
-(pass) Update with wrong key fails resolution [4.75ms]
+(pass) Update with wrong key fails resolution [4.12ms]
 
  9 pass
  0 fail
  42 expect() calls
-Ran 9 tests across 2 files. [132.00ms]
+Ran 9 tests across 2 files. [237.00ms]
