@@ -25,8 +25,7 @@
     "@digitalbazaar/multikey-context": "^2.0.1",
     "@digitalbazaar/security-context": "^1.0.1",
     "@digitalbazaar/x25519-key-agreement-key-2020": "^3.0.1",
-    "@ipld/dag-json": "^10.2.0",
-    "chalk": "^5.3.0",
+    "base32": "^0.0.7",
     "credentials-context": "^2.0.0",
     "did-context": "^3.1.1",
     "ed25519-signature-2020-context": "^1.1.0",
@@ -36,7 +35,6 @@
     "jsonld": "^8.3.2",
     "jsonld-document-loader": "^2.0.0",
     "jsonld-signatures": "^11.2.1",
-    "multiformats": "^13.1.0",
     "nanoid": "^5.0.6"
   }
 }

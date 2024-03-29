@@ -5,57 +5,57 @@
     "https://identity.foundation/linked-vp/contexts/v1",
     "https://didcomm.org/messaging/v2"
   ],
-  "id": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe",
+  "id": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te",
   "controller": [
-    "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe",
+    "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te",
     "did:key:z6MkhoA3GQu8Sek1GFrMpmZNFxy2fSXVzzMggdndDuAWQAnf"
   ],
   "authentication": [
-    "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#4jDJpwPh",
-    "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#DuAWQAnf"
+    "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#4jDJpwPh",
+    "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#DuAWQAnf"
   ],
   "assertionMethod": [
-    "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#BgxQ25XL"
+    "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#BgxQ25XL"
   ],
   "keyAgreement": [
-    "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#p5GH9pb7"
+    "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#p5GH9pb7"
   ],
   "verificationMethod": [
     {
-      "id": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#4jDJpwPh",
-      "controller": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe",
+      "id": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#4jDJpwPh",
+      "controller": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te",
       "type": "Multikey",
       "publicKeyMultibase": "z6MkkmrDWT9n8rmAVfEvuyBFroc6RFNffAoycrLw4jDJpwPh"
     },
     {
-      "id": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#DuAWQAnf",
+      "id": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#DuAWQAnf",
       "controller": "did:key:z6MkhoA3GQu8Sek1GFrMpmZNFxy2fSXVzzMggdndDuAWQAnf",
       "type": "Multikey",
       "publicKeyMultibase": "z6MkhoA3GQu8Sek1GFrMpmZNFxy2fSXVzzMggdndDuAWQAnf"
     },
     {
-      "id": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#BgxQ25XL",
-      "controller": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe",
+      "id": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#BgxQ25XL",
+      "controller": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te",
       "type": "Multikey",
       "publicKeyMultibase": "z6MkhGC8KFeSQq8y7Jt2wUgyyTgwJAbMt16gKEwCBgxQ25XL"
     },
     {
-      "id": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#p5GH9pb7",
-      "controller": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe",
+      "id": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#p5GH9pb7",
+      "controller": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te",
       "type": "Multikey",
       "publicKeyMultibase": "z6LSrrmqwqyj27zSwHqzhEDbiYk3JbhHyzmnDPD4p5GH9pb7"
     }
   ],
   "service": [
     {
-      "id": "did:tdw:example.com:NE7K3W6mxrFYPjk6nGMobsDe#whois",
+      "id": "did:tdw:example.com:ke465curdwjzrrp5x5ut92te#whois",
       "type": "LinkedVerifiablePresentation",
       "serviceEndpoint": [
-        "https://example.com/docs/NE7K3W6mxrFYPjk6nGMobsDe/whois.json"
+        "https://example.com/docs/ke465curdwjzrrp5x5ut92te/whois.json"
       ]
     },
     {
-      "id": "did:tdw:migrated.example.com:NE7K3W6mxrFYPjk6nGMobsDe#didcomm",
+      "id": "did:tdw:migrated.example.com:ke465curdwjzrrp5x5ut92te#didcomm",
       "type": "DIDCommMessaging",
       "serviceEndpoint": {
         "uri": "https://example.com/didcomm",

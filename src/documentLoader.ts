@@ -1,10 +1,8 @@
-import jsonld from "jsonld";
 import didContext from 'did-context';
 import ed25519Ctx from 'ed25519-signature-2020-context';
 import secCtx from '@digitalbazaar/security-context';
 import multikeyContext from '@digitalbazaar/multikey-context';
 import dataIntegrityCtx from '@digitalbazaar/data-integrity-context';
-import {createHash} from 'node:crypto';
 import {JsonLdDocumentLoader} from 'jsonld-document-loader';
 
 export const jdl = new JsonLdDocumentLoader();
@@ -39,36 +37,3 @@ jdl.addStatic(`https://didcomm.org/messaging/v2`, {
 })
 
 export const documentLoader = jdl.build();
-
-export const hash = (input: string) => {
-  return createHash('sha256').update(input).digest();
-}
-
-export async function canonize(input: any) {
-  return await jsonld.canonize(input, {
-    algorithm: 'URDNA2015',
-    format: 'application/n-quads',
-    documentLoader,
-    useNative: false
-  });
-}
-
-export async function canonizeProof(proof: any) {
-  // `jws`,`signatureValue`,`proofValue` must not be included in the proof
-  const { jws, signatureValue, proofValue, ...rest } = proof;
-  return await canonize(rest);
-}
-
-export async function createVerifyData({ document, proof }: any) {
-  // concatenate hash of c14n proof options and hash of c14n document
-  if (!proof['@context']) {
-    proof['@context'] = document['@context']
-  }
-
-  const c14nProofOptions = await canonizeProof(proof);
-  const c14nDocument = await canonize(document);
-  const proofHash = hash(c14nProofOptions);
-  const docHash = hash(c14nDocument);
-  return Buffer.concat([proofHash, docHash]);
-}
-

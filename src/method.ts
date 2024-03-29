@@ -1,9 +1,6 @@
-import { documentLoader, jdl } from "./data-integrity";
+import { documentLoader, jdl } from "./documentLoader";
 
 import { nanoid } from 'nanoid';
-import { sha256 } from 'multiformats/hashes/sha2';
-import { base32 } from 'multiformats/bases/base32';
-import { CID } from 'multiformats/cid';
 import * as Ed25519Multikey from '@digitalbazaar/ed25519-multikey';
 import {DataIntegrityProof} from '@digitalbazaar/data-integrity';
 import { canonicalize } from 'json-canonicalize';
@@ -11,11 +8,9 @@ import * as jsonpatch from 'fast-json-patch/index.mjs';
 import {cryptosuite as eddsa2022CryptoSuite} from
   '@digitalbazaar/eddsa-2022-cryptosuite';
 import jsigs from 'jsonld-signatures';
-import chalk from "chalk";
-import { base58btc } from "multiformats/bases/base58";
-import fs from 'node:fs';
 import { clone } from "./utils";
-import { error } from "elysia";
+import base32 from 'base32';
+import {createHash} from 'node:crypto';
 
 export const PLACEHOLDER = "{{SCID}}";
 export const METHOD = "tdw";
@@ -25,13 +20,13 @@ const CONTEXT = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/mult
 const {purposes: {AuthenticationProofPurpose}} = jsigs;
 
 export const createSCID = async (logEntryHash: string): Promise<{scid: string}> => {
-  return {scid: `${logEntryHash.slice(-24)}`};
+  return {scid: `${logEntryHash.slice(0, 24)}`};
 }
 
 export const deriveHash = async (input: any): Promise<{logEntryHash: string}> => {
   const data = canonicalize(input);
-  const hash = await sha256.digest(Buffer.from(data));
-  return {logEntryHash: base58btc.encode(hash.digest)};
+  const hash = createHash('sha256').update(data).digest();
+  return {logEntryHash: base32.encode(hash)};
 }
 
 export const createDID = async (options: CreateDIDInterface): Promise<{did: string, doc: any, meta: any, log: DIDLog}> => {

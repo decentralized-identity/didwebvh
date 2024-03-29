@@ -11,3 +11,4 @@ declare module 'jsonld';
 declare module 'jsonld-document-loader';
 declare module 'jsonld-signatures';
 declare module 'fast-json-patch/index.mjs';
+declare module 'base32';
