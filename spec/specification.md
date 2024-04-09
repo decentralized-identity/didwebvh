@@ -498,9 +498,9 @@ changed to `whois.vp`.
 ```json
 {
    "@context": "https://identity.foundation/linked-vp/contexts/v1",
-   "id": `#whois`,
+   "id": "#whois",
    "type": "LinkedVerifiablePresentation",
-   "serviceEndpoint": `https://example.com/dids/<scid>/whois.json`]
+   "serviceEndpoint": "https://example.com/dids/<scid>/whois.json"
 }
 ```
 
@@ -546,9 +546,9 @@ Thus, the implicit service for DID `did:tdw:example.com:dids:<scid>` is:
 
 ```json
 {
-   "id": `#files`,
+   "id": "#files",
    "type": "relativeRef",
-   "serviceEndpoint": `https://example.com/dids/<scid>`]
+   "serviceEndpoint": "https://example.com/dids/<scid>"
 }
 ```
 
