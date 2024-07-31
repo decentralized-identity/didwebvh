@@ -4,22 +4,24 @@ Trust DID Web (`did:tdw`) is an enhancement to the `did:web` DID method,
 providing complementary web-based features that address `did:web`'s
 limitations. `did:tdw` features include:
 
-- Ongoing publishing of all DID Document (DIDDoc) versions for a DID instead of,
+- Ongoing publishing of all DID Document ([[ref: DIDDoc]]) versions for a DID instead of,
   or alongside a current `did:web` DID/DIDDoc.
 - The same DID-to-HTTPS transformation as `did:web`.
 - Supports the same [High Assurance DID-to-DNS] mechanism.
 - The ability to resolve the full history of the DID using a verifiable chain of
   updates to the [[ref: DIDDoc]] from genesis to deactivation.
-- A [[def: self-certifying identifier]] (SCID) for the DID that is globally
-  unique, embedded in the DID, and derived from the initial [[ref: DIDDoc]]. The SCID
-  enables [[ref: DID portability]], such as moving the DID's web location (and
-  so changing the DID string itself) while retaining a connection to the
-  predecessor DID(s) and the DID's verifiable history.
+- A [[def: self-certifying identifier]] (SCID) for the DID. The SCID, globally unique and
+  embedded in the DID, is derived from the initial [[ref: DIDDoc]]. It ensures the integrity
+  of the DID's history mitigating the risk of attackers creating a new object with
+  the same identifier.
+- An optional mechanism for enabling [[ref: DID portability]] via the [[ref: SCID]], allowing
+  the DID's web location to be moved and the DID string to be updated, both while retaining
+  a connection to the predecessor DID(s) and preserving the DID's verifiable history.  
 - [[ref: DIDDoc]] updates contain a proof signed by the controller(s) *authorized* to
   update the DID.
 - An optional mechanism for publishing "pre-rotation" keys to prevent the loss of
   control of a DID in cases where an active private key is compromised.
-- An optional mechanism for having collaborating "witnesses"
+- An optional mechanism for having collaborating [[ref: witnesses]]
   that approve of updates to the DID by the [[ref: DID Controller]] before publication.
 - DID URL path handling that defaults (but can be overridden) to automatically
   resolving `<did>/path/to/file` by using a comparable DID-to-HTTPS translation
