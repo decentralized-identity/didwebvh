@@ -55,7 +55,7 @@ when forced to change (such as when an organization is acquired by another,
 resulting in a change of domain names) and when changing DID hosting service
 providers.
 
-[[def: DID:web]]
+[[def: did:web]]
 
 ~ `DID:web` as described in the [W3C specification](https://w3c-ccg.github.io/did-method-web/) is
 a DID method that leverages the Domain Name System (DNS) to perform the DID operations. It is valued
