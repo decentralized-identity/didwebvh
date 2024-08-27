@@ -4,10 +4,11 @@ The spec repository for did:tdw -- Trust DID Web DID method.
 
 Read the spec: [https://bcgov.github.io/trustdidweb/](https://bcgov.github.io/trustdidweb/)
 
-Implementations available:
+Proof of concept implementations available:
 
 - Typescript: [https://github.com/bcgov/trustdidweb-ts](https://github.com/bcgov/trustdidweb-ts)
 - Python: [https://github.com/bcgov/trustdidweb-py](https://github.com/bcgov/trustdidweb-py)
+- Go: [https://github.com/nuts-foundation/trustdidweb-go](https://github.com/nuts-foundation/trustdidweb-go)
 
 ## Abstract
 

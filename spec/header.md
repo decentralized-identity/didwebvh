@@ -15,6 +15,7 @@ Trust DID Web - `did:tdw`
 ~ [Brian Richter](https://github.com/brianorwhatever)
 ~ [Michel Sahli](https://github.com/bj-ms)
 ~ [Martina Kolpondinos](https://github.com/martipos)
+~ [Dmitri Zagdulin](https://github.com/dmitrizagidulin)
 
 **Participate:**
 ~ [GitHub repo](https://github.com/bcgov/trustdidweb)
@@ -22,7 +23,12 @@ Trust DID Web - `did:tdw`
 ~ [Commit history](https://github.com/bcgov/trustdidweb/commits/main)
 
 **Implementations:**
-~ [TypeScript](https://github.com/bcgov/trustdidweb-ts)
-~ [Python](https://github.com/bcgov/trustdidweb-py)
+~ [TypeScript]
+~ [Python]
+~ [Go]
+
+[TypeScript]: https://github.com/bcgov/trustdidweb-ts
+[Python]: https://github.com/bcgov/trustdidweb-py
+[Go]: https://github.com/nuts-foundation/trustdidweb-go
 
 ------------------------------------

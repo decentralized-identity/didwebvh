@@ -4,8 +4,9 @@
 
 Proof of concept implementations of `did:tdw` software for [[ref: DID Controllers]] and resolvers can be found here:
 
-- Typescript: [https://github.com/bcgov/trustdidweb-ts](https://github.com/bcgov/trustdidweb-ts)
-- Python: [https://github.com/bcgov/trustdidweb-py](https://github.com/bcgov/trustdidweb-py)
+- [Typescript]
+- [Python]
+- [Go]
 
 Both currently (as of 2024.04.11) support all of the features of the core `did:tdw` including [[ref: Key Pre-Rotation]]. Not yet supported is the the concept of [[ref: witnesses]].
 

@@ -115,7 +115,7 @@ proof of concept implementations. The specification/implementation interplay
 helped immensely in defining a practical, intuitive, straightforward, DID
 method. The existing proof of concept implementations of the `did:tdw` DID
 Method are listed in the [Implementors Guide](#Implementations). The current
-Typescript and Python implementations are each around 1500 lines of code.
+implementations range from around 1500 to 2000 lines of code.
 
 ### The `/whois` Use Case
 
