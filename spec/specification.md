@@ -225,8 +225,8 @@ Creating a `did:tdw` DID is done by carrying out the following steps.
 4. **Generate a preliminary DID Log Entry** (input JSON array)
    The [[ref: DID log entry]] is an input JSON array that when completed contains the following items:
    `[ versionId, versionTime, parameters, DIDDoc State, Data Integrity Proof ]`. When creating
-   (registering) the DID the first entry starts with the follows items for processing:
-   `[ "{SCID}", "<current time>", "parameters": [ <parameters>], { "value": "<DIDDoc with Placeholders>" } ]`
+   (registering) the DID the first entry starts with the following items for processing:
+   `[ "{SCID}", "<current time>", <parameters>, { "value": <DIDDoc with Placeholders> } ]`
 
    1. **Add a preliminary `versionId` value** 
    The first item in the input JSON array **MUST** be the placeholder string `{SCID}`.
