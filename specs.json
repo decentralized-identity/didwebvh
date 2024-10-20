@@ -24,8 +24,22 @@
       "katex": true,
       "external_specs": [
         {
-          "LINKED-VP": "https://identity.foundation/linked-vp/",
+          "LINKED-VP": "https://identity.foundation/linked-vp/"
+        },
+        {
           "TOIP": "https://trustoverip.github.io/ctwg-main-glossary/"
+        },
+        {
+          "multiformats": {
+            "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
+            "title": "Multiformats",
+            "rawDate": "2024-02-21",
+            "authors": [
+              "Juan Benet",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
         }
       ]
     }

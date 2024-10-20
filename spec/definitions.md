@@ -121,7 +121,7 @@ Specification](https://identity.foundation/linked-vp/).
 
 [[def: multihash]]
 
-~ Per the [[spec:draft-multiformats-multihash-07]], [[ref: multihash]] is a specification
+~ Per the [[spec:multiformats]], [[ref: multihash]] is a specification
 for differentiating instances of hashes. Software creating a hash prefixes
 (according to the specification) data to the hash indicating the algorithm used
 and the length of the hash, so that software receiving the hash knows how to
