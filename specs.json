@@ -19,16 +19,10 @@
         "repo": "trustdidweb"
       },
       "output_path": "./",
-      "logo": "tdw.jpg",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
       "logo_link": "https://github.com/decentralized-identity/trustdidweb",
       "katex": true,
       "external_specs": [
-        {
-          "LINKED-VP": "https://identity.foundation/linked-vp/"
-        },
-        {
-          "TOIP": "https://trustoverip.github.io/ctwg-main-glossary/"
-        },
         {
           "multiformats": {
             "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
@@ -42,6 +36,31 @@
           }
         }
       ]
+    },
+    {
+      "title": "Trust DID Web - The did:tdw DID Method - Version 0.3",
+      "spec_directory": "./spec-v0.3",
+      "markdown_paths": [
+        "header.md",
+        "abstract.md",
+        "definitions.md",
+        "overview.md",
+        "specification.md",
+        "security_and_privacy.md",
+        "implementors_guide.md",
+        "example.md",
+        "references.md",
+        "version.md"
+      ],
+      "source": {
+        "host": "github",
+        "account": "decentralized-identity",
+        "repo": "trustdidweb"
+      },
+      "output_path": "./v0.3",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
+      "logo_link": "https://github.com/decentralized-identity/trustdidweb",
+      "katex": true
     }
   ]
 }
