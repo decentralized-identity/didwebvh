@@ -1,18 +1,14 @@
-Trust DID Web - `did:tdw`
+Trust DID Web - `did:tdw` - v0.3
 ==================
 
-**Specification Status:** DRAFT
+**Specification Status:** HISTORICAL -- **THIS IS NOT THE CURRENT VERSION OF THE SPECIFICATION**
 
-**Specification Version:** 0.4 (see [Changelog](#didtdw-version-changelog))
+**Specification Version:** 0.3 (see [Changelog](#didtdw-version-changelog))
 
-**Source of Latest Draft:**
-  [https://github.com/decentralized-identity/trustdidweb](https://github.com/decentralized-identity/trustdidweb)
+**Latest Version:**
 
-**Previous Drafts:**
-- [v0.3](./v0.3)
-
-**Information Site:**
-  [https://didtdw.org/](https://didtdw.org/)
+- Specification: [https://identity.foundation/trustdidweb/](../)
+- Repository: [https://github.com/decentralized-identity/trustdidweb](https://github.com/decentralized-identity/trustdidweb)
 
 **Editors:**
 ~ [Stephen Curran](https://github.com/swcurran)
@@ -32,11 +28,9 @@ Trust DID Web - `did:tdw`
 ~ [TypeScript]
 ~ [Python]
 ~ [Go]
-~ [DIDTDW Server in Python]
 
 [TypeScript]: https://github.com/bcgov/trustdidweb-ts
 [Python]: https://github.com/bcgov/trustdidweb-py
 [Go]: https://github.com/nuts-foundation/trustdidweb-go
-[DIDTDW Server in Python]: https://github.com/decentralized-identity/trustdidweb-server-py
 
 ------------------------------------

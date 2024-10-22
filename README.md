@@ -66,7 +66,38 @@ installed. Follow these steps:
   - Use `npm run edit` to interactively edit, render and review the spec.
 - Review the resulting `index.html` file in a browser.
 
-The specification is currently in
-[Spec-Up](https://github.com/decentralized-identity/spec-up) format. See the
-[Spec-Up Documentation](https://identity.foundation/spec-up/) for a list of
-Spec-Up features and functionality.
+The specification is currently in [Spec-Up] format. See the
+[Spec-Up Documentation] for a list of Spec-Up features and functionality.
+
+[Spec-Up]: https://github.com/decentralized-identity/spec-up
+[Spec-Up Documentation]: https://identity.foundation/spec-up/
+
+# Publishing Previous Spec Versions
+
+[Spec-Up] allows for multiple versions of the spec to be rendered and accessed
+on the same site. We use that feature for the `did:tdw` spec to snapshot
+previous versions of the spec for reference.
+
+To create a snapshot of a version:
+
+- Make a new folder in the root of the repository for the new version, called `spec-v<ver>`. For example `v0.3`.
+- Copy the `spec` folder markdown files from the point of that version into the new folder. If you are doing this process as you are starting a new version, you can just copy the files from the `spec` folder of the main branch. Otherwise, you have to find the last commit of the version and get the files from that point in the GitHub history.
+- Update the `specs.json` file to include a new specification:
+  - Copy the primary spec entry text.
+  - Paste that text into a new spec entry in the `"specs"` array.
+  - Update the `"spec_directory"` property to be the name of the new folder you created.
+  - Update the `"output_path"` property to be `./v<ver>`. For example `"./v0.3"`.
+  - Append to the `"title"` property the version ` - Version <ver>`, For example ` - Version 0.3`.
+- Add a link to the versioned specification in the `Previous Drafts` bullet list, in the `header.md` file in the main spec, so that readers can click on it from the main specification.
+- Update the `header.md` file of the new version spec folder (e.g in `spec-v0.3`) to:
+  - Change the status to `HISTORICAL -- **THIS IS NOT THE CURRENT VERSION OF THE SPECIFICATION**`
+  - As appropriate, add guidance for readers **WITHOUT** altering the version of the specification itself.
+  - Remove the `Past Drafts` section and put a relative link back to the current spec -- such as:
+
+```text
+**Latest Version:**
+
+- Specification: [https://identity.foundation/trustdidweb/](../)
+- Repository: [https://github.com/decentralized-identity/trustdidweb](https://github.com/decentralized-identity/trustdidweb)
+
+```
