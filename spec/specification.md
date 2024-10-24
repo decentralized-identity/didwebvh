@@ -32,11 +32,12 @@ globally unique [[ref: SCID]] **MUST** be
 based on its initial content and placed into the DID identifier for publication
 and use.
 
-The domain name element of the method-specific identifier MUST match the
-common name used in the SSL/TLS certificate, and it MUST NOT include IP
-addresses. A port MAY be included and the colon MUST be percent encoded to
-prevent a conflict with paths. Directories and subdirectories MAY optionally be
-included, delimited by colons rather than slashes.
+The domain name element of the method-specific identifier MUST match the name
+found in the SSL/TLS certificate per [[spec:RFC6125]] and the its replacement
+[[spec:RFC9525]], and it MUST NOT include IP addresses. A port MAY be included
+and the colon MUST be percent encoded to prevent a conflict with paths.
+Directories and subdirectories MAY optionally be included, delimited by colons
+rather than slashes.
 
 As specified in the following Augmented Backus-Naur Form (ABNF) notation
 [[spec:rfc2234]] the [[ref: SCID]] **MUST** be present in the DID string. See
@@ -45,8 +46,9 @@ examples below. The `domain-segment` and `path-segment` elements refer to
 here the full ABNF of those elements from that RFC would inevitably be wrong.
 
 ```abnf
-tdw-did = "did:tdw:" scid ":" domain-segment 1+( "." domain-segment ) *( ":" path-segment )
+tdw-did = "did:tdw:" scid ":" domain-segment 1+( "." domain-segment ) [ percent-encoded-port ] *( ":" path-segment )
 domain-segment = ; A part of a domain name as defined in RFC3986, such as "example" and "com" in "example.com"
+percent-encoded-port = "%3A" ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) 1*3( "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" )
 path-segment= ; A part of a URL path as defined in RFC3986, such as "path", "to", "folder" in "path/to/folder"
 ```
 
