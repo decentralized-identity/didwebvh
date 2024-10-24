@@ -349,6 +349,14 @@ For each entry:
       Integrity]] proofs **MUST** be valid and **MUST** be signed by a threshold
       of [[ref: witnesses]]. For details, see the [DID
       Witnesses](#did-witnesses) section of this specification.
+   2. A `did:tdw` resolver can differentiate between the proofs from witnesses
+      and that of the [Authorized Keys](#authorized-keys) by the DID Method of
+      the signing key for the proof. The DID Controller's proof **MUST** be
+      signed using a `did:key` DID, while the witness proofs **MUST NOT** be a
+      `did:key` DID. For details about the witness DID methods, see the [DID
+      Witnesses](#did-witnesses) section of this specification. In addition, the
+      The DID Controller's proof **MUST** be signed using a key from the
+      currently active `updateKeys` [[ref: parameter]].
 3. Verify the `versionId` for the entry. The `versionId` is the
    concatenation of the version number, a dash (`-`), and the `entryHash`.
    1. The version number **MUST** be `1` for the the first [[ref: log entry]] and **MUST** be
@@ -379,7 +387,7 @@ For each entry:
    the active array of `nextKeyHashes` [[ref: parameter]], as defined in the
    [Key [[ref: Pre-Rotation]] Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
    section of this specification.
-9. If any verifications fail, discard the DID as invalid with an error message.
+9.  If any verifications fail, discard the DID as invalid with an error message.
 10. As each [[ref: log entry]] is processed and verified, collect the following information
    about each version:
       1. The [[ref: DIDDoc]].
@@ -895,6 +903,12 @@ An overview of the [[ref: witness]] mechanism is as follows:
   - Over time, the list of [[ref: witnesses]] may evolve, with each change being
     approved by the declared list of [[ref: witnesses]] from **before** such a
     change.
+  - The DID of the witnesses **SHOULD** be `did:tdw` DIDs to prevent the need for
+    a `did:tdw` resolver having to resolve DIDs of other DID methods.
+  - `did:tdw` resolvers **SHOULD** account for the the possibility that the
+    witnesses for a `did:tdw` DID might use the same witnesses (same DIDs) as
+    the DID being resolved, creating the potential for an infinite loop of
+    resolutions.
 - The [[ref: DID Controller]] prepares a [[ref: DID Log Entry]] and shares it with
   the [[ref: witnesses]].
   - The specification leaves to implementers *how* the [[ref: log entry]] data is provided to the [[ref: witnesses]].
