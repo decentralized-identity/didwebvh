@@ -47,7 +47,7 @@ here the full ABNF of those elements from that RFC would inevitably be wrong.
 
 ```abnf
 tdw-did = "did:tdw:" scid ":" domain-segment 1+( "." domain-segment ) [ percent-encoded-port ] *( ":" path-segment )
-scid = 46(base58-alphabet) ; The characters in the base58-btc-alphabet are as defined in the Multibase specification 
+scid = 46(base58-alphabet) ; The characters in the base58-btc-alphabet are as defined in the referenced W3C "Controller Documents" specification 
 domain-segment = ; A part of a domain name as defined in RFC3986, such as "example" and "com" in "example.com"
 percent-encoded-port = "%3A" ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) 1*4( DIGIT )
 path-segment= ; A part of a URL path as defined in RFC3986, such as "path", "to", "folder" in "path/to/folder"
