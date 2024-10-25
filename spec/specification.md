@@ -47,18 +47,20 @@ here the full ABNF of those elements from that RFC would inevitably be wrong.
 
 ```abnf
 tdw-did = "did:tdw:" scid ":" domain-segment 1+( "." domain-segment ) [ percent-encoded-port ] *( ":" path-segment )
+scid = 46(base58-alphabet) ; The characters in the base58-btc-alphabet are as defined in the Multibase specification 
 domain-segment = ; A part of a domain name as defined in RFC3986, such as "example" and "com" in "example.com"
-percent-encoded-port = "%3A" ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) 1*3( "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" )
+percent-encoded-port = "%3A" ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) 1*4( DIGIT )
 path-segment= ; A part of a URL path as defined in RFC3986, such as "path", "to", "folder" in "path/to/folder"
 ```
 
-The ABNF for a `did:tdw` is almost identical to that of `did:web`, with changes only to
-the DID Method (`tdw` instead of `web`), and the addition of the `<scid>:`
-element in `did:tdw` that is not in `did:web`. As specified in the [DID-to-HTTPS
-Transformation](#the-did-to-https-transformation) section of this specification,
-`did:tdw` and `did:web` DIDs that have the same fully qualified domain and path
-transform to the same HTTPS URL, with the exception of the final file --
-`did.json` for `did:web` and `did.jsonl` for `did:tdw`.
+The ABNF for a `did:tdw` is almost identical to that of `did:web`, with changes
+only to the DID Method (`tdw` instead of `web`), and the addition of the
+`<scid>:` (defined in the [SCID](#scid-generation-and-verification)) section of
+this specification) element in `did:tdw` that is not in `did:web`. As specified
+in the [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section
+of this specification, `did:tdw` and `did:web` DIDs that have the same fully
+qualified domain and path transform to the same HTTPS URL, with the exception of
+the final file -- `did.json` for `did:web` and `did.jsonl` for `did:tdw`.
 
 ### The DID to HTTPS Transformation
 
