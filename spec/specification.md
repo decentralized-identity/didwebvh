@@ -32,11 +32,12 @@ globally unique [[ref: SCID]] **MUST** be
 based on its initial content and placed into the DID identifier for publication
 and use.
 
-The domain name element of the method-specific identifier MUST match the
-common name used in the SSL/TLS certificate, and it MUST NOT include IP
-addresses. A port MAY be included and the colon MUST be percent encoded to
-prevent a conflict with paths. Directories and subdirectories MAY optionally be
-included, delimited by colons rather than slashes.
+The domain name element of the method-specific identifier MUST match the name
+found in the SSL/TLS certificate per [[spec:RFC6125]] and the its replacement
+[[spec:RFC9525]], and it MUST NOT include IP addresses. A port MAY be included
+and the colon MUST be percent encoded to prevent a conflict with paths.
+Directories and subdirectories MAY optionally be included, delimited by colons
+rather than slashes.
 
 As specified in the following Augmented Backus-Naur Form (ABNF) notation
 [[spec:rfc2234]] the [[ref: SCID]] **MUST** be present in the DID string. See
@@ -45,18 +46,21 @@ examples below. The `domain-segment` and `path-segment` elements refer to
 here the full ABNF of those elements from that RFC would inevitably be wrong.
 
 ```abnf
-tdw-did = "did:tdw:" scid ":" domain-segment 1+( "." domain-segment ) *( ":" path-segment )
+tdw-did = "did:tdw:" scid ":" domain-segment 1+( "." domain-segment ) [ percent-encoded-port ] *( ":" path-segment )
+scid = 46(base58-alphabet) ; The characters in the base58-btc-alphabet are as defined in the referenced W3C "Controller Documents" specification 
 domain-segment = ; A part of a domain name as defined in RFC3986, such as "example" and "com" in "example.com"
+percent-encoded-port = "%3A" ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) 1*4( DIGIT )
 path-segment= ; A part of a URL path as defined in RFC3986, such as "path", "to", "folder" in "path/to/folder"
 ```
 
-The ABNF for a `did:tdw` is almost identical to that of `did:web`, with changes only to
-the DID Method (`tdw` instead of `web`), and the addition of the `<scid>:`
-element in `did:tdw` that is not in `did:web`. As specified in the [DID-to-HTTPS
-Transformation](#the-did-to-https-transformation) section of this specification,
-`did:tdw` and `did:web` DIDs that have the same fully qualified domain and path
-transform to the same HTTPS URL, with the exception of the final file --
-`did.json` for `did:web` and `did.jsonl` for `did:tdw`.
+The ABNF for a `did:tdw` is almost identical to that of `did:web`, with changes
+only to the DID Method (`tdw` instead of `web`), and the addition of the
+`<scid>:` (defined in the [SCID](#scid-generation-and-verification)) section of
+this specification) element in `did:tdw` that is not in `did:web`. As specified
+in the [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section
+of this specification, `did:tdw` and `did:web` DIDs that have the same fully
+qualified domain and path transform to the same HTTPS URL, with the exception of
+the final file -- `did.json` for `did:web` and `did.jsonl` for `did:tdw`.
 
 ### The DID to HTTPS Transformation
 
