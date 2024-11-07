@@ -903,12 +903,11 @@ An overview of the [[ref: witness]] mechanism is as follows:
   - Over time, the list of [[ref: witnesses]] may evolve, with each change being
     approved by the declared list of [[ref: witnesses]] from **before** such a
     change.
-  - The DID of the witnesses **SHOULD** be `did:tdw` DIDs to prevent the need for
+  - The DID of the witnesses **MUST** be `did:tdw` DIDs to prevent the need for
     a `did:tdw` resolver having to resolve DIDs of other DID methods.
-  - `did:tdw` resolvers **SHOULD** account for the the possibility that the
-    witnesses for a `did:tdw` DID might use the same witnesses (same DIDs) as
-    the DID being resolved, creating the potential for an infinite loop of
-    resolutions.
+  - `did:tdw` resolvers **MUST** prevent infinite loops in DID resolution in
+    cases where the witnesses for a `did:tdw` DID use the same witnesses as the
+    DID being resolved.
 - The [[ref: DID Controller]] prepares a [[ref: DID Log Entry]] and shares it with
   the [[ref: witnesses]].
   - The specification leaves to implementers *how* the [[ref: log entry]] data is provided to the [[ref: witnesses]].
