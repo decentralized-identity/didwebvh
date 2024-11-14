@@ -785,6 +785,8 @@ A resolver of the DID **MUST** verify the signature and the key used for signing
 each [[ref: DID Log]] entry **MUST** be one from the list of active
 `updateKeys`. If not, terminate the resolution process with an error.
 
+If the DID is configured to support key pre-rotation [[ref: Pre-Rotation]], all subsequent [[ref: entries]] **MUST** sign their [[ref: log entry]] with their **current** `updateKeys` instead.
+
 The `did:tdw` Implementation Guide contains further discussion on the management
 of keys authorized to update the DID.
 
@@ -846,8 +848,7 @@ authorization key.
 5. The generated key pair **SHOULD** be safely stored so that it can be used in
    a later DID version to become a DID authorization key. At that time, the
    [[ref: multikey]] representation of the public key will be inserted into the
-   `updateKeys` property in the [[ref: parameters]]. After that [[ref: log entry]] is
-   published, the private key can be used to sign DID update authorizations
+   `updateKeys` property in the [[ref: parameters]] and the private key can be used to sign the [[ref: log entry]]'s DID update authorizations
    proofs.
 
 A [[ref: DID Controller]] **MAY** add include extra entries (for keys or just random
