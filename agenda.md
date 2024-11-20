@@ -10,6 +10,7 @@ Agenda: [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [TrustDIDWeb Reposit
 
 - [Meeting Information](#meeting-information)
 - [Future Topics](#future-topics)
+- [Meeting - 07 Nov 2024](#meeting---07-nov-2024)
 - [Meeting - 24 Oct 2024](#meeting---24-oct-2024)
 - [Meeting - 10 Oct 2024](#meeting---10-oct-2024)
 - [Meeting - 26 Sept 2024](#meeting---26-sept-2024)
@@ -48,6 +49,57 @@ _This document is live-edited DURING each call, and stable/authoritative copies 
 - Merging `did:tdw` features into `did:web`?
 - Implementor's experiences -- architectures, learnings
 - A did:tdw test suite -- such as proposed [here](https://github.com/nuts-foundation/trustdidweb-go/pull/1)
+
+============================================
+## Meeting - 07 Nov 2024
+
+Time: 9:00 Pacific / 18:00 Central Europe
+
+Recording: [Zoom Recording](https://us02web.zoom.us/rec/share/P4e70wPlORd-22ZfQz2nwCc4LiSphAgWEl7MuHMZxy9pIrE30EZXVh1Qc1-sXARe.1O6EbE-wmSAsgP67)
+
+Attendees:
+
+- Stephen Curran
+- Patrick St. Louis
+- Andrew Whitehead
+- Brian Richter
+- Cole Davis
+- Emiliano Sune
+- Kjetil Hustveit
+- Martina K
+- Michael Herman
+- Michel Sahli
+- Rob Aaron
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:tdw Specification license] -- W3C Mode
+    4. Introductions and Agenda Topics
+        1. Pre-rotation change to be put into a PR for discussion -- Michel Sahli
+    6. Announcements:
+        1. DID Methods Working Group Meetings start **next Wednesday, Nov. 13** at 9:00 Pacific / 18:00 Central Europe -- [calendar](https://calendar.app.google/h5sMifqRBHdt9Qjq7).
+2. IIW Update
+    1. did:tdw session
+    2. `<did>/whois` as a separate specification and work item.
+    3. Getting `<did>/whois` examples into the wild -- resolver support, did:tdw Server support.
+3. *No progress made on this.* Latest spec updates and implementation notes.
+    1. Cleaning up `[[spec]]` references -- Brian has enabled us to add our own spec references.
+    2. Next up -- DRYing the. spec.
+    3. Security and Privacy sections. Anyone able to help?
+    4. Getting "spec to a standard" advice and applying those changes.
+4. Registering did:tdw as a DID Method [PR](https://github.com/w3c/did-extensions/pull/581), and **[DONE!]** adding a did:tdw component to the [Universal Resolver](https://dev.uniresolver.io/) (thanks Brian!).
+5. [Spec. PRs and Issues](https://github.com/decentralized-identity/trustdidweb/issues)
+6. Update on the [did:tdw Web Server](https://github.com/decentralized-identity/trustdidweb-server-py) -- Patrick St. Louis.
+7. AnonCreds object formats and did:tdw, and perhaps a follow up discussion on [DID Linked Resources](https://w3c-ccg.github.io/DID-Linked-Resources/)
+    1. Good discussion about the pros and cons of signing the resource, if it is signed should we use the VCDM or just attach a Data Integrity proof, and how we can get a consistent hash and where should it go.
+    2. Alignment with the DID Linked Resources spec would really nice to have.  We don't want to return in the DIDDoc metadata the information about all the resources associated with a DID -- it can be a lot of data. That said, a discovery mechanism for resources, such as `<did>?resources` would be really nice.
+    3. The next step is to create a document about a likely approach ([@andrewwhitehead](https://github.com/andrewwhitehead) agreed to create that first draft) and then we can then collaborate on implementing/updating the document from there.
+8. DID Portability
+    1. Reviewed the spec concept
+9. Potential conflict on the name "tdw"
+    1. Project called "Trusted Digital Web" which has used the "TDW" acronym, although not for a DID Method. The project does mention DIDs. How to address the potential conflict? Michael Herman [raised an objection](https://github.com/w3c/did-extensions/pull/581#issuecomment-2462828639) on the DID Registration PR that we submitted.
+
 
 ## Meeting - 24 Oct 2024
 
