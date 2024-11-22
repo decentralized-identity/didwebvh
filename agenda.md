@@ -10,6 +10,7 @@ Agenda: [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [TrustDIDWeb Reposit
 
 - [Meeting Information](#meeting-information)
 - [Future Topics](#future-topics)
+- [Meeting - 21 Nov 2024](#meeting---21-nov-2024)
 - [Meeting - 07 Nov 2024](#meeting---07-nov-2024)
 - [Meeting - 24 Oct 2024](#meeting---24-oct-2024)
 - [Meeting - 10 Oct 2024](#meeting---10-oct-2024)
@@ -51,6 +52,82 @@ _This document is live-edited DURING each call, and stable/authoritative copies 
 - A did:tdw test suite -- such as proposed [here](https://github.com/nuts-foundation/trustdidweb-go/pull/1)
 
 ============================================
+## Meeting - 21 Nov 2024
+
+Time: 9:00 Pacific / 18:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/UsNpfqags9z3oprz-DbXQZQX-xPEnJlBZhTn8AWfY-35hNdFkBk9QJQfVKXmU867.mbd57z9owlBoP-oi)
+
+Attendees:
+
+- Stephen Curran
+- Sylvain Martel
+- John Jordan
+- Patrick St. Louis
+- Andrew Whitehead
+- Brian Richter
+- Emiliano Sune
+- Martina Kolpondinos
+- Michael Herman
+- Michel Sahli
+- Rob Aaron
+- Dmitri Zagidulin
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:tdw Specification license] -- W3C Mode
+    4. Introductions and Agenda Topics
+    5. Announcements:
+        1. Add here...
+2. DID Method Name Change:
+    1. What's the new DID Method name going to be?  Leaning is towards `did:webl`. Let's discuss.
+        1. Too easy to confuse with `did:web1`.
+        2. Or perhaps we should use it instead of `did:webl`.
+    3. An idea -- `did:web:<something>` but that doesn't sound aligned with the DID spec and would break the name space and `did:web` spec. Nope.
+    4. `did:weblog` -- but that conflicts with `blog`.
+    5. **`did:webh` -- "h" for history, emphasizing the log (history) capability, which is the important part. Loses the "secure", but so be it.**
+    6. `did:webhash` as an alternative. Although it is bit subtle a connection to the purpose of the DID Method.
+3. Version 0.5 Updates:
+    1. Pre-rotation change -- [PR #129](https://github.com/decentralized-identity/trustdidweb/pull/129).  Summary:
+        1. No pre-rotation:
+            1. Each entry is signed by a key from the active `updateKeys` list.
+            2. The `active` list is the most recently defined list prior to the current log entry -- except for the first entry, where it is the list in the first entry.
+        2. With pre-rotation:
+            1. Eliminate the `prerotation` parameter. Preroation is automatically activated when the `nextKeys` item is present in a DID log entry and **MUST** be enforced from then on.
+            2. Can be activated in the first log entry, or afterwards. If activated afterwards, the current log entry is signed according to the "non-pre-rotation" rules, and the pre-rotation rules apply to all subsequent log entries.
+            3. Once active, every entry **MUST** have a new `updateKeys` and `nextKeys` list.
+            4. The hash of each `updateKeys` list item **MUST** be in the `nextKeys` list from the previous entry. This rule does not apply to the first log entry, as there is no previous entry.
+            5. Each entry must be signed (in the DI proof) by a key in the `updateKeys` list from the current record.
+    2.  Witness change requests from @andrewwhitehead [HackMD Doc](https://hackmd.io/TlvkAGw6RMq0i9gPanU1jg). Summary:
+        1. Data model for the `witnesses` parameter remains the same (list of witnesses, threshold).
+        2. Instead of the witness proofs going into the log, they are stored in a separate file, `witness.json` -- an array of proofs from witness, including the DID Log entry version number (1, 2, ...) to which the proof applies. *Or should it be the `version_id`?*
+        3. The array contains only the last two proofs from each witness from which proofs are collected. When a witness proof is retrieved, if there are already two in the file from the witness, remove the oldest, and add the new one before writing the file.
+        4. The processing is: Given an entry to be witnessed, verify that the `witness.json` file contains valid witness proofs from a threshold of current witnesses on the current or **newer** log entries.
+        5. Questions from the document:
+            1. Witness proofs can be published before the DID log with a new log entry is published. This eliminates the race condition of the DID Log being published without corresponding witness proofs. The "two proofs" per witness allows for the verification of at least one of the proofs of the witness when the `witness.json` is published before the corresponding log entry. The resolver would ignore the proof of an unpublished entry.
+            2. What DID Method can a witness use? Currently must be `did:webh`, but could/should we allow `did:key` be used?  Could use "instantly resolved DIDs" -- e.g. `did:key`. Short list: `did:webh`, `did:key`, ~~`did:jwk`~~, maybe `did:web`.
+                1. Long discussion resulted -- to be fully resolved in Discord and at the next meeting.
+                2. It was proposed that there are two use cases for witnesses, one where there was just the added security of needing more than one key to sign the log entry (e.g. must compromize multiple keys and the web server to impact the DID), and another where the reputation of the witness was important in an ecosystem (external parties monitoring the behaviour of the DID Controller), so there needs to be ways to attach reputation (presumably, via VCs or a Trust Registry) to the witness.
+                3. For the first - purely for added security - an ephemeral key method is sufficient -- `did:key`. We discussed also allowing `did:jwk` but it was felt that was just an alternative to `did:key` that adds complexity/dependencies to the spec without adding any value.
+                4. For the second, the reputation could be added by a Trust Registry while using `did:key`, but it would eliminate (complicate?) the ability to use VCs for the reputation.
+                5. For the second, some thought support for `did:webh` makes sense, while others are concerned about possiblity of resolution taking a long time if the witnesses have witnesses have witnesses, and so on. Worse is the scenario of DIDs having common witnesses, and the need to detect and handle an infinite loop.
+                6. This then changed to a discussion, that also needs to be continued on Discord and at the next meeting about if a key from a prior log entry should be used to verify a signature in the `did:webh` scenario, and more broadly in the use of verifiable credentials signed using a key in a `did:webh` DIDDoc.
+            2. NOT DISCUSSED: Should the addition of witnesses only be permitted in the first entry?
+            3. NOT DISCUSSED: Is there a use case for turning off witnessing?
+4. NOT DISCUSSED: *No progress made on the spec.* Latest spec updates and implementation notes.
+    1. Cleaning up `[[spec]]` references -- Brian has enabled us to add our own spec references.
+    2. Next up -- DRYing the. spec.
+    3. Security and Privacy sections. Anyone able to help?
+    4. Getting "spec to a standard" advice and applying those changes.
+5. NOT DISCUSSED: DIDDoc and DID Metadata
+6. NOT DISCUSSED: [Spec. PRs and Issues](https://github.com/decentralized-identity/trustdidweb/issues)
+7. NOT DISCUSSED: Update on the [did:tdw Web Server](https://github.com/decentralized-identity/trustdidweb-server-py) -- Patrick St. Louis.
+8. NOT DISCUSSED: Update: AnonCreds object formats and did:tdw, and perhaps a follow up discussion on [DID Linked Resources](https://w3c-ccg.github.io/DID-Linked-Resources/)
+    1. Good discussion about the pros and cons of signing the resource, if it is signed should we use the VCDM or just attach a Data Integrity proof, and how we can get a consistent hash and where should it go.
+    2. Alignment with the DID Linked Resources spec would really nice to have.  We don't want to return in the DIDDoc metadata the information about all the resources associated with a DID -- it can be a lot of data. That said, a discovery mechanism for resources, such as `<did>?resources` would be really nice.
+    3. The next step is to create a document about a likely approach ([@andrewwhitehead](https://github.com/andrewwhitehead) agreed to create that first draft) and then we can then collaborate on implementing/updating the document from there.
+
 ## Meeting - 07 Nov 2024
 
 Time: 9:00 Pacific / 18:00 Central Europe
@@ -66,7 +143,7 @@ Attendees:
 - Cole Davis
 - Emiliano Sune
 - Kjetil Hustveit
-- Martina K
+- Martina Kolpondinos
 - Michael Herman
 - Michel Sahli
 - Rob Aaron
