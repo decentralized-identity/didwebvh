@@ -380,7 +380,7 @@ For each entry:
    DIDDoc]] for the version.
 8. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
    in the `parameters` property **MUST** match a hash in
-   the active array of `nextKeyHashes` [[ref: parameter]], as defined in the
+   the  array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]] entry with exception of the first [[ref: DID log]], as defined in the
    [Key [[ref: Pre-Rotation]] Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
    section of this specification.
 9. If any verifications fail, discard the DID as invalid with an error message.
@@ -392,8 +392,8 @@ For each entry:
       4. The latest list of active [[ref: multikey]] formatted public keys
          authorized to update the DID, from the `updateKeys` lists in the
          [[ref: parameters]].
-      5. If [[ref: pre-rotation]] is being used, the hashes of authorized DIDs that may
-         be used in later `updateKeys` lists. The [[ref: pre-rotation]] hashes are in the
+      5. If [[ref: pre-rotation]] is being used, the hashes of authorized keys that must
+         be used in the `updateKeys` list of the next [[ref: DID log]] entry. The [[ref: pre-rotation]] hashes are in the
          `nextKeyHashes` list in the [[ref: parameters]].
       6. All other `did:tdw` processing configuration settings as defined by in the
          `parameters` object.
@@ -470,16 +470,21 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
 6. Generate a [[ref: Data Integrity]] proof on the [[ref: DID log entry]] using
    an authorized key, as defined in the [Authorized Keys](#authorized-keys)
    section of this specification.
-7. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]] for the
+7. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
+   in the `parameters` property **MUST** match a hash in
+   the  array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]] entry with exception of the first [[ref: DID log]], as defined in the
+   [Key [[ref: Pre-Rotation]] Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
+   section of this specification.
+8. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]] for the
    DID, collect the required approvals from the DID's [[ref: witnesses]], adding
    their proofs to the [[ref: data integrity]] proof. See the [DID
    Witnesses](#did-witnesses) section of this specification.
-8. The proof JSON object **MUST** be added as the value of the `proof` property in the [[ref: log entry]].
-9. The entry **MUST** be made a [[ref JSON Line]] by removing extra whitespace, adding a `\n`
+9. The proof JSON object **MUST** be added as the value of the `proof` property in the [[ref: log entry]].
+10. The entry **MUST** be made a [[ref JSON Line]] by removing extra whitespace, adding a `\n`
    to the entry. 
-10. The new [[ref: log entry]] **MUST** be appended to the existing contents of
+11. The new [[ref: log entry]] **MUST** be appended to the existing contents of
     the [[ref: DID Log]] file `did.jsonl`.
-11. The updated [[ref: DID Log]] file **MUST** be published the appropriate
+12. The updated [[ref: DID Log]] file **MUST** be published the appropriate
     location defined by the `did:tdw` identifier.
     - This is a logical operation -- how a deployment serves the `did.jsonl`
     content is not constrained.
@@ -570,9 +575,12 @@ properties are defined below.
     [[ref: DID Controller]].
   - A key from the `updateKeys` array in the first [[ref: DID log entry]]
     **MUST** be used to authorize the initial [[ref: log entry]]. In all other
-    [[ref: DID log entries]], an `updateKeys` property becomes active *after* the
+    [[ref: DID log entries]] without the [[ref: Key Pre-Rotation]] feature, an `updateKeys` property becomes active *after* the
     publication of its entry -- meaning its [[ref: log entry]] **MUST** be
     signed by a key the most recent `updateKeys` list from a **prior** [[ref:
+    DID log]] entry. In [[ref: DID log entries]] with the [[ref: Key Pre-Rotation]] feature, an `updateKeys` property becomes 
+    active *before* the publication of its entry -- meaning its [[ref: log entry]] **MUST** be
+    signed by a key the `updateKeys` list from the **current** [[ref:
     DID log]] entry.
 - `portable`: A boolean (`true` / `false`) indicating if the DID is portable and
   thus can be renamed to change the Web location of the DID.
@@ -581,28 +589,18 @@ properties are defined below.
   - Once the value has been set to `false`, it cannot be set back to `true`.
   - See the section of this specification on [DID Portability](#did-portability)
     for more details about renaming a `did:tdw` DID.
-- `prerotation`: A boolean value indicating that subsequent authentication keys
-  added to the [[ref: DIDDoc]] (after this version) **MUST** have their hash included in
-  a `nextKeyHashes` [[ref: parameter]] property.
-  - The value is initialized to `false` until the property is included in a
-    [[ref: DID log entry]].
-  - Once the value is set to `true` in a [[ref: DID log entry]] it **MUST NOT**
-    be set to `false` in a subsequent entry.
 - `nextKeyHashes`: An array of strings that are hashes of [[ref: multikey]]
-  formatted public keys that **MAY** be added to the `updateKeys` list in the
-  [[ref: log entry]] of a future version of the DID.
+  formatted public keys that **MAY** be added to the `updateKeys` list in the next
+  [[ref: log entry]]. At least one entry of `nextKeyHashes` **MUST** be added to the next `updateKeys` list.
   - The process for generating the hashes and additional details for using [[ref: pre-rotation]] are defined in the
     [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
     section of this specification.
-  - If the [[ref: parameter]] `prerotation` has been set to `true`, all [[ref: multikey]]
-    formatted public keys added in a new `updateKeys` list **MUST** have their
-    hashes listed in the currently active `nextKeyHashes` list.
+  - Once the [[ref: parameter]] `nextKeyHashes` has been set, the [[ref: Key Pre-Rotation]] feature becomes active and the property **MUST** be present in any future [[ref: DID log entry]].
+  - All [[ref: multikey]] formatted public keys added in a new `updateKeys` list **MUST** have their
+    hashes listed in the `nextKeyHashes` list from the previous [[ref: DID log entry]].
   - A [[ref: DID Controller]] **MAY** put extra strings in the `nextKeyHashes`
     array that are not subsequently used in an `updateKeys` entry.
-  - When `prerotation` is active and the `updateKeys` [[ref: parameter]] is included in a
-    `parameters` property, a `nextKeyHashes` property with a new set of hashes
-    **MUST** be included in the same [[ref: parameters]] property. Any unused
-    hashes in the prior `nextKeyHashes` are ignored.
+  - Any unused hashes in the prior `nextKeyHashes` are ignored.
 - `witness`: A JSON object containing the [[ref: parameters]] for declaring the witnesses
   for the DID, and the [[ref: parameters]] for the process of updating a DID via a
   collaboration with [[ref: witnesses]] prior to publication. For details of
@@ -774,21 +772,32 @@ the [[ref: log entries]]. Any of the authorized verification keys may be referen
 in the [[ref: Data Integrity]] proof.
 
 For the first [[ref: log entry]] the **active** `updateKeys` list is the one in
-that first [[ref: log entry]]. For all subsequent [[ref: entries]], the **active** list
+that first [[ref: log entry]]. 
+
+A resolver of the DID **MUST** verify the signature and the key used for signing
+each [[ref: DID Log]] entry **MUST** be one from the list of active
+`updateKeys`. If not, terminate the resolution process with an error.
+
+The `did:tdw` Implementation Guide contains further discussion on the management
+of keys authorized to update the DID.
+
+The **active** `updateKeys` for subsequent [[ref: entries]] depends if the [[ref: Pre-Rotation]] is active or not.
+
+##### No Key Prerotation
+
+For all subsequent [[ref: entries]], the **active** list
 is the most recent `updateKeys` **before** the [[ref: log entry]] to be verified. Thus,
 the general case is that each [[ref: log entry]] is signed by the keys from the
 **previous** [[ref: log entry]]. Once a [[ref: log entry]] containing an `updateKeys` list is
 published, that `updateKeys` becomes the active list, and previous
 `updateKeys` are ignored.
 
-A resolver of the DID **MUST** verify the signature and the key used for signing
-each [[ref: DID Log]] entry **MUST** be one from the list of active
-`updateKeys`. If not, terminate the resolution process with an error.
+##### Prerotation
 
-If the DID is configured to support key pre-rotation [[ref: Pre-Rotation]], all subsequent [[ref: entries]] **MUST** sign their [[ref: log entry]] with their **current** `updateKeys` instead.
-
-The `did:tdw` Implementation Guide contains further discussion on the management
-of keys authorized to update the DID.
+For all subsequent [[ref: entries]], the **active** list
+is the `updateKeys` from the  **current** [[ref: log entry]] to be verified. Thus,
+the general case is that each [[ref: log entry]] is signed by the keys from the
+**current** [[ref: log entry]].
 
 #### DID Portability
 
@@ -808,7 +817,7 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
 #### Pre-Rotation Key Hash Generation and Verification
 
 Pre-rotation requires a [[ref: DID Controller]] to commit to the authorization
-keys that will later be used ("rotated to") for updating the [[ref: DIDDoc]]. The purpose
+keys that will be used ("rotated to") in the next [[ref: log entry]] for updating the [[ref: DIDDoc]]. The purpose
 of committing to future keys is that if the currently authorized keys are
 compromised by an attacker, the attacker should not be able to take control of
 the DID by using the compromised keys to rotate to new keys the attacker
@@ -818,12 +827,11 @@ non-normative section about [Using [[ref: Pre-Rotation]] Keys](#using-pre-rotati
 in the Implementer's Guide for additional guidance.
 
 As described in the [parameters](#didtdw-did-method-parameters)
-section of this specification, a [[ref: DID Controller]] **MAY** define that
-`prerotation` is active for the DID (value `true`). When [[ref: pre-rotation]] is active,
+section of this specification, a [[ref: DID Controller]] **MAY** define
+`nextKeyHashes` to activate the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active,
 all verification [[ref: multikeys]] in the `updateKeys` [[ref: parameters]] property in other
-than the initial version of the [[ref: DIDDoc]] **MUST** have their hash in the currently
-active nextKeyHashes` array from a previous [[ref: DID log entry]]. If
-not, terminate the resolution process with an error.
+than the initial version of the [[ref: DID log entry]] **MUST** have their hash in the  `nextKeyHashes` array
+from the previous [[ref: DID log entry]]. If not, terminate the resolution process with an error.
 
 To create a hash to be included in the `nextKeyHashes` array, the [[ref: DID
 Controller]] **MUST** execute the following process for each possible future
@@ -846,7 +854,7 @@ authorization key.
 4. Insert the calculated hash into the `nextKeyHashes` array being built up within
    the [[ref: parameters]] property.
 5. The generated key pair **SHOULD** be safely stored so that it can be used in
-   a later DID version to become a DID authorization key. At that time, the
+   the next [[ref: log entry]] to become a DID authorization key. At that time, the
    [[ref: multikey]] representation of the public key will be inserted into the
    `updateKeys` property in the [[ref: parameters]] and the private key can be used to sign the [[ref: log entry]]'s DID update authorizations
    proofs.
@@ -854,8 +862,8 @@ authorization key.
 A [[ref: DID Controller]] **MAY** add include extra entries (for keys or just random
 strings) in a `nextKeyHashes` array.
 
-When processing other than the first [[ref: DID log entry]] where the
-`prerotation` [[ref: parameter]] is active, a `did:tdw` resolver **MUST**:
+When processing other than the first [[ref: DID log entry]] where
+[[ref: pre-rotation]] feature is active, a `did:tdw` resolver **MUST**:
 
 1. For each [[ref: multikey]] in the `updateKeys` property in the `parameters` of
    the [[ref: log entry]], calculate the hash and hash algorithm for the [[ref:
@@ -863,8 +871,8 @@ When processing other than the first [[ref: DID log entry]] where the
 2. The hash algorithm **MUST** be one listed in the
    [parameters](#didtdw-did-method-parameters) defined by the version of the
    `did:tdw` specification being used by the [[ref: DID Controller]].
-3. The resultant hash **MUST** be in the most recently set `nextKeyHashes` prior to
-   the [[ref: log entry]] being processed. If not, terminate the resolution
+3. The resultant hash **MUST** be in the `nextKeyHashes` array from the previous [[ref: log entry]] prior to
+   being processed. If not, terminate the resolution
    process with an error.
 4. A new `nextKeyHashes` list **MUST** be in the `parameters` of the [[ref: log
    entry]] currently being processed. If not, terminate the resolution process with
