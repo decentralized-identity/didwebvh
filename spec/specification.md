@@ -557,7 +557,7 @@ properties are defined below.
     the processing rules for that and later [[ref: log entries]] have been changed to a
     different specification version.
   - Acceptable values for this specification are:
-    - `did:tdw:0.4`: Requires that the rules defined in this version of the specification be used
+    - `did:tdw:0.5`: Requires that the rules defined in this version of the specification be used
       in processing the log. Implied by the value are the following:
       - The permitted hash algorithms used by the [[ref: DID Controller]] **MUST** be `SHA-256` as defined in [[spec: rfc6234]].
       - The permitted [[ref: Data Integrity]] cryptosuites used by the [[ref: DID Controller]] **MUST** be `eddsa-jcs-2022` as referenced in [[ref: eddsa-jcs-2022]].
@@ -726,7 +726,7 @@ produce an [[ref: entry hash]]. As this is a first entry in a [[ref: DID Log]], 
 `versionId` is the [[ref: SCID]] of the DID.
 
 ```json
-{"versionId": "QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ", "versionTime": "2024-09-26T23:22:26Z", "parameters": {"prerotation": true, "updateKeys": ["z6MkhbNRN2Q9BaY9TvTc2K3izkhfVwgHiXL7VWZnTqxEvc3R"], "nextKeyHashes": ["QmXC3vvStVVzCBHRHGUsksGxn6BNmkdETXJGDBXwNSTL33"], "method": "did:tdw:0.4", "scid": "QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ"}, "state": {"@context": ["https://www.w3.org/ns/did/v1"], "id": "did:tdw:QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ:domain.example"}}
+{"versionId": "QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ", "versionTime": "2024-09-26T23:22:26Z", "parameters": {"prerotation": true, "updateKeys": ["z6MkhbNRN2Q9BaY9TvTc2K3izkhfVwgHiXL7VWZnTqxEvc3R"], "nextKeyHashes": ["QmXC3vvStVVzCBHRHGUsksGxn6BNmkdETXJGDBXwNSTL33"], "method": "did:tdw:0.5", "scid": "QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ"}, "state": {"@context": ["https://www.w3.org/ns/did/v1"], "id": "did:tdw:QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ:domain.example"}}
 ```
 
 Resulting [[ref: entryHash]]: `QmQq6Kg4ZZ1p49znzxnWmes4LkkWgMWLrnrfPre8UD56bz`
