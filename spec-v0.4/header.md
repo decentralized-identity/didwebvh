@@ -1,31 +1,15 @@
-Trust DID Web - `did:tdw`
+Trust DID Web - `did:tdw` - v0.4
 ==================
 
-**Specification Status:** UPDATE IN PROCESS
+**Specification Status:** CURRENT DRAFT
 
-The `did:tdw` Specification Editors are currently making a combination of
-updates to the DID Method such that this version of the specification has not
-yet been given a version. Once this set of changes have been approved, a version
-will be assigned and it will be the latest version of the specification. Until
-then, those looking for the current version of the specification should review
-[v0.4](./v0.4).
+**Specification Version:** 0.4 (see [Changelog](#didtdw-version-changelog))
 
-The updates in process are:
-
-- Adjusting the handling of pre-rotation keys and hashes.
-- Changing how and where witness proofs are managed.
-- Renaming the DID Method.
-
-**Current Specification:**- [v0.4](./v0.4)
-
-**Specification Version:** To Be Defined (see [Changelog](#didtdw-version-changelog))
-
-**Source of Latest Draft:**
-  [https://github.com/decentralized-identity/trustdidweb](https://github.com/decentralized-identity/trustdidweb)
+**Source For This Version:**
+  [https://github.com/decentralized-identity/trustdidweb/tree/main/spec-v0.4](https://github.com/decentralized-identity/trustdidweb/tree/main/spec-v0.4)
 
 **Previous Drafts:**
-- [v0.4](./v0.4)
-- [v0.3](./v0.3)
+- [v0.3](../v0.3)
 
 **Information Site:**
   [https://didtdw.org/](https://didtdw.org/)
