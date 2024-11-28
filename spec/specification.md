@@ -1012,18 +1012,19 @@ The following process is used to witness a DID version update:
     **after** a threshold of witness proofs have been received and **before** the
     witnessed [[ref: DID Log]] file is published.
 
-##### Verifying Witness Proofs
+##### Verifying Witness Proofs During Resolution
 
 A `did:tdw` resolver **MUST** verify that all [[ref: DID Log entries]] that have
 active [[ref: witnesses]] have a threshold of active witnesses approving the [[ref: log entry]].
 To do so, resolvers must:
 
 - Successfully complete the non-[[ref: witness]] verifications of the [[ref: DID Log]].
-- Verify all of the [[ref: witness]] proofs that reference [[ref: DID Log entries]] in the [[ref: DID Log]].
-  - A `did-witness.json` file **MAY** contain proofs of pending (unpublished) [[ref:
-    DID Log entries]]. Such proofs **MUST** be ignored by resolvers.
+- Verify the [[ref: witness]] proofs that reference [[ref: DID Log entries]] in the [[ref: DID Log]].
+  - Ignore any proofs that do not verify. For example, a `did-witness.json` file
+    **MAY** contain proofs of pending (unpublished) [[ref: DID Log entries]].
+    Such proofs **MUST** be ignored by resolvers.
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
-  verify that the `did-witness.json` file contains valid [[ref: witness]] proofs from a
+  verify that the `did-witness.json` file contains verified [[ref: witness]] proofs from a
   threshold of active [[ref: witnesses]] across the current or **later** log entries. If
   not, terminate the resolution process with an error.
   - As noted in the section on the [Witness proofs
