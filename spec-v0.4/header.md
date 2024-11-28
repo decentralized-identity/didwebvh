@@ -5,6 +5,16 @@ Trust DID Web - `did:tdw` - v0.4
 
 **Specification Version:** 0.4 (see [Changelog](#didtdw-version-changelog))
 
+**Next Specification:** [Draft](./next)
+
+:::warning
+
+The [next version of the specification](./next) is in process, with breaking
+changes around pre-rotation and witnesses. We will also be changing the name of
+the DID Method.
+
+:::
+
 **Source For This Version:**
   [https://github.com/decentralized-identity/trustdidweb/tree/main/spec-v0.4](https://github.com/decentralized-identity/trustdidweb/tree/main/spec-v0.4)
 

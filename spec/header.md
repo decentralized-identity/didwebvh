@@ -8,7 +8,7 @@ updates to the DID Method such that this version of the specification has not
 yet been given a version. Once this set of changes have been approved, a version
 will be assigned and it will be the latest version of the specification. Until
 then, those looking for the current version of the specification should review
-[v0.4](./v0.4).
+[v0.4](../).
 
 The updates in process are:
 
@@ -16,7 +16,7 @@ The updates in process are:
 - Changing how and where witness proofs are managed.
 - Renaming the DID Method.
 
-**Current Specification:**- [v0.4](./v0.4)
+**Current Specification:**- [v0.4](../)
 
 **Specification Version:** To Be Defined (see [Changelog](#didtdw-version-changelog))
 
@@ -24,7 +24,6 @@ The updates in process are:
   [https://github.com/decentralized-identity/trustdidweb](https://github.com/decentralized-identity/trustdidweb)
 
 **Previous Drafts:**
-- [v0.4](./v0.4)
 - [v0.3](./v0.3)
 
 **Information Site:**

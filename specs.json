@@ -18,7 +18,7 @@
         "account": "decentralized-identity",
         "repo": "trustdidweb"
       },
-      "output_path": "./",
+      "output_path": "./next",
       "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
       "logo_link": "https://github.com/decentralized-identity/trustdidweb",
       "katex": true,
@@ -55,7 +55,7 @@
         "account": "decentralized-identity",
         "repo": "trustdidweb"
       },
-      "output_path": "./v0.4",
+      "output_path": "./",
       "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
       "logo_link": "https://github.com/decentralized-identity/trustdidweb",
       "katex": true
