@@ -109,7 +109,7 @@ In the lifecycle of the specification, there will be times when the version is s
 Here's how we do that:
 
 - When the specification is stable, the `spec` folder is the landing page, and past versions are linked in the `header.md` file as "past versions".
-- When a new version of the specification is ready to be worked on:
+- When a new version of the specification with breaking changes is ready to be worked on:
   - Snapshot the stable specification version by creating a new directory (e.g.,
     `spec-v0.4`) and copying the files from the `spec` folder into the new
     folder
