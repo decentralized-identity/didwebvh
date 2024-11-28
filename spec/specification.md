@@ -380,7 +380,8 @@ For each entry:
    DIDDoc]] for the version.
 8. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
    in the `parameters` property **MUST** match a hash in
-   the  array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]] entry with exception of the first [[ref: DID log]], as defined in the
+   the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]]
+   entry, with exception of the first entry, as defined in the
    [Key [[ref: Pre-Rotation]] Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
    section of this specification.
 9. If any verifications fail, discard the DID as invalid with an error message.
