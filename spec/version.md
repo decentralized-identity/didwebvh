@@ -2,6 +2,9 @@
 
 The following lists the substantive changes in each version of the specification.
 
+- Version 0.5
+  - Remove the `prerotation` parameter. The feature is automatically enforced when `nextKeyHashes` is present.
+  - Clarify the way the [[ref: Pre-Rotation]] feature works, once a `nextKeyHashes` is commited, the next [[ref: DID log entries]] has to be signed by one of the commited keys.
 - Version 0.4
   - Removes large non-normative sections, such as the implementer's guide, as they are now published on the [https://didtdw.org/](https://didtdw.org/) information site.
   - Removes the use of JSON Patch from the specification. The full DIDDoc is included in each [[ref: DID log entry]].
