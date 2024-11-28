@@ -177,7 +177,7 @@ Each entry is a JSON object consisting of the following properties.
    specification.
 4. The JSON object `state` contains the [[ref: DIDDoc]] for this version of the
    DID.
-5. The JSON array `proof` contains a [[ref: Data Integrity]] proof calculated for
+5. The JSON array `proof` contains a [[ref: Data Integrity]] proof created for
    the entry and signed by a key authorized to update the [[ref: DIDDoc]].
 
 After creation, each entry has (per the [[ref JSON Lines]] specification) all
@@ -938,7 +938,6 @@ entry]] has the following data structure:
 
 "witness" : {
   "threshold": n,
-  "selfWeight": n,
   "witnesses" : [
       {
          "id": "<did:key DID of witness>",
@@ -951,27 +950,25 @@ entry]] has the following data structure:
 
 where:
 
-- threshold: an integer that must be attained or surpassed by the sum of the witnesses and DID Controller's weights for a DID log entry to be considered approved.
-- selfWeight: an integer that is the weight given the DID Controller's verified proof, in determining if the threshold has been surpassed.
+- threshold: an integer that must be attained or surpassed by the sum of the witnesses weights for a DID log entry to be considered approved.
 - witnesses: an array of witnesses, each including the required fields:
   - id: the DID of the witness. The DID **MUST** be a `did:key` DID.
   - weight: an integer that is the weight given to this witness's approval
 
 ##### Witness Threshold Algorithm
 
-The use of the [[ref: threshold]] and weighted approvals (versus needing approvals from
-all [[ref: witnesses]]) is to prevent faulty [[ref: witnesses]] from blocking the publishing of
-a new version of the DID. To determine if the [[ref: threshold]] has been met, sum the
-`weight` integer of the received approvals, plus the `selfWeight` of the [[ref: DID
-Controller]], and if it equal to or more than `threshold`, the update can be
+The use of the [[ref: threshold]] and weighted approvals (versus needing
+approvals from all [[ref: witnesses]]) is to prevent faulty [[ref: witnesses]]
+from blocking the publishing of a new version of the DID. To determine if the
+[[ref: threshold]] has been met, sum the `weight` integer of the received
+approvals and if it equal to or more than the `threshold`, the update can be
 published. The calculation **MUST**  be executed by resolvers processing a
 [[ref: DID Log]].
 
-For example, if there are two [[ref: witnesses]] with a `weight` of 1, a third
-with a weight of 2, the [[ref: DID Controller]] with a `selfWeight` of 2, and a
-`threshold` of 4, the [[ref: threshold]] is met by the [[ref: DID Controller]] plus
-either the first two [[ref: witnesses]] approving the change (`2+1+1`), or the
-third one (`2+2`).
+For example, if there are three [[ref: witnesses]] with a `weight` of `1`, a
+fourth with a weight of `2`, and a `threshold` of `3`, the [[ref: threshold]] is met
+by either the fourth plus any one of the other [[ref: witnesses]] (`2+1`), or
+all of the first three witness (`1+1+1`) providing an approving `proof`.
 
 ##### The Witness Proofs File
 
@@ -988,7 +985,7 @@ The data model for the `did-witness.json` file is:
 {
     [
        {
-            "version_id": "1-QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ",
+            "versionId": "1-QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ",
             "witness": "did:key:z82LkvR3CBNkb...",
             "proof": { ... }
        },
@@ -999,9 +996,9 @@ The data model for the `did-witness.json` file is:
 
 Where:
 
-- `version_id` is the `version_id` of the [[ref: DID log entry]] to which the proof applies.
+- `versionId` is the `versionId` of the [[ref: DID log entry]] to which the proof applies.
 - `witness` is the DID of the witness.
-- `proof` is the proof of the [[ref: DID Log Entry]], excluding the `proof` item, identified by the `version_num`.
+- `proof` is the proof of the [[ref: DID Log Entry]] (excluding the `proof` item) identified by the `version_id`.
 
 To limit the size of the file, only the two most recent proofs from each [[ref: witness]] are retained in the
 `did-witness.json` file. When a new, verified proof from a [[ref: witness]] is received,
@@ -1026,7 +1023,7 @@ The following process is used to witness a DID version update:
   - The meaning of "approve" for any given implementation is outside the scope of this specification.
 - If the verification is successful and approval granted, the [[ref: witness]]
   creates and sends a [[ref: Data Integrity]] proof for the [[ref: DID log entry]] (minus
-  the `proof` item) to the [[ref: DID Controller]] signed by the [[ref: witness]]'s key.
+  the DID Controller `proof`) to the [[ref: DID Controller]], signed by the [[ref: witness]]'s key.
   - The proof generation process of the witness **MUST** match the one used by
    the DID Controller in generating its proof for the [[ref: DID log entry]],
    as defined in the [Authorized Keys](#authorized-keys) section of this
@@ -1055,7 +1052,7 @@ To do so, resolvers must:
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
   verify that the `did-witness.json` file contains verified [[ref: witness]]
   [[ref: Data Integrity]] proofs from a [[ref: threshold]] of active [[ref:
-  witnesses]] for the current or **later** log entries. If not, terminate the
+  witnesses]] of the current or **later** log entries. If not, terminate the
   resolution process with an error.
   - As noted in the section on the [Witness proofs
     file](#the-witness-proofs-file), no more than two proofs from any [[ref: witness]]
