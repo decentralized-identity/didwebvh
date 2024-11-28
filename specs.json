@@ -18,7 +18,7 @@
         "account": "decentralized-identity",
         "repo": "trustdidweb"
       },
-      "output_path": "./",
+      "output_path": "./next",
       "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
       "logo_link": "https://github.com/decentralized-identity/trustdidweb",
       "katex": true,
@@ -36,6 +36,29 @@
           }
         }
       ]
+    },
+    {
+      "title": "Trust DID Web - The did:tdw DID Method - Version 0.4",
+      "spec_directory": "./spec-v0.4",
+      "markdown_paths": [
+        "header.md",
+        "abstract.md",
+        "overview.md",
+        "specification.md",
+        "security_and_privacy.md",
+        "definitions.md",
+        "references.md",
+        "version.md"
+      ],
+      "source": {
+        "host": "github",
+        "account": "decentralized-identity",
+        "repo": "trustdidweb"
+      },
+      "output_path": "./",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
+      "logo_link": "https://github.com/decentralized-identity/trustdidweb",
+      "katex": true
     },
     {
       "title": "Trust DID Web - The did:tdw DID Method - Version 0.3",
