@@ -1020,7 +1020,7 @@ To do so, resolvers must:
 
 - Successfully complete the non-[[ref: witness]] verifications of the [[ref: DID Log]].
 - Verify the [[ref: witness]] proofs that reference [[ref: DID Log entries]] in the [[ref: DID Log]].
-  - Ignore any proofs that do not verify. For example, a `did-witness.json` file
+  - Ignore any witness proofs that do not verify. For example, a `did-witness.json` file
     **MAY** contain proofs of pending (unpublished) [[ref: DID Log entries]].
     Such proofs **MUST** be ignored by resolvers.
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
