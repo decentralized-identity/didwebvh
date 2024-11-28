@@ -104,11 +104,22 @@ To create a snapshot of a version:
 
 ## Handling Version Transitions
 
-In the lifecycle of the specification, there will be times when the version is stable, but clarifications may be added, and when new versions are being defined with breaking changes.  We use the Spec-Up feature to have multiple versions (described above) to enable that, but it gets a little tricky. Notably, we want the landing page for the specification to **always** be the current version of the specification, **and** we want all "in progress" work to be to made to the single, primary specification, so that GitHub holds the full evolution of the specification.  To enable that, we adjust as needed the `"outpath_path"` in the `specs.json` file to define what version of the spec is on the specification landing page -- the spec version where `"output_path"` is set to `"./"`).
+In the lifecycle of the specification, there will be times when the version is
+stable, but clarifications may be added, and when new versions are being defined
+with breaking changes.  We use the Spec-Up feature to have multiple versions
+(described above) to enable that, but it gets a little tricky. Notably, we want
+the landing page for the specification to **always** be the current version of
+the specification, **and** we want all "in progress" work to be to made to the
+single, primary specification (the files in the `spec` folder), so that GitHub
+holds the full evolution of the specification.  To enable that, we adjust as
+needed the `"output_path"` in the `specs.json` file to define what version of
+the spec is on the specification landing page -- the spec version whose
+`"output_path"` is set to `"./"`).
 
 Here's how we do that:
 
-- When the specification is stable, the `spec` folder is the landing page, and past versions are linked in the `header.md` file as "past versions".
+- When the specification is stable, the `spec` folder is the landing page, and
+  past versions are linked in the `header.md` file as "past versions".
 - When a new version of the specification with breaking changes is ready to be worked on:
   - Snapshot the stable specification version by creating a new directory (e.g.,
     `spec-v0.4`) and copying the files from the `spec` folder into the new
@@ -116,16 +127,16 @@ Here's how we do that:
   - Create a new entry in the `specs.json` file for the version.
   - Set the `output_path` of the new version (e.g., `spec-v0.4`) to be `"./"`,
     so that it becomes the landing page.
-  - Change the `output_path` of the primary `spec` folder to `"./next"`.
+  - Change the `output_path` of the primary `spec` folder entry to `"./next"`.
   - Update the `header.json` files in both the new folder and the `spec` folder
-    to point at one another, adding any notes to help readers understand the
+    to link to one another, adding any notes to help readers understand the
     status of the current and next versions of the specification.
 - When the "next" version of the specification stabilizes, revert to the
   "normal" state of the `spec` folder being the landing page.
-  - Change the `output_path` of the primary `spec` folder to `"./next"`.
-  - Change the `output_path` of the formerly "current" spec to its version
-    (e.g., `"./v0.4"`).
+  - Change the `output_path` of the primary `spec` folder to `"./"`.
+  - Change the `output_path` of the formerly "current" spec version to a path
+    that includes its version (e.g., `"./v0.4"`).
   - Update the `header.json` files in both the (now past version) folder and the
-    `spec` folder to point at one another's new `output_path` values, remove any
+    `spec` folder to link to one another's new `output_path` values, remove any
     clarification notes that no longer apply, and make the past version "just
     another" past version (e.g., like `spec-v0.3`)
