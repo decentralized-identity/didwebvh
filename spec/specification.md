@@ -61,8 +61,8 @@ in the [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section
 of this specification, `did:tdw` and `did:web` DIDs that have the same fully
 qualified domain and path transform to the same HTTPS URL, with the exception of
 the final file -- `did.json` for `did:web` and `did.jsonl` for `did:tdw`. For
-`did:tdw` DIDs using [[ref: witnesses]], another file `witness.json` is also
-find (logically) beside the `did.jsonl` web server file. See the
+`did:tdw` DIDs using [[ref: witnesses]], another file `did-witness.json` is also
+found (logically) beside the `did.jsonl` web server file. See the
 [witnesses](#did-witnesses) section of this specification for details.
 
 ### The DID to HTTPS Transformation
@@ -96,11 +96,11 @@ retrieve the [[ref: DID Log]].
       witness proofs for the [[ref: DID entries]] must be published and
       retrieved during resolution. The URL for the extra file is defined by
       replacing the `/did.jsonl` at the end of the [[ref: DID Log]] URL with
-      `/witness.json`.
+      `/did-witness.json`.
    2. When this algorithm is used for resolving a DID path (such as
       `<did>/whois` or `<did>/path/to/file` as defined in the section [DID URL
       Handling](#did-url-resolution)), append the DID URL path instead.
-8. The content type for the `did.jsonl` file **MUST** be `text/jsonl`.
+8. The content type for the `did.jsonl` file **SHOULD** be `text/jsonl`.
 
 The following are some examples of various DID-to-HTTPS transformations based
 on the processing steps specified above.
@@ -298,7 +298,7 @@ Creating a `did:tdw` DID is done by carrying out the following steps.
 
    If the [[ref: DID Controller]] has opted to use [[ref: witnesses]] for the
    DID, the required proofs from the DID's [[ref: witnesses]] **MUST** be
-   collected and published in the `witness.json` file before the [[ref: DID
+   collected and published in the `did-witness.json` file before the [[ref: DID
    Log]] with the new version is published. See the [DID
    Witnesses](#did-witnesses) section of this specification.
 
@@ -362,7 +362,7 @@ For each entry:
    an authorized key as defined in the [Authorized Keys](#authorized-keys)
    section of this specification.
    1. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]]
-      resolvers **MUST** retrieve and verify the DID's `witness.json` file. For
+      resolvers **MUST** retrieve and verify the DID's `did-witness.json` file. For
       details, see the [DID Witnesses](#did-witnesses) section of this
       specification.
 3. Verify the `versionId` for the entry. The `versionId` is the
@@ -412,7 +412,8 @@ For each entry:
   the [[ref: DID Log entries]] must be witnessed, further verification of
   the [[ref: witness]] proofs must be carried out, as defined in the [DID
   Witnesses](#did-witnesses) section of this specification.
-11. If any verifications fail, discard the DID as invalid with an error message.
+11. If any of the DID verifications outlined in this process fail, discard the
+    DID as invalid with an error message.
 
 On completing the processing and successful verification of all [[ref: entries]] in the
 [[ref: DID Log]], respond to the DID resolution request, including the
@@ -494,7 +495,7 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
 10. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]] for the
    DID, the [[ref: DID Controller]] **MUST** collect the threshold of proofs
    from the DID's [[ref: witnesses]], and update and publish the DID's
-   `witness.json` file. The updated `witness.json` file **MUST** be published
+   `did-witness.json` file. The updated `did-witness.json` file **MUST** be published
    **BEFORE** the updated [[ref: DID Log]] file is published. See the [DID
    Witnesses](#did-witnesses) section of this specification.
 11. The updated [[ref: DID Log]] file **MUST** be published at the appropriate
@@ -945,14 +946,14 @@ Controller]].
 
 ##### The Witness Proofs File
 
-Proofs from witnesses are retained in a separate file (`witness.json`) from the
+Proofs from witnesses are retained in a separate file (`did-witness.json`) from the
 [[ref: DID Log]]. The same [DID to HTTPS
 Transformation](#the-did-to-https-transformation) used for the [[ref: DID Log]]
-is used to locate the `witness.json` resource, with only the last element
-changed (`did.jsonl` to `witness.json`). The media type of the file **MUST** be
+is used to locate the `did-witness.json` resource, with only the last element
+changed (`did.jsonl` to `did-witness.json`). The media type of the file **SHOULD** be
 `text/json`.
 
-The data model for the `witness.json` file is:
+The data model for the `did-witness.json` file is:
 
 ```json
 {
@@ -974,7 +975,7 @@ Where:
 - `proof` is the proof of the [[ref: DID Log Entry]], excluding the `proof` item, identified by the `version_num`.
 
 Only the two most recent proofs from each [[ref: witness]] are retained in the
-`witness.json` file. When a new, verified proof from a [[ref: witness]] is received,
+`did-witness.json` file. When a new, verified proof from a [[ref: witness]] is received,
 the [[ref: DID Controller]] adds it to the file. If two other proofs from that
 [[ref: witness]] are found in the file, the oldest **MUST** be removed. The presence of a valid
 proof is an attestation from that [[ref: witness]] that the current and all prior versions
@@ -997,13 +998,17 @@ The following process is used to witness a DID version update:
 - If the verification is successful and approval granted, the [[ref: witness]]
   sends a [[ref: Data Integrity]] proof across the [[ref: DID log entry]] (minus
   the `proof` item) to the [[ref: DID Controller]] signed by the [[ref: witness]]'s key.
+  - The proof generation process of the witness **MUST** match the one used by
+   the DID Controller in generating its proof across the [[ref: DID log entry]],
+   as defined in the [Authorized Keys](#authorized-keys) section of this
+   specification. 
 - The DID Controller updates the [[ref: witnesses]]'s proofs in the
-  `witness.json` file with the received proofs, and publishes the updated file.
+  `did-witness.json` file with the received proofs, and publishes the updated file.
   - The specification leaves to implementers how [[ref: witness]] proofs are
     conveyed to the [[ref: DID Controller]].
-  - The [[ref: DID Controller]] **MAY** publish the updated `witness.json` file
+  - The [[ref: DID Controller]] **MAY** publish the updated `did-witness.json` file
     as new witness proofs are added to the file.
-  - The [[ref: DID Controller]] **MUST** publish the update `witness.json` file
+  - The [[ref: DID Controller]] **MUST** publish the update `did-witness.json` file
     **after** a threshold of witness proofs have been received and **before** the
     witnessed [[ref: DID Log]] file is published.
 
@@ -1015,10 +1020,10 @@ To do so, resolvers must:
 
 - Successfully complete the non-[[ref: witness]] verifications of the [[ref: DID Log]].
 - Verify all of the [[ref: witness]] proofs that reference [[ref: DID Log entries]] in the [[ref: DID Log]].
-  - A `witness.json` file **MAY** contain proofs of pending (unpublished) [[ref:
+  - A `did-witness.json` file **MAY** contain proofs of pending (unpublished) [[ref:
     DID Log entries]]. Such proofs **MUST** be ignored by resolvers.
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
-  verify that the `witness.json` file contains valid [[ref: witness]] proofs from a
+  verify that the `did-witness.json` file contains valid [[ref: witness]] proofs from a
   threshold of active [[ref: witnesses]] across the current or **later** log entries. If
   not, terminate the resolution process with an error.
   - As noted in the section on the [Witness proofs
