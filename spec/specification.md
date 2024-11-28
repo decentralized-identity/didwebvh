@@ -493,13 +493,15 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
    the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]] entry with exception of the first entry, as defined in the
    [Key [[ref: Pre-Rotation]] Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
    section of this specification.
-8. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]] for the
-   DID, collect the required approvals from the DID's [[ref: witnesses]], adding
-   their proofs to the [[ref: data integrity]] proof. See the [DID
-   Witnesses](#did-witnesses) section of this specification.
-9. The proof JSON object **MUST** be added as the value of the `proof` property in the [[ref: log entry]].
-10. The entry **MUST** be made a [[ref JSON Line]] by removing extra whitespace, adding a `\n`
+8. The proof JSON object **MUST** be added as the value of the `proof` property in the [[ref: log entry]].
+9. The entry **MUST** be made a [[ref JSON Line]] by removing extra whitespace, adding a `\n`
    to the entry. 
+10. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]] for the
+   DID, the [[ref: DID Controller]] **MUST** collect the [[ref: threshold]] of proofs
+   from the DID's [[ref: witnesses]], and update and publish the DID's
+   `did-witness.json` file. The updated `did-witness.json` file **MUST** be published
+   **BEFORE** the updated [[ref: DID Log]] file is published. See the [DID
+   Witnesses](#did-witnesses) section of this specification.
 11. The new [[ref: log entry]] **MUST** be appended to the existing contents of
     the [[ref: DID Log]] file `did.jsonl`.
 12. The updated [[ref: DID Log]] file **MUST** be published the appropriate
