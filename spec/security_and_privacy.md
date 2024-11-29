@@ -43,6 +43,6 @@ See also:
 
 ### Cross-Origin Resource Sharing (CORS) Policy Considerations
 
-To support scenarios where DID resolution is performed by client applications running in a web browser, the file served for the [[ref: DID Log]] should be accessible by any origin. To enable this, the [[ref: DID Log]] HTTP response can be set to include the following header:
+To support scenarios where DID resolution is performed by client applications running in a web browser, the file served for the [[ref: DID Log]] needs to be accessible by any origin. To enable this, the [[ref: DID Log]] HTTP response MUST be set to include the following header:
 
 `Access-Control-Allow-Origin: *`
