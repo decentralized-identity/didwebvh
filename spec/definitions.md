@@ -29,7 +29,7 @@ in the [[spec:DID-CORE]].
 
 ~ A DID Document as defined by the [[spec: DID-Core]] -- the document returned when a DID is resolved.
 
-[[def: did:key]]
+[[def: did:key, `did:key`]]
 
 ~ `DID:key`...
 
@@ -60,7 +60,7 @@ when forced to change (such as when an organization is acquired by another,
 resulting in a change of domain names) and when changing DID hosting service
 providers.
 
-[[def: did:web]]
+[[def: did:web, `did:web`]]
 
 ~ `did:web` as described in the [W3C specification](https://w3c-ccg.github.io/did-method-web/)
 is a DID method that leverages the Domain Name System (DNS) to perform the DID operations.
@@ -131,7 +131,7 @@ in this specification as permitted.
 
 [[def: multi-sig, multisig]]
 
-~ A cryptographic signature that to be valid **MUST** contain a defined threshold
+~ A cryptographic signature that to be valid **MUST** contain a defined [[ref: threshold]]
 (for example, 4 of 7) individual signatures to be considered valid. The
 multi-signature key reference points to a verification method that defines what
 keys may contribute to the signature, and under what conditions the
@@ -173,6 +173,14 @@ Log]] entry ready for publication, verifies it according to this specification,
 and approves it according to its ecosystem governance (whatever that might be). If the verification and
 approval process results are positive, witnesses returns to the DID Controller a [[ref: Data Integrity]] proof
 attesting to that positive result.
+
+[[def: threshold, witness threshold]]
+
+~ An algorithm that defines when a sufficient number of [[ref: witnesses]] have
+submitted valid [[ref: Data Integrity]] proofs for a [[ref: DID Log entry]] such
+that it is approved and can be published. The algorithm details are in the
+[Witness Threshold Algorithm](#witness-threshold-algorithm) section of this
+specification.
 
 [[def: W3C VCDM]]
 

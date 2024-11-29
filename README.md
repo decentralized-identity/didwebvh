@@ -10,6 +10,18 @@ Proof of concept implementations available:
 - Python: [https://github.com/bcgov/trustdidweb-py](https://github.com/bcgov/trustdidweb-py)
 - Go: [https://github.com/nuts-foundation/trustdidweb-go](https://github.com/nuts-foundation/trustdidweb-go)
 
+## Current Status of the Specification -- updated: 2024-11-29
+
+The current stable version of the specification is **v0.4**. It is the landing page
+of the [rendered specification](https://identity.foundation/trustdidweb/) and
+has been snapshotted into the `spec-v0.4` folder in this repo. Active work is happening (in
+the `spec`) folder on the next version of the specification ([rendered
+here](https://identity.foundation/trustdidweb/next)). The editors will announce
+when that new version is stable, assigned a version number, and becomes the next
+current version of the specification. Updates in that version will included at
+least changes in the pre-rotation handling, witnesses, and will include a name
+change to the DID Method.
+
 ## Abstract
 
 The `did:tdw` (Trust DID Web) method is an enhancement to the
