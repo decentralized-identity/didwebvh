@@ -349,15 +349,16 @@ are each a JSON object with the following properties:
 
 For each entry:
 
-1. Update the currently active [[ref: parameters]] with the [[ref: parameters]] from
-   the entry (if any). Continue processing using the now active set of
-   [[ref: parameters]].
+1. Update the currently active [[ref: parameters]] with the [[ref: parameters]]
+   from the entry (if any). The `parameters` **MUST** adhere to the [`did:tdw`
+   DID Method Parameters](#didtdw-did-method-parameters) section of this
+   specification. Continue processing using the now active set of [[ref:
+   parameters]].
    - While all [[ref: parameters]] in the first [[ref: Log Entry]] take effect
      immediately, some kinds of [[ref: parameters]] defined in later [[ref:
      entries]] only take effect *after* that entry has been published. For
-     example, rotating the authorized keys (in the array `updateKeys`) to update
-     a DID takes effect only *after* the entry in which they are defined has
-     been published.
+     example, updating the `nextKeys` and `witnesses` arrays take effect only
+     *after* the entry in which they are defined has been published.
 2. The [[ref: Data Integrity]] proof in the entry **MUST** be valid and signed by
    an authorized key as defined in the [Authorized Keys](#authorized-keys)
    section of this specification.
@@ -378,25 +379,19 @@ For each entry:
    `versionTime` for each [[ref: log entry]] **MUST** be greater than the
    previous entry's time. The `versionTime` of the last entry **MUST** be
    earlier than the current time.
-5. Parse and apply the `did:tdw` DID Method configuration `parameters`. Note
-   that in versions after the first, some `parameters` apply to immediately and
-   impact the process of the current DID version, while others, such as
-   `updateKeys` and `witnesses` apply after the current version has been
-   published. The `parameters` **MUST** adhere to the [`did:tdw` DID Method
-   Parameters](#didtdw-did-method-parameters) section of this specification.
-6. When processing the first [[ref: DID log]] entry, verify the [[ref: SCID]]
+5. When processing the first [[ref: DID log]] entry, verify the [[ref: SCID]]
    (defined in the [[ref: parameters]]) according to the
    [SCID Generation and Verification](#scid-generation-and-verification) section
    of this specification.
-7. Get the value of the [[ref: log entry]] property `state`, which is the [[ref:
+6. Get the value of the [[ref: log entry]] property `state`, which is the [[ref:
    DIDDoc]] for the version.
-8. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
+7. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
    in the `parameters` property **MUST** match a hash in
    the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]]
    entry, with exception of the first entry, as defined in the
    [Key [[ref: Pre-Rotation]] Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
    section of this specification.
-9. As each [[ref: log entry]] is processed and verified, collect the following information
+8. As each [[ref: log entry]] is processed and verified, collect the following information
    about each version:
       1. The [[ref: DIDDoc]].
       2. The `versionId` of the [[ref: DIDDoc]].
@@ -409,11 +404,11 @@ For each entry:
          `nextKeyHashes` list in the [[ref: parameters]].
       6. All other `did:tdw` processing configuration settings as defined by in the
          `parameters` object.
-10. If the `parameters` for any of the versions define that some or all of
+9.  If the `parameters` for any of the versions define that some or all of
   the [[ref: DID Log entries]] must be witnessed, further verification of
   the [[ref: witness]] proofs must be carried out, as defined in the [DID
   Witnesses](#did-witnesses) section of this specification.
-11. If any of the DID verifications outlined in this process fail, discard the
+10.  If any of the DID verifications outlined in this process fail, discard the
     DID as invalid with an error message.
 
 On completing the processing and successful verification of all [[ref: entries]] in the
@@ -907,13 +902,13 @@ the DID. This specification defines the technical mechanism for using [[ref:
 witnesses]]. Governance and policy questions about when and how to use the
 technical mechanism are outside the scope of this specification.
 
-Witnesses can prevent a [[ref: DID Controller]] from updating/removing DID
+Witnesses can prevent a [[ref: DID Controller]] from updating/removing
 versions of a DID without detection by the witnesses. [[ref: Witnesses]] are
 also a further mitigation against malicious actors compromising both a [[ref:
 DID Controller]]'s authorization key(s) to update the DID, and the [[ref: DID
 Controller]]'s web site where the [[ref: DID log]] is published. With both
 compromises, a malicious actor could take control over the DID by rewriting the
-[[ref: DID Log]] using the keys they have comprised. By adding [[ref:
+[[ref: DID Log]] using the keys they have compromised. By adding [[ref:
 witnesses]] to monitor and approve each version update, a malicious actor cannot
 rewrite the previous history without having compromised a sufficient number of
 [[ref: witnesses]], the [[ref: DID Controller]]'s key(s), and the Web Server on
@@ -926,7 +921,7 @@ parameter, as described in the [Parameters](#didtdw-did-method-parameters)
 section of this specification. Once the first `witness` parameter has been added
 to a version, there is always an active list of witnesses, and a [[ref: threshold]] of
 the active witnesses must provide verified proofs about an update before the
-update can be published. If the a DID version contains a new (replacement) list
+update can be published. If a DID version contains a new (replacement) list
 of witnesses (by including a new `witness` [[ref: parameter]]) that new list
 becomes active **AFTER** the new version is published.
 
@@ -1008,7 +1003,7 @@ Where:
 
 - `versionId` is the `versionId` of the [[ref: DID log entry]] to which the proof applies.
 - `witness` is the DID of the witness.
-- `proof` is the proof of the [[ref: DID Log Entry]] (excluding the `proof` item) identified by the `version_id`.
+- `proof` is the proof of the [[ref: DID Log Entry]] (excluding the `proof` item) identified by the `versionId`.
 
 To limit the size of the file, only the two most recent proofs from each [[ref: witness]] are retained in the
 `did-witness.json` file. When a new, verified proof from a [[ref: witness]] is received,
@@ -1022,12 +1017,12 @@ of the DID have been verified and approved by that witness.
 The following process is used to witness a DID version update:
 
 - The [[ref: DID Controller]] prepares the full [[ref: DID Log Entry]] (including the
-  `proof` element) for the new version of DID, and shares it with the active [[ref: witnesses]].
+  `proof` element) for the new version of the DID, and shares it with the active [[ref: witnesses]].
   - The specification leaves to implementers *how* the [[ref: log entry]] data is provided to the [[ref: witnesses]].
 - The [[ref: witnesses]] ***MUST** hold their own copy of the published [[ref:
   DID Log]] prior to the version being witnessed.
 - Each [[ref: witness]] verifies the [[ref: DID Log Entry]], as defined by this
-  specification. If not, the [[ref: witnesses]] **MUST NOT** approve the [[ref: log entry]].
+  specification. If not verified, the [[ref: witnesses]] **MUST NOT** approve the [[ref: log entry]].
 - Each [[ref: witness]] determines (based on the governance of the ecosystem)
   if they approve of the DID version update.
   - The meaning of "approve" for any given implementation is outside the scope of this specification.
@@ -1055,22 +1050,22 @@ active [[ref: witnesses]] have a [[ref: threshold]] of active witnesses approvin
 To do so, resolvers must:
 
 - Successfully complete the non-[[ref: witness]] verifications of the [[ref: DID Log]].
-- Verify the [[ref: witness]] proofs that reference [[ref: DID Log entries]] in the [[ref: DID Log]].
+- Verify the [[ref: witness]] proofs in the `did-witness.json` file.
   - Ignore any witness proofs that do not verify. For example, a `did-witness.json` file
     **MAY** contain proofs of pending (unpublished) [[ref: DID Log entries]].
     Such proofs **MUST** be ignored by resolvers.
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
-  verify that the `did-witness.json` file contains verified [[ref: witness]]
+  confirm that the `did-witness.json` file contains verified [[ref: witness]]
   [[ref: Data Integrity]] proofs from a [[ref: threshold]] of active [[ref:
-  witnesses]] of the current or **later** log entries. If not, terminate the
+  witnesses]] for the current or any **later** log entry. If not, terminate the
   resolution process with an error.
   - As noted in the section on the [Witness proofs
     file](#the-witness-proofs-file), no more than two proofs from any [[ref: witness]]
     are retained in the file. A valid proof from a [[ref: witness]] on a given entry
-    implies the [[ref: witness]]'s "approval" of all prior [[ref: DID log
+    implies the [[ref: witness]]'s "approval" of **all** prior [[ref: DID log
     entries]].
 
-If you want to learn about the practical application of witnesses, see the
+If you want to learn more about the practical application of witnesses, see the
 Implementer's Guide section on
 [Witnesses](https://didtdw.org/latest/implementers_guide/#witnesses) on the
 `did:tdw` information site for more discussion on the witness capability and
