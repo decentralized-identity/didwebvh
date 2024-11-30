@@ -1,7 +1,7 @@
 {
   "specs": [
     {
-      "title": "Trust DID Web - The did:tdw DID Method",
+      "title": "The did:webvh DID Method -- did:web + Verifiable History",
       "spec_directory": "./spec",
       "markdown_paths": [
         "header.md",
@@ -19,7 +19,7 @@
         "repo": "trustdidweb"
       },
       "output_path": "./next",
-      "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/didwebvh.jpg",
       "logo_link": "https://github.com/decentralized-identity/trustdidweb",
       "katex": true,
       "external_specs": [
@@ -59,6 +59,20 @@
       "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
       "logo_link": "https://github.com/decentralized-identity/trustdidweb",
       "katex": true
+      "external_specs": [
+        {
+          "multiformats": {
+            "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
+            "title": "Multiformats",
+            "rawDate": "2024-02-21",
+            "authors": [
+              "Juan Benet",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        }
+      ]
     },
     {
       "title": "Trust DID Web - The did:tdw DID Method - Version 0.3",
