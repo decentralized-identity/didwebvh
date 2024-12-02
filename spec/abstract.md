@@ -8,7 +8,7 @@ limitations as a long-lasting DID. `did:webvh` features include:
 - Ongoing publishing of the full history of the DID, including all of the DID
   Document ([[ref: DIDDoc]]) versions instead of, or alongside an existing
   `did:web` DIDDoc.
-- The ability to resolve the full history of the DID using a verifiable chain of]
+- The ability to resolve the full history of the DID using a verifiable chain of
   updates to the [[ref: DIDDoc]] from genesis to deactivation.
 - A [[ref: self-certifying identifier]] (SCID) for the DID. The [[ref: SCID]], globally unique and
   embedded in the DID, is derived from the initial [[ref: DID log entry]]. It ensures the integrity
