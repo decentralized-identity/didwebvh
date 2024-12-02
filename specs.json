@@ -58,7 +58,7 @@
       "output_path": "./",
       "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
       "logo_link": "https://github.com/decentralized-identity/trustdidweb",
-      "katex": true
+      "katex": true,
       "external_specs": [
         {
           "multiformats": {
