@@ -1,4 +1,4 @@
-## `did:tdw` Version Changelog
+## `did:webvh` Version Changelog
 
 The following lists the substantive changes in each version of the specification.
 
@@ -10,6 +10,8 @@ The following lists the substantive changes in each version of the specification
     `did-witness.json`. Adjustments to the witness threshold algorithm were also
     made, such as removing the [[ref: DID Controllers]]' `selfweight` attribute,
     and defining that all witness DIDs must be `did:key` DIDs.
+  - Rename the DID Method to `did:webvh` (`did:web` + Verifiable History)
+  - Moves the DID Method information site to [https://didwebvh.info](https://didwebvh.info).
 - Version 0.4
   - Removes large non-normative sections, such as the implementer's guide, as they are now published on the [https://didtdw.org/](https://didtdw.org/) information site.
   - Removes the use of JSON Patch from the specification. The full DIDDoc is included in each [[ref: DID log entry]].

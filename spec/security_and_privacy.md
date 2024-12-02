@@ -12,7 +12,7 @@ essential to prevent spoofing and ensure authenticity of DNS records.
 
 #### DNS Privacy Considerations
 
-Resolving a `did:tdw` identifier can expose users to tracking by DNS providers
+Resolving a `did:webvh` identifier can expose users to tracking by DNS providers
 and web servers. To mitigate this risk, it's recommended to use privacy-enhancing
 technologies such as VPNs, TOR, or trusted universal resolver services, in line
 with strategies outlined in the [did:web

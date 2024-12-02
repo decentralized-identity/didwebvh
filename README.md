@@ -1,6 +1,7 @@
-# Trust DID Web - A DID Method
+# The `did:webvh` DID Method -- `did:web` + Verifiable History
 
-The spec repository for did:tdw -- Trust DID Web DID method.
+The spec repository for the `did:webvh` DID Method. `did:webvh` is `did:web`
+extended to include the Verifiable History of the DID.
 
 Read the spec: [https://identity.foundation/trustdidweb](https://identity.foundation/trustdidweb)
 
@@ -10,23 +11,19 @@ Proof of concept implementations available:
 - Python: [https://github.com/bcgov/trustdidweb-py](https://github.com/bcgov/trustdidweb-py)
 - Go: [https://github.com/nuts-foundation/trustdidweb-go](https://github.com/nuts-foundation/trustdidweb-go)
 
-## Current Status of the Specification -- updated: 2024-11-29
+## Current Status of the Specification
 
-The current stable version of the specification is **v0.4**. It is the landing page
-of the [rendered specification](https://identity.foundation/trustdidweb/) and
-has been snapshotted into the `spec-v0.4` folder in this repo. Active work is happening (in
-the `spec`) folder on the next version of the specification ([rendered
-here](https://identity.foundation/trustdidweb/next)). The editors will announce
-when that new version is stable, assigned a version number, and becomes the next
-current version of the specification. Updates in that version will included at
-least changes in the pre-rotation handling, witnesses, and will include a name
-change to the DID Method.
+The current stable version of the specification can be found at
+[https://identity.foundation/trustdidweb](https://identity.foundation/trustdidweb).
+See any guidance there about the status of the specification -- past versions,
+upcoming changes, etc.
 
 ## Abstract
 
-The `did:tdw` (Trust DID Web) method is an enhancement to the
-`did:web` protocol, providing a complementary web-based DID method that addresses limitations
-of `did:web`. It's features include the following.
+The `did:webvh` DID Method is an enhancement to the well-known `did:web` DID
+method, providing a complementary web-based DID method that addresses
+limitations of `did:web`, most notability, the verifiable history for which it
+is name. `did:webvh` features include the following.
 
 - Ongoing publishing of all DID Document (DIDDoc) versions for a DID instead of,
   or alongside a `did:web` DID/DIDDoc.
@@ -51,13 +48,13 @@ of `did:web`. It's features include the following.
   Verifiable Credentials with the DID as the `credentialSubject`,
   signed by the DID.
 
-Combined, the additional features enable greater trust and security without
-compromising the simplicity of `did:web`. The incorporation of the DID Core
-compatible "/whois" path, drawing inspiration from the traditional WHOIS
-protocol, offers an easy to use, decentralized, trust registry.
-This `did:tdw` aims to establish a more trusted and secure web environment by
-providing robust verification processes and enabling transparency and
-authenticity in the management of decentralized digital identities.
+Combined, the additional features enable greater trust, security and
+verifiability without compromising the simplicity of `did:web`. The incorporation
+of the DID Core compatible "/whois" path, drawing inspiration from the
+traditional WHOIS protocol, offers an easy to use, decentralized, trust
+registry. `did:webvh` aims to establish a more trusted and secure web
+environment by providing robust verification processes and enabling transparency
+and authenticity in the management of decentralized digital identities.
 
 ## Contributing to the Specification
 
@@ -87,7 +84,7 @@ The specification is currently in [Spec-Up] format. See the
 ## Publishing Previous Spec Versions
 
 [Spec-Up] allows for multiple versions of the spec to be rendered and accessed
-on the same site. We use that feature for the `did:tdw` spec to snapshot
+on the same site. We use that feature for the `did:webvh` DID Method spec to snapshot
 previous versions of the spec for reference.
 
 To create a snapshot of a version:
@@ -116,27 +113,27 @@ To create a snapshot of a version:
 
 ## Handling Version Transitions
 
-In the lifecycle of the specification, there will be times when the version is
-stable, but clarifications may be added, and when new versions are being defined
-with breaking changes.  We use the Spec-Up feature to have multiple versions
-(described above) to enable that, but it gets a little tricky. Notably, we want
+In the lifecycle of the specification, there will be times when the latest version is
+stable, with clarifications being added, and other times when new versions are being defined
+with breaking changes.  We use the Spec-Up multiple versions feature
+(as described above) to support that, but it can get a little tricky. Notably, we want
 the landing page for the specification to **always** be the current version of
 the specification, **and** we want all "in progress" work to be to made to the
-single, primary specification (the files in the `spec` folder), so that GitHub
-holds the full evolution of the specification.  To enable that, we adjust as
+single, primary specification -- the files in the `spec` folder -- so that GitHub
+holds the full history of the specification.  To enable that, we adjust as
 needed the `"output_path"` in the `specs.json` file to define what version of
 the spec is on the specification landing page -- the spec version whose
 `"output_path"` is set to `"./"`).
 
-Here's how we do that:
+Here's how we do that in different situations:
 
 - When the specification is stable, the `spec` folder is the landing page, and
-  past versions are linked in the `header.md` file as "past versions".
+  past versions are linked in that folder's `header.md` file as "past versions".
 - When a new version of the specification with breaking changes is ready to be worked on:
   - Snapshot the stable specification version by creating a new directory (e.g.,
     `spec-v0.4`) and copying the files from the `spec` folder into the new
-    folder
-  - Create a new entry in the `specs.json` file for the version.
+    folder.
+  - Create a new entry in the `specs.json` file for that new snapshot version.
   - Set the `output_path` of the new version (e.g., `spec-v0.4`) to be `"./"`,
     so that it becomes the landing page.
   - Change the `output_path` of the primary `spec` folder entry to `"./next"`.

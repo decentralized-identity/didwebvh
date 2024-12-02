@@ -1,14 +1,14 @@
 ## Abstract
 
-Trust DID Web (`did:tdw`) is an enhancement to the `did:web` DID method,
+DID Web + Verifiable History (`did:webvh`) is an enhancement to the `did:web` DID method,
 providing complementary features that address `did:web`'s
-limitations. `did:tdw` features include:
+limitations as a long-lasting DID. `did:webvh` features include:
 
-- Ongoing publishing of all DID Document ([[ref: DIDDoc]]) versions for a DID instead of,
-  or alongside a current `did:web` DID/DIDDoc.
 - The same DID-to-HTTPS transformation as `did:web`.
-- Supports the same [High Assurance DIDs with DNS] mechanism.
-- The ability to resolve the full history of the DID using a verifiable chain of
+- Ongoing publishing of the full history of the DID, including all of the DID
+  Document ([[ref: DIDDoc]]) versions instead of, or alongside an existing
+  `did:web` DIDDoc.
+- The ability to resolve the full history of the DID using a verifiable chain of]
   updates to the [[ref: DIDDoc]] from genesis to deactivation.
 - A [[ref: self-certifying identifier]] (SCID) for the DID. The [[ref: SCID]], globally unique and
   embedded in the DID, is derived from the initial [[ref: DID log entry]]. It ensures the integrity
@@ -23,6 +23,7 @@ limitations. `did:tdw` features include:
   control of a DID in cases where an active private key is compromised.
 - An optional mechanism for having collaborating [[ref: witnesses]]
   that approve of updates to the DID by a [[ref: DID Controller]] before publication.
+- Supports the same [High Assurance DIDs with DNS] mechanism.
 - DID URL path handling that defaults (but can be overridden) to automatically
   resolving `<did>/path/to/file` by using a comparable DID-to-HTTPS translation
   as for the [[ref: DIDDoc]].
@@ -35,9 +36,9 @@ limitations. `did:tdw` features include:
 
 [High Assurance DIDs with DNS]: https://datatracker.ietf.org/doc/draft-carter-high-assurance-dids-with-dns/
 
-Combined, the additional features enable greater trust and security without
+Combined, the additional features enable greater trust, security and verifiability without
 compromising the simplicity of `did:web`.
 
-For more information about the Trust DID Web (`did:tdw`) DID method and how (and
+For information beyond this specification about the (`did:webvh`) DID method and how (and
 where) it is used in practice, please visit
-[https://didtdw.org/](https://didtdw.org/)
+[https://didwebvh.info/](https://didwebvh.info/)

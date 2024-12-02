@@ -1,13 +1,13 @@
-Trust DID Web - `did:tdw`
+`did:web` + Verifiable History - The `did:webvh` DID Method
 ==================
 
 **Specification Status:** UPDATE IN PROCESS
 
-The `did:tdw` Specification Editors are currently making a combination of
-updates to the DID Method such that this version of the specification has not
-yet been given a version. Once this set of changes have been approved, a version
-will be assigned and it will be the latest version of the specification. Until
-then, those looking for the current version of the specification should review
+The `did:webvh` Specification Editors are currently making a set of
+breaking changes to the DID Method. At this time, the next version of the specification has not
+yet been given a version number. Once the set of changes have been approved, a version
+will be assigned and made the latest version of the specification. Until
+then, those looking for the current stable version of the specification should review
 [v0.4](../).
 
 The updates in process are:
@@ -18,7 +18,7 @@ The updates in process are:
 
 **Current Specification:**- [v0.4](../)
 
-**Specification Version:** To Be Defined (see [Changelog](#didtdw-version-changelog))
+**Specification Version:** To Be Defined (see [Changelog](#didwebvh-version-changelog))
 
 **Source of Latest Draft:**
   [https://github.com/decentralized-identity/trustdidweb](https://github.com/decentralized-identity/trustdidweb)
@@ -27,7 +27,7 @@ The updates in process are:
 - [v0.3](./v0.3)
 
 **Information Site:**
-  [https://didtdw.org/](https://didtdw.org/)
+  [https://didwebvh.info/](https://didwebvh.info/)
 
 **Editors:**
 ~ [Stephen Curran](https://github.com/swcurran)

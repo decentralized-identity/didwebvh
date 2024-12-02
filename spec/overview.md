@@ -14,49 +14,48 @@ without its challenges--
 from trust layers inherited from the web and the absence of a verifiable
 history for the DID.
 
-Tackling these concerns, the `did:tdw` (Trust DID Web) DID
-method aims to enhance `did:web` by introducing features such
-as a [[ref: self-certifying identifiers]] (SCIDs), update key(s)
-and a verifiable history, akin to what is available with ledger-based DIDs,
-but without relying on a ledger.
+Tackling these concerns, the `did:webvh` (`did:web` + Verifiable History) DID
+Method aims to enhance `did:web` by introducing features such as a [[ref:
+self-certifying identifiers]] (SCIDs), update key(s) and a verifiable history,
+akin to what is available with ledger-based DIDs, but without relying on a
+ledger.
 
 This approach not only maintains backward compatibility but also offers an
 additional layer of assurance for those requiring more robust verification
-processes. By publishing the resulting DID as both `did:web` and `did:tdw`, it
+processes. By publishing the resulting DID as both `did:web` and `did:webvh`, it
 caters to a broader range of trust requirements, from those who are comfortable
 with the existing `did:web` infrastructure to those seeking greater security
-assurances provided by `did:tdw`. This innovative step represents a significant
+assurances provided by `did:webvh`. This innovative step represents a significant
 stride towards a more trusted and secure web, where the integrity of
 cryptographic key publishing is paramount.
 
-The key differences between `did:web` and `did:tdw` revolve around the core
+The key differences between `did:web` and `did:webvh` revolve around the core
 issues of decentralization and security. `did:web` is recognized for its
 simplicity and cost-effectiveness, allowing for easy establishment of a
 credential ecosystem. However, it is not inherently decentralized as it relies
 on DNS domain names, which require centralized registries. Furthermore, it lacks a
 cryptographically verifiable, tamper-resistant, and persistently stored DID
-document. In contrast, `did:tdw` (Trust DID Web) is proposed as an enhancement
+document. In contrast, `did:webvh` is an enhancement
 to `did:web`, aiming to address these limitations by adding a verifiable history
-to the DID without the need for a ledger. This method seeks to provide a more
+to the DID without the need for a ledger. This method provides a more
 decentralized approach by ensuring that the security of the embedded
-SCID does not depend on DNS. Additionally, `did:tdw` is
+SCID does not depend on DNS. `did:webvh` is
 capable of resolving a cryptographically verifiable trust registry and status
 lists, using DID-Linked Resources, which `did:web` lacks. These features are
-designed to build a trusted web, offering a higher level of assurance for
+designed to build a trusted web by offering a higher level of assurance for
 cryptographic key publishing and management.
 
 For backwards compatibility, and for verifiers that "trust" `did:web`, a
-`did:tdw` can be trivially modified and published in parallel to a `did:web`
-DID. For resolvers that want more assurance, `did:tdw` provides a way to "trust
-did:web" (or to enable a "trusted web" if you say it fast) enabled by the
-features listed in the [Abstract](#abstract).
+`did:webvh` can be trivially modified and published with a parallel `did:web`
+DID. For resolvers that want more assurance, `did:webvh` provides a way to
+verify a did:web using the features listed in the [Abstract](#abstract).
 
-The following is a `tl;dr` summary of how `did:tdw` works:
+The following is a `tl;dr` summary of how `did:webvh` works:
 
-1. `did:tdw` uses the same DID-to-HTTPS transformation as `did:web`, so
-   `did:tdw`'s  `did.jsonl` ([[ref: JSON Lines]]) file is found in the same
+1. `did:webvh` uses the same DID-to-HTTPS transformation as `did:web`, so
+   `did:webvh`'s  `did.jsonl` ([[ref: JSON Lines]]) file is found in the same
    location as `did:web`'s `did.json` file, and supports an easy transition
-   from `did:web` to gain the added benefits of `did:tdw`.
+   from `did:web` to gain the added benefits of `did:webvh`.
 2. The `did.jsonl` is a list of JSON [[ref: DID log entries]], one per line,
    whitespace removed (per [[ref: JSON Lines]]). Each entry contains the
    information needed to derive a version of the [[ref: DIDDoc]] from its preceding
@@ -69,49 +68,53 @@ The following is a `tl;dr` summary of how `did:tdw` works:
     2. `versionTime` -- as asserted by the [[ref: DID Controller]].
     3. `parameters` -- a set of [[ref: parameters]] that impact the processing of the current and
       future [[ref: log entries]].
-        - Example [[ref: parameters]] are the version of the `did:tdw` specification and
-        hash algorithm being used as well as the [[ref: SCID]] and update key(s).
+        - Example [[ref: parameters]] are the version of the `did:webvh` specification and
+        hash algorithm being used, as well as the [[ref: SCID]] and update key(s).
     4. `state` -- the new version of the [[ref: DIDDoc]].
     5. A [[ref: Data Integrity]] (DI) proof across the entry, signed by a [[ref:
-      DID Controller]] authorized key to update the [[ref: DIDDoc]], and optionally,
-      a set of witnesses that monitor the actions of the DID Controller.
+      DID Controller]]-authorized key to update the [[ref: DIDDoc]].
+    6. If the [[ref: DID Controller]] enables support for DID [[witnesses]], an
+       extra file (`did-witness.json`) in the same web location contains [[ref:
+       Data Integrity]] proofs from witness for [[ref: DID Log entries]].
 4. In generating the first version of the [[ref: DIDDoc]], the [[ref: DID
   Controller]] calculates the [[ref: SCID]] for the DID from the first [[ref:
-  log entry]] (which includes the [[ref: DIDDoc]]) by using the string
-  `"{SCID}"` everywhere the actual [[ref: SCID]] is to be placed. The [[ref: DID
-  Controller]] then replaces the placeholders with the calculated [[ref: SCID]],
-  including it as a `parameter` in the first [[ref: log entry]], and inserting
-  it where needed in the initial (and all subsequent) DIDDocs. The [[ref: SCID]]
-  enables an optional [[ref: portability]] capability, allowing a DID's web
-  location to be moved, while retaining the DID and version history of the DID.
-1. A [[ref: DID Controller]] generates and publishes the new/updated [[ref: DID Log]] file by making it
-  available at the appropriate location on the web, based on the identifier of the
-  DID.
-1. Given a `did:tdw` DID, a resolver converts the DID to an HTTPS URL,
-  retrieves, and processes the [[ref: DID Log]] `did.jsonl`, generating and verifying
+  log entry]] (which includes the [[ref: DIDDoc]]). This is done by using the
+  string `"{SCID}"` everywhere the actual [[ref: SCID]] is to be placed in order
+  to generate the hash. The [[ref: DID Controller]] then replaces the
+  placeholders with the calculated [[ref: SCID]], including it as a `parameter`
+  in the first [[ref: log entry]], and inserting it where needed in the initial
+  (and all subsequent) DIDDocs. The [[ref: SCID]] must be verified by the
+  resolvers, to verify that the inception event has not been tampered with. The
+  [[ref: SCID]] also enables an optional [[ref: portability]] capability,
+  allowing a DID's web location to be moved, while retaining the [[ref: SCID]] and verifiable
+  history of the identifier.
+5. A [[ref: DID Controller]] generates and publishes the new/updated [[ref: DID Log]] file by making it
+  available at the appropriate location on the web, based on the DID's identifier.
+6. Given a `did:webvh` DID, a resolver converts the DID to an HTTPS URL,
+  retrieves, and processes the [[ref: DID Log]] `did.jsonl` file, generating and verifying
   each [[ref: log entry]] as per the requirements outlined in this specification.
     - In the process, the resolver collects all the [[ref: DIDDoc]] versions and public
-      keys used by the DID currently, or in the past. This enables
-      resolving both current and past versions of the DID.
-1. `did:tdw` DID URLs with paths and `/whois` are resolved to documents
+      keys used by the DID currently, and in the past. This enables
+      resolving both current and past versions of the DID and keys.
+7. `did:webvh` DID URLs with paths and `/whois` are resolved to documents
   published by the [[ref: DID Controller]] that are by default in the web location relative to the
   `did.jsonl` file. See the [note below](#the-whois-use-case) about the
    powerful capability enabled by the `/whois` DID URL path.
-1. Optionally, a [[ref: DID Controller]] can easily generate and publish a `did:web` DIDDoc
-  from the latest `did:tdw` [[ref: DIDDoc]] in parallel with the `did:tdw` [[ref: DID Log]].
+8. A [[ref: DID Controller]] can easily generate and publish a `did:web` DIDDoc
+  from the latest `did:webvh` [[ref: DIDDoc]] in parallel with the `did:webvh` [[ref: DID Log]].
 
   ::: warning
     A resolver settling for just the `did:web` version of the DID does not get the
-    verifiability of the `did:tdw` log.
+    verifiability of the `did:webvh` log.
   :::
 
-An example of a `did:tdw` evolving through a series of versions can be seen in
-the [did:tdw Examples](https://didtdw.org/latest/example/) on the `did:tdw`
+An example of a `did:webvh` evolving through a series of versions can be seen in
+the [`did:webvh` Examples](https://didwebvh.org/latest/example/) on the `did:webvh`
 information site.
 
 ### The `/whois` Use Case
 
-This DID Method introduces what we hope will be a widely embraced convention for
+The `did:webvh` DID Method introduces what we hope will be a widely embraced convention for
 all [[ref: DID Methods]] -- the `/whois` path. This feature harkens back to the `WHOIS`
 protocol that was created in the 1970s to provide a directory about people and
 entities in the early days of ARPANET. In the 80's, `whois` evolved into
@@ -128,7 +131,7 @@ published by the [[ref: DID Controller]]) containing [[ref: Verifiable Credentia
 the DID as the `credentialSubject`, and the VP signed by the DID. Given a DID,
 one can gather verifiable data about the [[ref: DID Controller]] by resolving
 `<did>/whois` and processing the returned VP. That's powerful -- an efficient,
-highly decentralized, trust registry. For `did:tdw`, the approach is very simple
+highly decentralized, trust registry. For `did:webvh`, the approach is very simple
 -- transform the DID to its HTTPS equivalent, and execute a `GET <https>/whois`.
 Need to know who issued the VCs in the VP? Get the issuer DIDs from those VCs,
 and resolve `<issuer did>/whois` for each. This is comparable to walking a CA
@@ -136,7 +139,7 @@ and resolve `<issuer did>/whois` for each. This is comparable to walking a CA
 and the issuers that attest to them.
 
 The following is a use case for the `/whois` capability. Consider an example of
-the `did:tdw` controller being a mining company that has exported a shipment and
+the `did:webvh` controller being a mining company that has exported a shipment and
 created a "Product Passport" Verifiable Credential with information about the
 shipment. A country importing the shipment (the Importer) might want to know
 more about the issuer of the VC, and hence, the details of the shipment. They
@@ -153,7 +156,7 @@ about that DID. It might contain:
   - Perhaps the Importer does not know about the mining authority for that
     jurisdiction. The Importer can repeat the `/whois` resolution process for
     the issuer of _that_ credential. The Importer might (for example), resolve
-    and verify the `did:tdw` DID for the Authority, and then resolve the
+    and verify the `did:webvh` DID for the Authority, and then resolve the
     `/whois` DID URL to find a verifiable credential issued by the government of
     the jurisdiction. The Importer recognizes and trusts that government's
     authority, and so can decide to recognize and trust the mining permit

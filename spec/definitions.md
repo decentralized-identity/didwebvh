@@ -3,7 +3,7 @@
 [[def: base58btc]]
 
 ~ Applies [[spec:draft-msporny-base58-03]] to convert
-data to a `base58` encoding. Used in `did:tdw` for encoding hashes for [[ref: SCIDs]] and [[ref: entry hashes]].
+data to a `base58` encoding. Used in `did:webvh` for encoding hashes for [[ref: SCIDs]] and [[ref: entry hashes]].
 
 [[def: Data Integrity]]
 
@@ -50,11 +50,11 @@ in the [[ref: DID Log]].
 ~ DID methods are the mechanism by which a particular type of DID and its
 associated DID document are created, resolved, updated, and deactivated. DID
 methods are defined using separate DID method specifications. This document is
-the DID Method Specification for `DID:tdw`.
+the DID Method Specification for `did:webvh`.
 
-[[def: DID Portability, DID:tdw portability, `DID:tdw` portability, portability]]
+[[def: DID Portability, did:webvh portability, `did:webvh` portability, portability]]
 
-~ `did:tdw` portability is the capability to change the DID string for the
+~ `did:webvh` portability is the capability to change the DID string for the
 DID while retaining the [[ref: SCID]] and the history of the DID. This is useful
 when forced to change (such as when an organization is acquired by another,
 resulting in a change of domain names) and when changing DID hosting service
@@ -66,8 +66,8 @@ providers.
 is a DID method that leverages the Domain Name System (DNS) to perform the DID operations.
 It is valued for its simplicity and ease of deployment compared to [[ref: DID methods]] that are
 based on distributed ledgers or blockchain technology, but also comes with increased
-challenges related to trust and security. `did:web` provides a starting point for `did:tdw`,
-which complements `did:web` with specific features to address the challenges
+challenges related to trust, security and verifiability. `did:web` provides a starting point for `did:webvh`,
+which complements `did:web` with specific features to address its challenges
 while still providing ease of deployment.
 
 [[def: eddsa-jcs-2022]]
@@ -80,7 +80,7 @@ the cryptosuite can be found in the specification, here:
 
 [[def: Entry Hash, entryHash, entry hashes]]
 
-~ A `DID:tdw` entry hash is a hash generated using a formally defined process
+~ A `did:webvh` entry hash is a hash generated using a formally defined process
 over the input data to a [[ref: log entry]], excluding the [[ref: Data Integrity]]
 proof. The input data includes content from the predecessor to the
 version of the DID, ensuring that all the versions are "chained" together in a
@@ -139,16 +139,16 @@ multi-signature is considered valid.
 
 [[def: parameters, parameter]]
 
-~ `did:tdw` parameters are a defined set of configurations that control how the
+~ `did:webvh` parameters are a defined set of configurations that control how the
 issuer has generated the DID, and how the resolver must process the DID [[ref:
 Log entries]]. The use of parameters allows for the controlled evolution of
-`did:tdw` log handling, such as evolving the set of permitted hash algorithms or
+`did:webvh` log handling, such as evolving the set of permitted hash algorithms or
 cryptosuites. This enables support for very long lasting identifiers -- decades.
 
 [[def: self-certifying identifier, self-certifying identifiers, SCID, SCIDs]]
 
 ~ An object identifier derived from initial data such that an attacker could not
-create a new object with the same identifier. The input for a `DID:tdw` SCID is
+create a new object with the same identifier. The input for a `did:webvh` SCID is
 the initial [[ref: DIDDoc]] with the placeholder `{SCID}` wherever the SCID is to be
 placed.
 
@@ -168,7 +168,7 @@ signs the [[ref: verifiable presentation]].
 [[def: witness, witnesses]]
 
 ~ Witnesses are participants in the process of creating and verifying a version
-of a `DID:tdw` [[ref: DIDDoc]]. Notably, a witness receives from the [[ref: DID Controller]] a [[ref: DID
+of a `did:webvh` [[ref: DIDDoc]]. Notably, a witness receives from the [[ref: DID Controller]] a [[ref: DID
 Log]] entry ready for publication, verifies it according to this specification,
 and approves it according to its ecosystem governance (whatever that might be). If the verification and
 approval process results are positive, witnesses returns to the DID Controller a [[ref: Data Integrity]] proof
