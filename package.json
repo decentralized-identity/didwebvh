@@ -1,7 +1,7 @@
 {
-  "name": "trustdidweb",
+  "name": "didwebvh",
   "version": "1.0.0",
-  "description": "Trust DID Web (tdw).",
+  "description": "did:webvh -- did:web + Verifiable History",
   "main": "index.js",
   "scripts": {
     "edit": "node -e \"require('spec-up')()\"",
@@ -12,15 +12,15 @@
     "decentralized identifier",
     "DID",
     "spec",
-    "trustdidweb",
+    "didwebvh",
     "tdw"
   ],
   "author": "Stephen Curran",
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/decentralized-identity/trustdidweb/issues"
+    "url": "https://github.com/decentralized-identity/didwebvh/issues"
   },
-  "homepage": "https://github.com/decentralized-identity/trustdidweb#readme",
+  "homepage": "https://identity.foundation/didwebvh/",
   "dependencies": {
     "spec-up": "github:brianorwhatever/spec-up#master"
   }
