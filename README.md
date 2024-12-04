@@ -3,18 +3,19 @@
 The spec repository for the `did:webvh` DID Method. `did:webvh` is `did:web`
 extended to include the Verifiable History of the DID.
 
-Read the spec: [https://identity.foundation/trustdidweb](https://identity.foundation/trustdidweb)
+Read the spec: [https://identity.foundation/didwebvh](https://identity.foundation/didwebvh/next)
 
 Proof of concept implementations available:
 
-- Typescript: [https://github.com/bcgov/trustdidweb-ts](https://github.com/bcgov/trustdidweb-ts)
-- Python: [https://github.com/bcgov/trustdidweb-py](https://github.com/bcgov/trustdidweb-py)
+- Typescript: [https://github.com/decentralized-identity/trustdidweb-ts](https://github.com/decentralized-identity/trustdidweb-ts)
+- Python: [https://github.com/decentralized-identity/trustdidweb-py](https://github.com/decentralized-identity/trustdidweb-py)
 - Go: [https://github.com/nuts-foundation/trustdidweb-go](https://github.com/nuts-foundation/trustdidweb-go)
+- Python Web Server: [https://github.com/decentralized-identity/trustdidweb-server-py](https://github.com/decentralized-identity/trustdidweb-server-py)
 
 ## Current Status of the Specification
 
 The current stable version of the specification can be found at
-[https://identity.foundation/trustdidweb](https://identity.foundation/trustdidweb).
+[https://identity.foundation/didwebvh](https://identity.foundation/didwebvh).
 See any guidance there about the status of the specification -- past versions,
 upcoming changes, etc.
 
@@ -106,8 +107,8 @@ To create a snapshot of a version:
 ```text
 **Latest Version:**
 
-- Specification: [https://identity.foundation/trustdidweb/](../)
-- Repository: [https://github.com/decentralized-identity/trustdidweb](https://github.com/decentralized-identity/trustdidweb)
+- Specification: [https://identity.foundation/didwebvh/](../)
+- Repository: [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
 ```
 

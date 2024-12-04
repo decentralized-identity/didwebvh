@@ -21,7 +21,7 @@ The updates in process are:
 **Specification Version:** To Be Defined (see [Changelog](#didwebvh-version-changelog))
 
 **Source of Latest Draft:**
-  [https://github.com/decentralized-identity/trustdidweb](https://github.com/decentralized-identity/trustdidweb)
+  [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
 **Previous Drafts:**
 - [v0.3](./v0.3)
@@ -39,9 +39,9 @@ The updates in process are:
 ~ [Dmitri Zagdulin](https://github.com/dmitrizagidulin)
 
 **Participate:**
-~ [GitHub repo](https://github.com/decentralized-identity/trustdidweb)
-~ [File a bug](https://github.com/decentralized-identity/trustdidweb/issues)
-~ [Commit history](https://github.com/decentralized-identity/trustdidweb/commits/main)
+~ [GitHub repo](https://github.com/decentralized-identity/didwebvh)
+~ [File a bug](https://github.com/decentralized-identity/didwebvh/issues)
+~ [Commit history](https://github.com/decentralized-identity/didwebvh/commits/main)
 
 **Implementations:**
 ~ [TypeScript]
@@ -49,8 +49,8 @@ The updates in process are:
 ~ [Go]
 ~ [DIDTDW Server in Python]
 
-[TypeScript]: https://github.com/bcgov/trustdidweb-ts
-[Python]: https://github.com/bcgov/trustdidweb-py
+[TypeScript]: https://github.com/decentralized-identity/trustdidweb-ts
+[Python]: https://github.com/decentralized-identity/trustdidweb-py
 [Go]: https://github.com/nuts-foundation/trustdidweb-go
 [DIDTDW Server in Python]: https://github.com/decentralized-identity/trustdidweb-server-py
 

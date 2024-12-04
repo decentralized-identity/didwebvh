@@ -16,11 +16,11 @@
       "source": {
         "host": "github",
         "account": "decentralized-identity",
-        "repo": "trustdidweb"
+        "repo": "didwebvh"
       },
       "output_path": "./next",
-      "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/didwebvh.jpg",
-      "logo_link": "https://github.com/decentralized-identity/trustdidweb",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
       "katex": true,
       "external_specs": [
         {
@@ -53,11 +53,11 @@
       "source": {
         "host": "github",
         "account": "decentralized-identity",
-        "repo": "trustdidweb"
+        "repo": "didwebvh"
       },
       "output_path": "./",
-      "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
-      "logo_link": "https://github.com/decentralized-identity/trustdidweb",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/tdw.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
       "katex": true,
       "external_specs": [
         {
@@ -92,11 +92,11 @@
       "source": {
         "host": "github",
         "account": "decentralized-identity",
-        "repo": "trustdidweb"
+        "repo": "didwebvh"
       },
       "output_path": "./v0.3",
-      "logo": "https://raw.githubusercontent.com/decentralized-identity/trustdidweb/refs/heads/main/tdw.jpg",
-      "logo_link": "https://github.com/decentralized-identity/trustdidweb",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/tdw.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
       "katex": true
     }
   ]
