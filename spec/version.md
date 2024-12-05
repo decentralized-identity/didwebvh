@@ -3,10 +3,12 @@
 The following lists the substantive changes in each version of the specification.
 
 - Version 0.5
-  - Remove the `prerotation` parameter. The feature is automatically enforced when `nextKeyHashes` is present.
-  - Clarify the way the [[ref: Pre-Rotation]] feature works, once a `nextKeyHashes` is committed, the next [[ref: DID log entries]] has to be signed by one of the committed keys.
-  - Changes the [[ref: witness]] handling by removing the witness [[ref: Data
-    Integrity]] proofs from the [[ref: DID Log]] file and into a separate file
+  - Remove the `prerotation` parameter. The feature is automatically enforced
+    when `nextKeyHashes` is present.
+  - Clarify the way the [[ref: Pre-Rotation]] feature works, once a `nextKeyHashes`
+    is committed, the next [[ref: DID log entries]] has to be signed by one of the committed keys.
+  - Changes the [[ref: witness]] handling by removing the witness [[ref: Data Integrity]]
+    proofs from the [[ref: DID Log]] file and into a separate file
     `did-witness.json`. Adjustments to the witness threshold algorithm were also
     made, such as removing the [[ref: DID Controllers]]' `selfweight` attribute,
     and defining that all witness DIDs must be `did:key` DIDs.
@@ -18,8 +20,8 @@ The following lists the substantive changes in each version of the specification
   - Changes the data format of the [[ref: DID log entries]] from an array to an object. The [[ref: DID Log]] remains in the [[ref: JSON Lines]] format.
   - Changes the [[ref: DID log entry]] array to be named JSON objects or properties.
   - Makes each DID version's [[ref: Data Integrity]] proof apply across the JSON
-    [[ref: DID log entry]] object, as is typical with [[ref: DID Integrity
-    Proofs]]. Previously, the [[ref: Data Integrity]] proof was generated across
+    [[ref: DID log entry]] object, as is typical with [[ref: Data Integrity]] proofs.
+    Previously, the [[ref: Data Integrity]] proof was generated across
     the current DIDDoc version, with the `versionId` as the challenge.
   - Specified that the `versionTime` must be recorded as a UTC time zone timestamp.
 - Version 0.3
@@ -33,10 +35,9 @@ The following lists the substantive changes in each version of the specification
   - Adds the [[ref: parameter]] `portable` to enable the capability to move a
     `did:tdw` during the creation of the DID.
   - Removes the first two [[ref: Log Entry]] items `entryHash` and `versionId`
-    and replacing them with the new `versionId` as the first item in each [[ref: log
-    entry]]. The new versionId takes the form `<version number>-<entryHash>`,
+    and replacing them with the new `versionId` as the first item in each
+    [[ref: log entry]]. The new versionId takes the form `<version number>-<entryHash>`,
     where `<version number>` is the incrementing integer of version of the
     entry: 1, 2, 3, etc.
   - The `<did>/whois` media type is changed to `application/vp` and the file is
-    changed to `whois.vp` to match the IANA registration of a [[ref: Verifiable
-    Presentation]].
+    changed to `whois.vp` to match the IANA registration of a [[ref: Verifiable Presentation]].

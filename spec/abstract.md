@@ -1,6 +1,6 @@
 ## Abstract
 
-DID Web + Verifiable History (`did:webvh`) is an enhancement to the `did:web` DID method,
+DID Web + Verifiable History (`did:webvh`) is an enhancement to the [[ref: did:web]] DID method,
 providing complementary features that address `did:web`'s
 limitations as a long-lasting DID. `did:webvh` features include:
 
@@ -17,7 +17,7 @@ limitations as a long-lasting DID. `did:webvh` features include:
 - An optional mechanism for enabling [[ref: DID portability]] via the [[ref: SCID]], allowing
   the DID's web location to be moved and the DID string to be updated, both while retaining
   a connection to the predecessor DID(s) and preserving the DID's verifiable history.
-- [[ref: DIDDoc]] updates contain a proof signed by the [[ref: DID Controllers]] *authorized* to
+- [[ref: DIDDoc]] updates contain a proof signed by the [[ref: DID Controller's]] *authorized* to
   update the DID.
 - An optional mechanism for publishing "pre-rotation" keys to prevent the loss of
   control of a DID in cases where an active private key is compromised.

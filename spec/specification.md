@@ -93,7 +93,7 @@ retrieve the [[ref: DID Log]].
    `https://`.
 7. Append `/did.jsonl` to complete the URL.
    1. If the DID is using [[ref: witnesses]], an extra JSON file containing the
-      witness proofs for the [[ref: DID entries]] must be published and
+      witness proofs for the [[ref: DID Log Entries]] must be published and
       retrieved during resolution. The URL for the extra file is defined by
       replacing the `/did.jsonl` at the end of the [[ref: DID Log]] URL with
       `/did-witness.json`.
@@ -821,8 +821,8 @@ As noted in the [Update (rotate)](#update-rotate) section of the specification,
 a `did:webvh` DID can be renamed by changing the `id` DID string in the
 DIDDoc to one that resolves to a different HTTPS URL if the following conditions are met.
 
-- The [[ref: DID Log]] of the renamed DID **MUST** contain all of the [[ref: log
-  entries]] from the creation of the DID.
+- The [[ref: DID Log]] of the renamed DID **MUST** contain all of the [[ref: log entries]]
+  from the creation of the DID.
 - The [[ref: log entry]] in which the DID is renamed **MUST** be a valid DID entry
   building on the prior [[ref: DID log entries]], per this specification.
 - The [[ref: parameter]] `portable` **MUST** be set to `true`, as defined in the
@@ -845,7 +845,7 @@ in the Implementer's Guide for additional guidance.
 As described in the [parameters](#didwebvh-did-method-parameters)
 section of this specification, a [[ref: DID Controller]] **MAY** define
 `nextKeyHashes` to activate the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active,
-all verification [[ref: multikeys]] in the `updateKeys` [[ref: parameters]] property in other
+all [[ref: multikey]] representations of the public keys in the `updateKeys` [[ref: parameters]] property in other
 than the initial version of the [[ref: DID log entry]] **MUST** have their hash in the  `nextKeyHashes` array
 from the previous [[ref: DID log entry]]. If not, terminate the resolution process with an error.
 
@@ -854,7 +854,7 @@ Controller]] **MUST** execute the following process for each possible future
 authorization key.
 
 1. Generate a new key pair.
-2. Generate a [[ref: multikeys]] representation of the public key of the new key
+2. Generate a [[ref: multikey]] representation of the public key of the new key
    pair.
 3. Calculate the hash string as `base58btc(multihash(multikey))`, where:
    1. `multikey` is the [[ref: multikey]] representation of the public key from Step 2.
@@ -882,17 +882,16 @@ When processing other than the first [[ref: DID log entry]] where
 [[ref: pre-rotation]] feature is active, a `did:webvh` resolver **MUST**:
 
 1. For each [[ref: multikey]] in the `updateKeys` property in the `parameters` of
-   the [[ref: log entry]], calculate the hash and hash algorithm for the [[ref:
-   mulithash]] [[ref: multikey]].
+   the [[ref: log entry]], calculate the hash and hash algorithm for the [[ref: multihash]]
+   [[ref: multikey]].
 2. The hash algorithm **MUST** be one listed in the
    [parameters](#didwebvh-did-method-parameters) defined by the version of the
    `did:webvh` specification being used by the [[ref: DID Controller]].
 3. The resultant hash **MUST** be in the `nextKeyHashes` array from the previous [[ref: log entry]] prior to
    being processed. If not, terminate the resolution
    process with an error.
-4. A new `nextKeyHashes` list **MUST** be in the `parameters` of the [[ref: log
-   entry]] currently being processed. If not, terminate the resolution process with
-   an error.
+4. A new `nextKeyHashes` list **MUST** be in the `parameters` of the [[ref: log entry]]
+   currently being processed. If not, terminate the resolution process withan error.
 
 #### DID Witnesses
 
@@ -931,13 +930,13 @@ becomes active **AFTER** the new version is published.
 
 If there is a need in an ecosystem to identify who the witnesses are, a
 mechanism should be defined by the governance of the ecosystem, such as the
-entry of the DID in a [[ref: Trust Registry]]. Such mechanisms are outside the
+entry of the DID in a trust registry. Such mechanisms are outside the
 scope of this specification.
 
 ##### The `witness` Parameter
 
-The `witness` element in a [[ref: parameters]] object of a [[ref: DID Log
-entry]] has the following data structure:
+The `witness` element in a [[ref: parameters]] object of a [[ref: DID Log entry]]
+has the following data structure:
 
 ```json
 
@@ -1101,13 +1100,13 @@ with the semantic simplicity of using them with a web-based DID method.
 Specifically, a `did:webvh` implementation **MUST**:
 
 - Resolve the `/whois` DID URL path using a [[spec:LINKED-VP]] service, whether
-  or not it exists in the `did:webvh` [[ref: DIDDoc]], returning a [[ref: Verifiable
-  Presentation]], if published by the [[ref: DID Controller]], found at the same
-  path as the `did.jsonl` file, using the `/whois.vp` filename component, and
-  the `application/vp' media type, as per the [IANA Verifiable Presentation
-  Assignment](https://www.iana.org/assignments/media-types/application/vp).
-  - For example, `did:webvh:{SCID}.example.com/whois` returns the [[ref: verifiable
-    presentation]] from `https://{SCID}.example.com/.well-known/whois.vp`.
+  or not it exists in the `did:webvh` [[ref: DIDDoc]], returning a
+  [[ref: Verifiable Presentation]], if published by the [[ref: DID Controller]],
+  found at the same path as the `did.jsonl` file, using the `/whois.vp` filename
+  component, and the `application/vp' media type, as per the
+  [IANA Verifiable Presentation Assignment](https://www.iana.org/assignments/media-types/application/vp).
+  - For example, `did:webvh:{SCID}.example.com/whois` returns the
+    [[ref: verifiable presentation]] from `https://{SCID}.example.com/.well-known/whois.vp`.
 - Resolve any `did:webvh` DID URL using a [[spec:DID-CORE]] `relativeRef` DID
   [[ref: parameter]], whether or not a supporting service exists in the `did:webvh` [[ref: DIDDoc]],
   returning the file found at web location corresponding to the DID-to-HTTPS
@@ -1130,21 +1129,19 @@ how a [[ref: DID Controller]] can override them.
 #### whois LinkedVP Service
 
 The `#whois` service enables those that receive a `did:webvh` DID to retrieve and
-a [[ref: Verifiable Presentation]] (and embedded [[ref: Verifiable
-Credentials]]) the [[ref: DID Controller]] has decided to publish about itself.
-The intention is that anyone wanting to learn more about a particular `did:webvh`
-DID can resolve the `<did>/whois` DID URL to retrieve a [[ref: Verifiable
-Presentation]] published by the [[ref: DID Controller]] that contains [[ref:
-Verifiable Credentials]] with the DID as the subject. The DID Controller
-includes in the [[ref: Verifiable Presentation]] any [[ref: Verifiable Credentials]] that it
-thinks might be helpful for resolvers in making a trust decision about the [[ref: DID
-Controller]].
+a [[ref: Verifiable Presentation]] (and embedded [[ref: Verifiable Credentials]])
+the [[ref: DID Controller]] has decided to publish about itself. The intention
+is that anyone wanting to learn more about a particular `did:webvh`
+DID can resolve the `<did>/whois` DID URL to retrieve a [[ref: Verifiable Presentation]]
+published by the [[ref: DID Controller]] that contains [[ref: Verifiable Credentials]]
+with the DID as the subject. The DID Controller includes in the [[ref: Verifiable Presentation]]
+any [[ref: Verifiable Credentials]] that it thinks might be helpful for resolvers
+in making a trust decision about the [[ref: DID Controller]].
 
 It is up to the [[ref: DID Controller]] to decide to publish a `whois`
 [[ref: verifiable presentation]], and which [[ref: verifiable credentials]] to put into the
 [[ref: verifiable presentation]]. It is up to a DID resolver to decide what attestations
-from third parties are useful in making a trust decision about the [[ref: DID
-Controller]].
+from third parties are useful in making a trust decision about the [[ref: DID Controller]].
 
 `did:webvh` DIDs **automatically** supports a `/whois` service endpoint with the
 following definition based on the [[spec:LINKED-VP]] specification, with the
@@ -1163,17 +1160,16 @@ transformation with `did.jsonl` changed to `whois.vp`. Differing from the
 }
 ```
 
-The returned `whois.vp` **MUST** contain a [[ref: W3C VCDM]] [[ref: verifiable
-presentation]] signed by the DID and containing [[ref: verifiable credentials]]
+The returned `whois.vp` **MUST** contain a [[ref: W3C VCDM]] [[ref: verifiable presentation]]
+signed by the DID and containing [[ref: verifiable credentials]]
 that **MUST** have the DID as the `credentialSubject`.
 
 A [[ref: DID Controller]] **MAY** explicitly add to their [[ref: DIDDoc]] a `did:webvh`
 service with the `"id": "#whois"`. Such an entry **MUST** override the implicit
 `service` above. If the [[ref: DID Controller]] wants to publish the `whois`
-[[ref: verifiable presentation]] in a different format than the [[ref: W3C
-VCDM]] format, they **MUST** explicitly add to their [[ref: DIDDoc]] a service with the
-`"id": "#whois"` to specify the name and implied format of the [[ref: verifiable
-presentation]].
+[[ref: verifiable presentation]] in a different format than the [[ref: W3C VCDM]]
+format, they **MUST** explicitly add to their [[ref: DIDDoc]] a service with the
+`"id": "#whois"` to specify the name and implied format of the [[ref: verifiable presentation]].
 
 To resolve the DID URL `<did:webvh DID>/whois`, the resolver **MUST**:
 

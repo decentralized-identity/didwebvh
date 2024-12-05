@@ -20,7 +20,7 @@ verifiable, decentralized digital identities. A DID refers to any subject (e.g.,
 a person, organization, thing, data model, abstract entity, etc.) as determined
 by the controller of the DID.
 
-[[def: DID Controller, DID Controllers]]
+[[def: DID Controller, DID Controller's, DID Controllers]]
 
 ~ The entity that controls (create, updates, deletes) a given DID, as defined
 in the [[spec:DID-CORE]].
@@ -28,10 +28,6 @@ in the [[spec:DID-CORE]].
 [[def: DIDDoc]]
 
 ~ A DID Document as defined by the [[spec: DID-Core]] -- the document returned when a DID is resolved.
-
-[[def: did:key, `did:key`]]
-
-~ `DID:key`...
 
 [[def: DID Log, DID Logs]]
 
@@ -60,7 +56,7 @@ when forced to change (such as when an organization is acquired by another,
 resulting in a change of domain names) and when changing DID hosting service
 providers.
 
-[[def: did:web, `did:web`]]
+[[def: did:web]]
 
 ~ `did:web` as described in the [W3C specification](https://w3c-ccg.github.io/did-method-web/)
 is a DID method that leverages the Domain Name System (DNS) to perform the DID operations.
@@ -114,10 +110,20 @@ able to rotate to a new key known only to the attacker.
 
 [[def: Linked-VP, Linked Verifiable Presentation]]
 
-~ A [[spec:DID-CORE]] `service` entry that specifies where a [[ref: verifiable
-presentation]] about the DID subject can be found. The [Decentralized Identity
+~ A [[spec:DID-CORE]] `service` entry that specifies where a [[ref: verifiable presentation]]
+about the DID subject can be found. The [Decentralized Identity
 Foundation](https://identity.foundation/) hosts the [Linked VP
 Specification](https://identity.foundation/linked-vp/).
+
+[[def: multibase]]
+
+~ A specification for encoding binary data as a string using a prefix that
+indicates the encoding.
+
+[[def: multikey]]
+
+~ A verification method that encodes key types into a single binary stream that
+is then encoded as a [[ref: multibase]] value.
 
 [[def: multihash]]
 
@@ -128,14 +134,6 @@ and the length of the hash, so that software receiving the hash knows how to
 verify it. Although [[ref: multihash]] supports many hash algorithms, for
 interoperability, [[ref: DID Controllers]] **MUST** only use the hash algorithms defined
 in this specification as permitted.
-
-[[def: multi-sig, multisig]]
-
-~ A cryptographic signature that to be valid **MUST** contain a defined [[ref: threshold]]
-(for example, 4 of 7) individual signatures to be considered valid. The
-multi-signature key reference points to a verification method that defines what
-keys may contribute to the signature, and under what conditions the
-multi-signature is considered valid.
 
 [[def: parameters, parameter]]
 
