@@ -109,7 +109,7 @@ The following is a `tl;dr` summary of how `did:webvh` works:
   :::
 
 An example of a `did:webvh` evolving through a series of versions can be seen in
-the [`did:webvh` Examples](https://didwebvh.org/latest/example/) on the `did:webvh`
+the [`did:webvh` Examples](https://didwebvh.info/latest/example/) on the `did:webvh`
 information site.
 
 ### The `/whois` Use Case
