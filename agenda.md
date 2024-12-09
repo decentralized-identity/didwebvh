@@ -1,8 +1,8 @@
-# Trust DID Web Work Item Rolling Agenda<!-- omit in toc -->
+# did:webvh DID Method Work Item Rolling Agenda<!-- omit in toc -->
 
 Zoom Link: [https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1](https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1)
 
-Agenda: [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [TrustDIDWeb Repository](https://github.com/decentralized-identity/trustdidweb/blob/main/agenda.md) (synchronized after each meeting)
+Agenda: [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [did:webvh Repository](https://github.com/decentralized-identity/trustdidweb/blob/main/agenda.md) (synchronized after each meeting)
 
 [**WG projects**](https://github.com/decentralized-identity?q=wg-cc&type=&language=) | [DIF page](https://identity.foundation/working-groups/claims-credentials.html) | [Mailing list and Wiki](https://lists.identity.foundation/g/cc-wg) | [Meeting recordings](https://docs.google.com/spreadsheets/d/1wgccmMvIImx30qVE9GhRKWWv3vmL2ZyUauuKx3IfRmA/edit?gid=111226877#gid=111226877)
 
@@ -10,6 +10,7 @@ Agenda: [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [TrustDIDWeb Reposit
 
 - [Meeting Information](#meeting-information)
 - [Future Topics](#future-topics)
+- [Meeting - 05 Dec 2024](#meeting---05-dec-2024)
 - [Meeting - 21 Nov 2024](#meeting---21-nov-2024)
 - [Meeting - 07 Nov 2024](#meeting---07-nov-2024)
 - [Meeting - 24 Oct 2024](#meeting---24-oct-2024)
@@ -27,7 +28,7 @@ Agenda: [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [TrustDIDWeb Reposit
 - Links and Repositories:
     - [Specification], [Spec Repository](https://github.com/decentralized-identity/trustdidweb), [Information Site](https://didtdw.org/)
     - Implementations: [TS](https://github.com/decentralized-identity/trustdidweb-ts), [Python](https://github.com/bcgov/trustdidweb-py), [Go](https://pkg.go.dev/github.com/nuts-foundation/trustdidweb-go)
-    - [Trust DID Web Server](https://github.com/decentralized-identity/trustdidweb-server-py)
+    - [did:webvh Server](https://github.com/decentralized-identity/trustdidweb-server-py)
 
 _Participants are encouraged to turn your video on. This is a good way to build rapport across the contributor community._
 
@@ -46,12 +47,68 @@ _This document is live-edited DURING each call, and stable/authoritative copies 
 
 ## Future Topics
 
-- Using the `did:tdw` log format with other DID Methods
-- Merging `did:tdw` features into `did:web`?
+- Using the `did:webvh` log format with other DID Methods
+- Merging `did:webvh` features into `did:web`?
 - Implementor's experiences -- architectures, learnings
-- A did:tdw test suite -- such as proposed [here](https://github.com/nuts-foundation/trustdidweb-go/pull/1)
+- A did:webvh test suite -- such as proposed [here](https://github.com/nuts-foundation/trustdidweb-go/pull/1)
 
 ============================================
+## Meeting - 05 Dec 2024
+
+Time: 9:00 Pacific / 18:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/gllobsEiHYk_fsSjoaOQA3b3WQjl_MbFcw1m3XeuXhKfZqL9rKmTUUyNh9IqMAZL.wbw7Bla6LkMzA6d3)
+
+Attendees:
+
+- Stephen Curran
+- Brian Richter
+- Andrew Whitehead
+- Patrick St. Louis
+- Kaliya Young
+- Jamie Hale
+- Alex Sinelnikov
+- Emiliano Sune
+- Rob Aaron
+- Sylvain Martel
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:tdw Specification license] -- W3C Mode
+    4. Introductions and Agenda Topics
+        1. Kaliya and Alex
+    6. Announcements:
+        1. Much of the renaming of the DID Method has been completed. Next up is the update of the implementations.
+2. Are we good with the [next version](https://identity.foundation/didwebvh/next)?
+    1. Name is updated.
+    2. Pre-rotation change is made (although we will add a picture to clarify).
+        3. Issue -- should we allow turning off pre-rotation, and how. [Issue 151](https://github.com/decentralized-identity/didwebvh/issues/151)
+        4. Add the picture from Brian and flow from Sylvain to spec or info site.
+    4. Witness proofs in a separate file.
+        5. Brian to fix the JSON.
+        6. Sign the versionId instead of the DID Log Entry -- [Issue 152](https://github.com/decentralized-identity/didwebvh/issues/152)
+3. Discussions left open from last week.
+    1. Should a key from a prior log entry be used to verify a signature? YES! --  Related to that -- should a `did:webvh` resolver provide any support for doing that?
+        1. The DID Controller should be able to express that a key is revoked.  Ideally for signing, but also for verifying -- need a status. But that should be a DID Core feature -- did:webhv would do what the DID Core spec.
+        2. Should a resolver return the entire log, so that a client can weed through it? YES
+        3. Should a resolver resolve a fragment that is not in the current DIDDoc?  For example, if the VC is signed by an identified key (e.g., `<did>#key-a`), can the client ask the resolver for that key regardless of the version of the DIDDoc it is in? What if it is in multiple versions of the DIDDoc?  Presumably all are the same, but... YES (we should discuss in an issue)
+        4. VersionTime can always be used.
+        5. Should there be a way to get a list of all keys in all the versions of the DIDDoc, in case the client wants to try them all? NO
+        6. Other approaches?
+    2. Should the addition of witnesses only be permitted in the first entry or can it be later?  As defined in the latest update, later is permitted.  **Decsion: Leave as is.**
+    4. Is there a use case for turning off witnessing? As defined now, this is not mentioned, but presumably one could put an empty list (`[]`) in and "turn off" further witnessing -- although that update would have to be witnessed. **Decision: Add in a paragraph about turning off witnessing.**
+4. Next efforts -- updating the implementations to the new version. Goal is to try for backwards compatibility -- but not to go to extremes. Please report back on the challenges. 
+4. NOT DISCUSSED: AnonCreds object formats and did:tdw, and perhaps a follow up discussion on [DID Linked Resources](https://w3c-ccg.github.io/DID-Linked-Resources/). @andrewwhitehead has provided this [proposal](https://hackmd.io/@andrewwhitehead/HkNC44z71g). Let's talk about it.
+5. Plans for updates to the spec.
+    1. A ChatGPT pass, likely using the using the "Academic Assistant Pro" GPT. That should include DRYing the spec to remove duplication.
+    2. Cleaning up `[[spec]]` references -- Brian has enabled us to add our own spec references.
+    3. Security and Privacy sections. Anyone able to help?
+    4. Getting "spec to a standard" advice and applying those changes.
+6. NOT DISCUSSED: DIDDoc and DID Metadata
+7. NOT DISCUSSED: [Spec. PRs and Issues](https://github.com/decentralized-identity/trustdidweb/issues)
+8. NOT DISCUSSED: Update on the [did:webvh Web Server](https://github.com/decentralized-identity/trustdidweb-server-py) -- Patrick St. Louis.
+
 ## Meeting - 21 Nov 2024
 
 Time: 9:00 Pacific / 18:00 Central Europe
