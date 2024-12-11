@@ -34,6 +34,18 @@
             ],
             "status": "Internet Draft"
           }
+        },
+        {
+          "di-eddsa-v1.0": {
+            "href": "https://www.w3.org/TR/vc-di-eddsa",
+            "title": "Data Integrity EdDSA Cryptosuites v1.0",
+            "rawDate": "2024-12-08",
+            "authors": [
+              "Dave Longley",
+              "Manu Sporny"
+            ],
+            "status": "W3C Technical Recommendation"
+          }
         }
       ]
     },
