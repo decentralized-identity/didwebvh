@@ -16,7 +16,7 @@ The updates in process are:
 - Changing how and where witness proofs are managed.
 - Renaming the DID Method.
 
-**Current Specification:**- [v0.4](../)
+**Current Specification:**- [v0.4](/)
 
 **Specification Version:** To Be Defined (see [Changelog](#didwebvh-version-changelog))
 
@@ -24,7 +24,7 @@ The updates in process are:
   [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
 **Previous Drafts:**
-- [v0.3](./v0.3)
+- [v0.3](/v0.3)
 
 **Information Site:**
   [https://didwebvh.info/](https://didwebvh.info/)

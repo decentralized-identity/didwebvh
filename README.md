@@ -107,7 +107,7 @@ To create a snapshot of a version:
 ```text
 **Latest Version:**
 
-- Specification: [https://identity.foundation/didwebvh/](../)
+- Specification: [https://identity.foundation/didwebvh/](/)
 - Repository: [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
 ```

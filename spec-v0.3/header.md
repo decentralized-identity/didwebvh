@@ -9,7 +9,7 @@ This version of the specification was released at the time the OLD name for the 
 
 **Latest Version:**
 
-- Specification: [https://identity.foundation/didwebvh/](../)
+- Specification: [https://identity.foundation/didwebvh/](/)
 - Repository: [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
 **Editors:**
