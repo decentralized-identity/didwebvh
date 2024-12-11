@@ -574,8 +574,8 @@ properties are defined below.
   - Acceptable values for this specification are:
     - `did:webvh:0.5`: Requires that the rules defined in this version of the specification be used
       in processing the log. Implied by the value are the following:
-      - The permitted hash algorithms used by the [[ref: DID Controller]] **MUST** be `SHA-256` as defined in [[spec: rfc6234]].
-      - The permitted [[ref: Data Integrity]] cryptosuites used by the [[ref: DID Controller]] **MUST** be `eddsa-jcs-2022` as referenced in [[ref: eddsa-jcs-2022]].
+      - The permitted hash algorithms used by the [[ref: DID Controller]] **MUST** be `SHA-256` as defined in [[spec:rfc6234]].
+      - The permitted [[ref: Data Integrity]] cryptosuites used by the [[ref: DID Controller]] **MUST** be `eddsa-jcs-2022` as referenced in [spec:di-eddsa-v1.0].
 - `scid`: The value of the [[ref: SCID]] for this DID.
   - This property **MUST** appear in the first [[ref: DID log entry]].
 - `updateKeys`: An array of [[ref: multikey]] formatted public keys
@@ -839,21 +839,30 @@ compromised by an attacker, the attacker should not be able to take control of
 the DID by using the compromised keys to rotate to new keys the attacker
 controls. Assuming the attacker has not also compromised the committed key
 pairs, they cannot rotate the authorization keys without detection. See the
-non-normative section about [Using [[ref: Pre-Rotation]] Keys](#using-pre-rotation-keys)
-in the Implementer's Guide for additional guidance.
+non-normative section about [Using [[ref: Pre-Rotation]] Keys]([#using-pre-rotation-keys](https://didwebvh.info/latest/implementers-guide/prerotation-keys/))
+in the `did:webvh` Implementer's Guide for additional guidance.
 
-As described in the [parameters](#didwebvh-did-method-parameters)
-section of this specification, a [[ref: DID Controller]] **MAY** define
-`nextKeyHashes` to activate the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active,
-all [[ref: multikey]] representations of the public keys in the `updateKeys` [[ref: parameters]] property in other
-than the initial version of the [[ref: DID log entry]] **MUST** have their hash in the  `nextKeyHashes` array
-from the previous [[ref: DID log entry]]. If not, terminate the resolution process with an error.
+As described in the [parameters](#didwebvh-did-method-parameters) section of
+this specification, a [[ref: DID Controller]] **MAY** include the [[ref: parameter]]
+`nextKeyHashes` with a non-empty list in any [[ref: DID log entry]] to activate
+the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active, all
+[[ref: multikey]] representations of the public keys in the `updateKeys` [[ref:
+parameters]] property in other than the initial version of the [[ref: DID log
+entry]] **MUST** have their hash in the  `nextKeyHashes` array from the previous
+[[ref: DID log entry]]. If not, terminate the resolution process with an error.
+
+A [[ref: DID Controller]] may turn off the use of pre-rotation by setting the
+[[ref: parameter]] `nextKeyHashes` to an empty list in any [[ref: DID log
+entry]]. If there is an active set of `nextKeyHashes` at the time, the
+pre-rotation requirements remains in effect for the [[ref: DID Log entry]]. The
+subsequent [[ref: DID Log entry]] **MUST** use the non-pre-rotation rules.
 
 To create a hash to be included in the `nextKeyHashes` array, the [[ref: DID
 Controller]] **MUST** execute the following process for each possible future
 authorization key.
 
-1. Generate a new key pair.
+1. Generate a new key pair. The key type **MUST** be one that can be used as a
+   `did:webvh` authorization key.
 2. Generate a [[ref: multikey]] representation of the public key of the new key
    pair.
 3. Calculate the hash string as `base58btc(multihash(multikey))`, where:
@@ -895,18 +904,19 @@ When processing other than the first [[ref: DID log entry]] where
 
 #### DID Witnesses
 
-The [[ref: witness]] process for a DID provides a way for collaborators to work
-with the [[ref: DID Controller]] to "witness" the publication of new versions of
-the DID. This specification defines the technical mechanism for using [[ref:
-witnesses]]. Governance and policy questions about when and how to use the
-technical mechanism are outside the scope of this specification.
+The [[ref: witness]] process for a `did:webvh` DID provides a way for
+collaborators to work with the [[ref: DID Controller]] to "witness" the
+publication of new versions of the DID. This specification defines the technical
+mechanism for using [[ref: witnesses]]. Governance and policy questions about
+when and how to use the technical mechanism are outside the scope of this
+specification.
 
 Witnesses can prevent a [[ref: DID Controller]] from updating/removing
 versions of a DID without detection by the witnesses. [[ref: Witnesses]] are
 also a further mitigation against malicious actors compromising both a [[ref:
 DID Controller]]'s authorization key(s) to update the DID, and the [[ref: DID
 Controller]]'s web site where the [[ref: DID log]] is published. With both
-compromises, a malicious actor could take control over the DID by rewriting the
+compromises, a malicious actor might be able to take control over the DID by rewriting the
 [[ref: DID Log]] using the keys they have compromised. By adding [[ref:
 witnesses]] to monitor and approve each version update, a malicious actor cannot
 rewrite the previous history without having compromised a sufficient number of
@@ -917,12 +927,15 @@ which the [[ref: DID Log]] is published.
 
 The list of DIDs that witness DID updates are defined in the `witness`
 parameter, as described in the [Parameters](#didwebvh-did-method-parameters)
-section of this specification. Once the first `witness` parameter has been added
-to a version, there is always an active list of witnesses, and a [[ref: threshold]] of
-the active witnesses must provide verified proofs about an update before the
-update can be published. If a DID version contains a new (replacement) list
-of witnesses (by including a new `witness` [[ref: parameter]]) that new list
-becomes active **AFTER** the new version is published.
+section of this specification. After the first `witness` parameter has been
+added to a version, and while there are active witnesses, a [[ref: threshold]]
+of the active witnesses must provide valid proofs associated with each [[ref:
+DID log entry]] before the [[ref: DID log entry]] can be published. If a [[ref:
+DID log entry]] contains a new (replacement) list of witnesses (by including a
+new `witness` [[ref: parameter]]) that new list becomes active only **AFTER**
+the new version is published. Such a replacement list **MAY** be empty `[]`.
+Once an empty [[ref: witness]] list becomes active, updates to the DID are not
+[[ref: witnessed]].
 
 ##### Witness DIDs and Reputation
 
@@ -964,10 +977,9 @@ where:
 The use of the [[ref: threshold]] and weighted approvals (versus needing
 approvals from all [[ref: witnesses]]) is to prevent faulty [[ref: witnesses]]
 from blocking the publishing of a new version of the DID. To determine if the
-[[ref: threshold]] has been met, sum the `weight` integer of the received
-approvals and if it equal to or more than the `threshold`, the update can be
-published. The calculation **MUST**  be executed by resolvers processing a
-[[ref: DID Log]].
+[[ref: threshold]] has been met, all participants **MUST** sum the `weight`
+integer of the received approvals. and if it equal to or more than the
+`threshold` **MUST** be accepted as "[[ref: witnessed]]".
 
 For example, if there are three [[ref: witnesses]] with a `weight` of `1`, a
 fourth with a weight of `2`, and a `threshold` of `3`, the [[ref: threshold]] is met
@@ -976,40 +988,60 @@ all of the first three witness (`1+1+1`) providing an approving `proof`.
 
 ##### The Witness Proofs File
 
-Proofs from witnesses are retained in a separate file (`did-witness.json`) from the
-[[ref: DID Log]]. The same [DID to HTTPS
+Proofs from [[ref: witnesses]] are placed into a separate file
+(`did-witness.json`) from the [[ref: DID Log]]. The same [DID to HTTPS
 Transformation](#the-did-to-https-transformation) used for the [[ref: DID Log]]
 is used to locate the `did-witness.json` resource, with only the last element
-changed (`did.jsonl` to `did-witness.json`). The media type of the file **SHOULD** be
-`text/json`.
+changed (`did.jsonl` to `did-witness.json`). The media type of the file
+**SHOULD** be `text/json`.
 
 The data model for the `did-witness.json` file is:
 
 ```json
-{
-    [
-       {
-            "versionId": "1-QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ",
-            "witness": "did:key:z82LkvR3CBNkb...",
-            "proof": { ... }
-       },
-       ...
-   ]
-}
+[
+  {
+    "versionId": "1-Qmba111111...",
+    "proof": [{ ... }, { ... }]
+  },
+  {
+    "versionId": "2-Qzmb222222...",
+    "proof": [{ ... }, { ... }]
+  }
+]
 ```
 
 Where:
 
-- `versionId` is the `versionId` of the [[ref: DID log entry]] to which the proof applies.
-- `witness` is the DID of the witness.
-- `proof` is the proof of the [[ref: DID Log Entry]] (excluding the `proof` item) identified by the `versionId`.
+- `versionId` is the `versionId` of the [[ref: DID log entry]] to which the
+  [[ref: witness]] proofs apply.
+- `proof` is an array of [[ref: Data Integrity]] proofs that use the `versionId`
+  as input data.  The permitted [[ref: Data Integrity]] cryptosuites used by the
+  [[ref: witnesses]] **MUST** be `eddsa-jcs-2022` as referenced in [spec:di-eddsa-v1.0].
 
-To limit the size of the file, only the two most recent proofs from each [[ref: witness]] are retained in the
-`did-witness.json` file. When a new, verified proof from a [[ref: witness]] is received,
-the [[ref: DID Controller]] adds it to the file. If two other proofs from that
-[[ref: witness]] are found in the file, the oldest **SHOULD** be removed. The presence of a valid
-proof is an attestation from a [[ref: witness]] that the current **and all prior** versions
-of the DID have been verified and approved by that witness.
+A valid proof from a [[ref: witness]] carries the implication that all prior
+[[ref: DID Log entries]] are also approved by that witness. To maintain a
+manageable `did-witness.json` file size, the [[ref: DID Controller]] **SHOULD**
+remove all older proofs for **published** [[ref: DID Log entries]], keeping only the
+latest proof for each witness.
+
+To eliminate the race condition in publishing the [[ref: DID Log]] and
+`did-witness.json` files, when a new [[ref: DID Log entry]] is being added,
+[[ref: witness]] proofs **MUST** be added to the `did-witness.json` file and
+that file published **BEFORE** publishing the [[ref: DID Log]] file containing
+the new [[ref: DID Log entry]]. As a result, `did:webvh` resolvers may find
+proofs for unpublished [[ref: DID log entries]] in the `did-witness.json` file.
+Resolvers **MUST** ignore proofs with `versionId`s not in the [[ref: DID Log]]
+file. Since resolvers cannot verify an unpublished [[ref: DID log entry]], the
+[[ref: witness]] proofs on unpublished [[ref: DID log entries]] do not carry the
+implication of approval of prior [[ref: DID Log entries]]. Therefore, at times
+there may be two proofs in the `did-witness.json` file for a [[ref: witness]]:
+
+- The most recent proof for a published [[ref: DID Log entry]].
+- An additional proof that applies to an unpublished [[ref: DID Log entry]].
+
+To ensure file cleanliness and avoid unnecessary clutter any `did-witness.json`
+array entry without proofs (containing only the `versionId`) **SHOULD** be
+removed.
 
 ##### Witnessing a DID Version Update
 
@@ -1019,23 +1051,20 @@ The following process is used to witness a DID version update:
   `proof` element) for the new version of the DID, and shares it with the active [[ref: witnesses]].
   - The specification leaves to implementers *how* the [[ref: log entry]] data is provided to the [[ref: witnesses]].
 - The [[ref: witnesses]] ***MUST** hold their own copy of the published [[ref:
-  DID Log]] prior to the version being witnessed.
+  DID Log]] prior witnessing a [[ref: DID Log entry]].
 - Each [[ref: witness]] verifies the [[ref: DID Log Entry]], as defined by this
   specification. If not verified, the [[ref: witnesses]] **MUST NOT** approve the [[ref: log entry]].
 - Each [[ref: witness]] determines (based on the governance of the ecosystem)
   if they approve of the DID version update.
   - The meaning of "approve" for any given implementation is outside the scope of this specification.
 - If the verification is successful and approval granted, the [[ref: witness]]
-  creates and sends a [[ref: Data Integrity]] proof for the [[ref: DID log entry]] (minus
-  the DID Controller `proof`) to the [[ref: DID Controller]], signed by the [[ref: witness]]'s key.
-  - The proof generation process of the witness **MUST** match the one used by
-   the DID Controller in generating its proof for the [[ref: DID log entry]],
-   as defined in the [Authorized Keys](#authorized-keys) section of this
-   specification. 
-- The DID Controller updates the [[ref: witnesses]]'s proofs in the
-  `did-witness.json` file with the received proofs, and publishes the updated file.
+  creates and sends to the [[ref: DID Controller]] a [[ref: Data Integrity]]
+  proof signed using the [[ref: witness]]'s `did:key` DID.
   - The specification leaves to implementers how [[ref: witness]] proofs are
     conveyed to the [[ref: DID Controller]].
+- The [[ref: DID Controller]] **MUST** create or add the proof to the record for
+  the applicable `versionID` for the unpublished [[ref: DID log entry]].
+  to the `did-witness.json` file.
   - The [[ref: DID Controller]] **MAY** publish the updated `did-witness.json` file
     as new witness proofs are added to the file.
   - The [[ref: DID Controller]] **MUST** publish the updated `did-witness.json` file
@@ -1044,25 +1073,20 @@ The following process is used to witness a DID version update:
 
 ##### Verifying Witness Proofs During Resolution
 
-A `did:webvh` resolver **MUST** verify that all [[ref: DID Log entries]] that have
-active [[ref: witnesses]] have a [[ref: threshold]] of active witnesses approving the [[ref: log entry]].
-To do so, resolvers must:
+A `did:webvh` resolver **MUST** verify that all [[ref: DID Log entries]] that
+have active [[ref: witnesses]] have a [[ref: threshold]] of active witnesses
+approving the [[ref: log entry]]. To do so, resolvers must:
 
 - Successfully complete the non-[[ref: witness]] verifications of the [[ref: DID Log]].
 - Verify the [[ref: witness]] proofs in the `did-witness.json` file.
-  - Ignore any witness proofs that do not verify. For example, a `did-witness.json` file
-    **MAY** contain proofs of pending (unpublished) [[ref: DID Log entries]].
-    Such proofs **MUST** be ignored by resolvers.
+  - The resolver **MUST** ignore the proofs of any unpublished [[ref: DID Log entries]].
+  - If any of the proofs of published [[ref: DID Log entries]] do not validate,
+  terminate the resolution process with an error.
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
   confirm that the `did-witness.json` file contains verified [[ref: witness]]
-  [[ref: Data Integrity]] proofs from a [[ref: threshold]] of active [[ref:
-  witnesses]] for the current or any **later** log entry. If not, terminate the
-  resolution process with an error.
-  - As noted in the section on the [Witness proofs
-    file](#the-witness-proofs-file), no more than two proofs from any [[ref: witness]]
-    are retained in the file. A valid proof from a [[ref: witness]] on a given entry
-    implies the [[ref: witness]]'s "approval" of **all** prior [[ref: DID log
-    entries]].
+  [[ref: Data Integrity]] proofs from a [[ref: threshold]] of the then active
+  [[ref: witnesses]] for the current or any **later** published log entries. If
+  not, terminate the resolution process with an error.
 
 If you want to learn more about the practical application of witnesses, see the
 Implementer's Guide section on
