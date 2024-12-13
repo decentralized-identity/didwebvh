@@ -428,6 +428,24 @@ Document the full list of error codes that can be generated in resolving a DID.
 
 ##### Reading did:webvh DID URLs
 
+A `didLwebvh` resolver **MUST** resolve the [[spec:DID-Core]] `versionId` and
+`versionTime` DID URL query parameters. The `versionId` query argument value
+**MUST** match the full `versionId` from a [[ref: DID Log entry]] for the
+resolver to return that version of the DIDDoc. If a [[ref: DID Log entry]] with
+that `versionId` is not found, a `NotFound` **MUST** be returned. A specified
+time in [[ref: ISO8601]] format as the query argument for `versionTime` **MUST**
+return the DIDDoc from the [[ref: DID Log entry]] that was active at that time,
+if any. If the DID was not active at the specified time, a `NotFound` **MUST**
+be returned.
+
+A `did:webvh` resolver **SHOULD** resolve the DID URL query parameter
+`versionNumber` with an integer value if there is a [[ref: DID Log entry]] with
+a `versionId` with a matching integer prior to the literal `-` -- the
+`versionNumber` for that [[ref: DID Log entry]] as defined in the process for
+setting the `versionId` in the [creating the DID](#create-register) section of
+this specification. The `versionNumber` query parameter is not in the
+[[spec:DID-Core]] specification.
+
 A `did:webvh` resolver **MAY** implement the resolution of the `/whois` and a DID
 URL Path using the [whois LinkedVP Service](#whois-linkedvp-service) and 
 [DID URL Path Resolution Service](#did-url-path-resolution-service) as defined in
