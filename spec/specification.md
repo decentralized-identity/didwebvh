@@ -530,15 +530,21 @@ section of this specification.
 #### Deactivate (Revoke)
 
 To deactivate the DID, the [[ref: DID Controller]] **MUST** add to the [[ref:
-DID log entry]] [[ref: parameters]] the property name and value `"deactivated": true`. A [[ref: DID
-Controller]] **SHOULD** update the [[ref: DIDDoc]] and `parameters` object to
-further indicate the deactivation of the DID, such as including an empty
-`updateKeys` list (`"updateKeys": []`) in the [[ref: parameters]], preventing
-further versions of the DID.
+DID log entry]] [[ref: parameters]] the property name and value `"deactivated":
+true`. A [[ref: DID Controller]] **SHOULD** update the [[ref: DIDDoc]] and
+`parameters` object to further indicate the deactivation of the DID, such as
+including an empty `updateKeys` list (`"updateKeys": []`) in the [[ref:
+parameters]], preventing further versions of the DID. If the DID is using [[ref:
+pre-rotation]], two [[ref: DID log entries]] are required, the first to stop the
+use of pre-rotation, and the second for the empty `updateKeys` list. For
+additional details about turning off [[ref: pre-rotation]] see the
+[pre-rotation](#pre-rotation-key-hash-generation-and-verification) section of
+this specification.
 
 A resolver encountering in the [[ref: DID log entry]] [[ref: parameters]] the
-property key:value pair `"deactivated": true` **MUST** return in the [[ref: DIDDoc]] Metadata the property key:value
-`"deactivated": true`, as per the [[spec:DID-RESOLUTION]] specification.
+property key:value pair `"deactivated": true` **MUST** return in the [[ref:
+DIDDoc]] Metadata the property key:value `"deactivated": true`, as per the
+[[spec:DID-RESOLUTION]] specification.
 
 ### DID Method Processes
 
@@ -918,7 +924,7 @@ When processing other than the first [[ref: DID log entry]] where
    being processed. If not, terminate the resolution
    process with an error.
 4. A new `nextKeyHashes` list **MUST** be in the `parameters` of the [[ref: log entry]]
-   currently being processed. If not, terminate the resolution process withan error.
+   currently being processed. If not, terminate the resolution process with an error.
 
 #### DID Witnesses
 
