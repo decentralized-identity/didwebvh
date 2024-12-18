@@ -428,7 +428,7 @@ Document the full list of error codes that can be generated in resolving a DID.
 
 ##### Reading did:webvh DID URLs
 
-A `didLwebvh` resolver **MUST** resolve the [[spec:DID-Core]] `versionId` and
+A `did:webvh` resolver **MUST** resolve the [[spec:DID-Core]] `versionId` and
 `versionTime` DID URL query parameters. The `versionId` query argument value
 **MUST** match the full `versionId` from a [[ref: DID Log entry]] for the
 resolver to return that version of the DIDDoc. If a [[ref: DID Log entry]] with
@@ -1002,7 +1002,7 @@ The use of the [[ref: threshold]] and weighted approvals (versus needing
 approvals from all [[ref: witnesses]]) is to prevent faulty [[ref: witnesses]]
 from blocking the publishing of a new version of the DID. To determine if the
 [[ref: threshold]] has been met, all participants **MUST** sum the `weight`
-integer of the received approvals. and if it equal to or more than the
+integer of the received approvals. and if it is equal to or more than the
 `threshold` **MUST** be accepted as "[[ref: witnessed]]".
 
 For example, if there are three [[ref: witnesses]] with a `weight` of `1`, a
@@ -1017,7 +1017,7 @@ Proofs from [[ref: witnesses]] are placed into a separate file
 Transformation](#the-did-to-https-transformation) used for the [[ref: DID Log]]
 is used to locate the `did-witness.json` resource, with only the last element
 changed (`did.jsonl` to `did-witness.json`). The media type of the file
-**SHOULD** be `text/json`.
+**SHOULD** be `application/json`.
 
 The data model for the `did-witness.json` file is:
 
@@ -1075,7 +1075,7 @@ The following process is used to witness a DID version update:
   `proof` element) for the new version of the DID, and shares it with the active [[ref: witnesses]].
   - The specification leaves to implementers *how* the [[ref: log entry]] data is provided to the [[ref: witnesses]].
 - The [[ref: witnesses]] ***MUST** hold their own copy of the published [[ref:
-  DID Log]] prior witnessing a [[ref: DID Log entry]].
+  DID Log]] prior to witnessing a [[ref: DID Log entry]].
 - Each [[ref: witness]] verifies the [[ref: DID Log Entry]], as defined by this
   specification. If not verified, the [[ref: witnesses]] **MUST NOT** approve the [[ref: log entry]].
 - Each [[ref: witness]] determines (based on the governance of the ecosystem)
@@ -1087,7 +1087,7 @@ The following process is used to witness a DID version update:
   - The specification leaves to implementers how [[ref: witness]] proofs are
     conveyed to the [[ref: DID Controller]].
 - The [[ref: DID Controller]] **MUST** create or add the proof to the record for
-  the applicable `versionID` for the unpublished [[ref: DID log entry]].
+  the applicable `versionId` for the unpublished [[ref: DID log entry]].
   to the `did-witness.json` file.
   - The [[ref: DID Controller]] **MAY** publish the updated `did-witness.json` file
     as new witness proofs are added to the file.
