@@ -533,11 +533,12 @@ To deactivate the DID, the [[ref: DID Controller]] **MUST** add to the [[ref:
 DID log entry]] [[ref: parameters]] the property name and value `"deactivated":
 true`. A [[ref: DID Controller]] **SHOULD** update the [[ref: DIDDoc]] and
 `parameters` object to further indicate the deactivation of the DID, such as
-including an empty `updateKeys` list (`"updateKeys": []`) in the [[ref:
-parameters]], preventing further versions of the DID. If the DID is using [[ref:
-pre-rotation]], two [[ref: DID log entries]] are required, the first to stop the
-use of pre-rotation, and the second for the empty `updateKeys` list. For
-additional details about turning off [[ref: pre-rotation]] see the
+including a `null` or empty list `updateKeys` (`"updateKeys": null`,
+`"updateKeys": []`) in the [[ref: parameters]], preventing further versions of
+the DID. If the DID is using [[ref: pre-rotation]], two [[ref: DID log entries]]
+are required, the first to stop the use of pre-rotation, and the second for the
+null/empty list `updateKeys`. For additional details about turning off [[ref:
+pre-rotation]] see the
 [pre-rotation](#pre-rotation-key-hash-generation-and-verification) section of
 this specification.
 
@@ -868,7 +869,7 @@ in the `did:webvh` Implementer's Guide for additional guidance.
 
 As described in the [parameters](#didwebvh-did-method-parameters) section of
 this specification, a [[ref: DID Controller]] **MAY** include the [[ref: parameter]]
-`nextKeyHashes` with a non-empty list in any [[ref: DID log entry]] to activate
+`nextKeyHashes` with a non-empty and non-`null` list in any [[ref: DID log entry]] to activate
 the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active, all
 [[ref: multikey]] representations of the public keys in the `updateKeys` [[ref:
 parameters]] property in other than the initial version of the [[ref: DID log
@@ -876,7 +877,7 @@ entry]] **MUST** have their hash in the  `nextKeyHashes` array from the previous
 [[ref: DID log entry]]. If not, terminate the resolution process with an error.
 
 A [[ref: DID Controller]] may turn off the use of pre-rotation by setting the
-[[ref: parameter]] `nextKeyHashes` to an empty list in any [[ref: DID log
+[[ref: parameter]] `nextKeyHashes` to `null` or to an empty list in any [[ref: DID log
 entry]]. If there is an active set of `nextKeyHashes` at the time, the
 pre-rotation requirements remains in effect for the [[ref: DID Log entry]]. The
 subsequent [[ref: DID Log entry]] **MUST** use the non-pre-rotation rules.
@@ -957,9 +958,9 @@ of the active witnesses must provide valid proofs associated with each [[ref:
 DID log entry]] before the [[ref: DID log entry]] can be published. If a [[ref:
 DID log entry]] contains a new (replacement) list of witnesses (by including a
 new `witness` [[ref: parameter]]) that new list becomes active only **AFTER**
-the new version is published. Such a replacement list **MAY** be empty `[]`.
-Once an empty [[ref: witness]] list becomes active, updates to the DID are not
-[[ref: witnessed]].
+the new version is published. Such a replacement list **MAY** be a `null` or
+empty list (`[]`) value. Once a null or empty list [[ref: witness]] becomes
+active, updates to the DID are not [[ref: witnessed]].
 
 ##### Witness DIDs and Reputation
 
