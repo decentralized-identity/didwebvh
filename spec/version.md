@@ -7,11 +7,13 @@ The following lists the substantive changes in each version of the specification
     when `nextKeyHashes` is present.
   - Clarify the way the [[ref: Pre-Rotation]] feature works, once a `nextKeyHashes`
     is committed, the next [[ref: DID log entries]] has to be signed by one of the committed keys.
-  - Changes the [[ref: witness]] handling by removing the witness [[ref: Data Integrity]]
-    proofs from the [[ref: DID Log]] file and into a separate file
+  - Clarify how to stop using [[ref: pre-rotation]], including when deactivating the DID.
+  - Change the [[ref: witness]] handling by removing the witness [[ref: Data Integrity]]
+    proofs from the [[ref: DID Log]] file and puts them into a separate file
     `did-witness.json`. Adjustments to the witness threshold algorithm were also
     made, such as removing the [[ref: DID Controllers]]' `selfweight` attribute,
     and defining that all witness DIDs must be `did:key` DIDs.
+  - Clarify how to stop using witnesses.
   - Rename the DID Method to `did:webvh` (`did:web` + Verifiable History)
   - Moves the DID Method information site to [https://didwebvh.info](https://didwebvh.info).
 - Version 0.4
