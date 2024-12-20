@@ -533,12 +533,11 @@ To deactivate the DID, the [[ref: DID Controller]] **MUST** add to the [[ref:
 DID log entry]] [[ref: parameters]] the property name and value `"deactivated":
 true`. A [[ref: DID Controller]] **SHOULD** update the [[ref: DIDDoc]] and
 `parameters` object to further indicate the deactivation of the DID, such as
-including a `null` or empty list `updateKeys` (`"updateKeys": null`,
-`"updateKeys": []`) in the [[ref: parameters]], preventing further versions of
-the DID. If the DID is using [[ref: pre-rotation]], two [[ref: DID log entries]]
-are required, the first to stop the use of pre-rotation, and the second for the
-null/empty list `updateKeys`. For additional details about turning off [[ref:
-pre-rotation]] see the
+setting to `null` the `updateKeys` in the [[ref: parameters]], preventing
+further versions of the DID. If the DID is using [[ref: pre-rotation]], two
+[[ref: DID log entries]] are required, the first to stop the use of
+pre-rotation, and the second for setting `updateKeys` to `null`. For additional
+details about turning off [[ref: pre-rotation]] see the
 [pre-rotation](#pre-rotation-key-hash-generation-and-verification) section of
 this specification.
 
@@ -622,11 +621,14 @@ properties are defined below.
     active *before* the publication of its entry -- meaning its [[ref: log entry]] **MUST** be
     signed by a key the `updateKeys` list from the **current** [[ref:
     DID log]] entry.
+  - `updateKeys` **SHOULD** be set to `null` when deactivating the DID. See the
+    [deactivate](#deactivate-revoke) section of this specification for more
+    details.
 - `portable`: A boolean (`true` / `false`) indicating if the DID is portable and
   thus can be renamed to change the Web location of the DID.
   - The value can **ONLY** be set to `true` in the first [[ref: log entry]], the initial version of the DID.
-  - If not explicitly set in the first [[ref: log entry]], it is set to `false`.
-  - Once the value has been set to `false`, it cannot be set back to `true`.
+  - If not explicitly set in the first [[ref: log entry]], it **MUST** be set to `false`.
+  - Once the value has been explicitly to `false` in a [[ref: DID log entry]], it **MUST NOT** be set back to `true`.
   - See the section of this specification on [DID Portability](#did-portability)
     for more details about renaming a `did:webvh` DID.
 - `nextKeyHashes`: An array of strings that are hashes of [[ref: multikey]]
@@ -635,12 +637,20 @@ properties are defined below.
   - The process for generating the hashes and additional details for using [[ref: pre-rotation]] are defined in the
     [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
     section of this specification.
-  - Once the [[ref: parameter]] `nextKeyHashes` has been set, the [[ref: Key Pre-Rotation]] feature becomes active and the property **MUST** be present in any future [[ref: DID log entry]].
+  - If not explicitly set in the first [[ref: DID Log entry]], its value **MUST** be `null`.
+  - Once the [[ref: parameter]] `nextKeyHashes` has been set to a non-empty
+    list, the [[ref: Key Pre-Rotation]] feature becomes active. While active the
+    properties `nextKeyHashes` and `updateKeys` **MUST** be present in all
+    [[ref: DID log entry]].
   - All [[ref: multikey]] formatted public keys added in a new `updateKeys` list **MUST** have their
     hashes listed in the `nextKeyHashes` list from the previous [[ref: DID log entry]].
   - A [[ref: DID Controller]] **MAY** put extra strings in the `nextKeyHashes`
     array that are not subsequently used in an `updateKeys` entry.
   - Any unused hashes in the prior `nextKeyHashes` are ignored.
+  - The value of `nextKeyHashes` **MAY** be set to `null` to deactivate
+    pre-rotation. For additional details about turning off [[ref: pre-rotation]]
+    see the [pre-rotation](#pre-rotation-key-hash-generation-and-verification)
+    section of this specification.
 - `witness`: A JSON object containing the [[ref: parameters]] for declaring the witnesses
   for the DID, and the [[ref: parameters]] for the process of updating a DID via a
   collaboration with [[ref: witnesses]] prior to publication. For details of
@@ -652,14 +662,18 @@ properties are defined below.
     a `witness` property becomes active **after** the publication of its entry
     -- meaning its [[ref: log entry]] **MUST** be witnessed by active
     `witnesses` from a **prior** [[ref: DID log]] entry.
-- `deactivated`: A JSON boolean that **SHOULD** be set to `true` when the DID is to
-  be deactivated. See the [deactivate (revoke)](#deactivate-revoke) section of
-  this specification for more details.
+  - If the `witness` property is not set in the first [[ref: DID log entry]],
+    its value **MUST** be null.
+- `deactivated`: A JSON boolean that **MUST** be initialized to `false` and
+  **SHOULD** be set to `true` when the DID is to be deactivated but remains
+  resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this
+  specification for more details.
 - `ttl`: A number, the number of seconds that a cache entry for a resolved
-  `did:webvh` DID **SHOULD** last, as recommended by the [[ref: DID Controller]]. A
-  resolver can use this value in deciding whether to retrieve a new version of
-  the DID's `did.jsonl` file. If not specified, resolvers **MAY** set a default
-  based on the business needs of the resolver clients.
+  `did:webvh` DID **SHOULD** last, as recommended by the [[ref: DID
+  Controller]]. A resolver can use this value in deciding whether to retrieve a
+  new version of the DID's `did.jsonl` file. If not specified, its value
+  **MUST** be `null` and resolvers **MAY** set a default based on the business
+  needs of the resolver clients.
   - Caching a `did:webvh` can be valuable in places where the business rules
     require resolving a number of DID URLs for the same DID. For example, a
     client might want call the resolver to the current [[ref: DIDDoc]], and then make
@@ -869,7 +883,7 @@ in the `did:webvh` Implementer's Guide for additional guidance.
 
 As described in the [parameters](#didwebvh-did-method-parameters) section of
 this specification, a [[ref: DID Controller]] **MAY** include the [[ref: parameter]]
-`nextKeyHashes` with a non-empty and non-`null` list in any [[ref: DID log entry]] to activate
+`nextKeyHashes` with a non-empty list in any [[ref: DID log entry]] to activate
 the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active, all
 [[ref: multikey]] representations of the public keys in the `updateKeys` [[ref:
 parameters]] property in other than the initial version of the [[ref: DID log
@@ -877,10 +891,10 @@ entry]] **MUST** have their hash in the  `nextKeyHashes` array from the previous
 [[ref: DID log entry]]. If not, terminate the resolution process with an error.
 
 A [[ref: DID Controller]] may turn off the use of pre-rotation by setting the
-[[ref: parameter]] `nextKeyHashes` to `null` or to an empty list in any [[ref: DID log
-entry]]. If there is an active set of `nextKeyHashes` at the time, the
-pre-rotation requirements remains in effect for the [[ref: DID Log entry]]. The
-subsequent [[ref: DID Log entry]] **MUST** use the non-pre-rotation rules.
+[[ref: parameter]] `nextKeyHashes` to `null` in any [[ref: DID log entry]]. If
+there is an active set of `nextKeyHashes` at the time, the pre-rotation
+requirements remains in effect for the [[ref: DID Log entry]]. The subsequent
+[[ref: DID Log entry]] **MUST** use the non-pre-rotation rules.
 
 To create a hash to be included in the `nextKeyHashes` array, the [[ref: DID
 Controller]] **MUST** execute the following process for each possible future
@@ -953,13 +967,13 @@ which the [[ref: DID Log]] is published.
 The list of DIDs that witness DID updates are defined in the `witness`
 parameter, as described in the [Parameters](#didwebvh-did-method-parameters)
 section of this specification. After the first `witness` parameter has been
-added to a version, and while there are active witnesses, a [[ref: threshold]]
-of the active witnesses must provide valid proofs associated with each [[ref:
-DID log entry]] before the [[ref: DID log entry]] can be published. If a [[ref:
-DID log entry]] contains a new (replacement) list of witnesses (by including a
-new `witness` [[ref: parameter]]) that new list becomes active only **AFTER**
-the new version is published. Such a replacement list **MAY** be a `null` or
-empty list (`[]`) value. Once a null or empty list [[ref: witness]] becomes
+added to a [[ref: DID log entry]], and while there are active witnesses, a
+[[ref: threshold]] of the active witnesses must provide valid proofs associated
+with each [[ref: DID log entry]] before the [[ref: DID log entry]] can be
+published. If a [[ref: DID log entry]] contains a new (replacement) list of
+witnesses (by including a new `witness` [[ref: parameter]]) that new list
+becomes active **AFTER** the new [[ref: DID log entry]] has been published. Such
+a replacement **MAY** be a `null`. Once a [[ref: witness]] set to `null` becomes
 active, updates to the DID are not [[ref: witnessed]].
 
 ##### Witness DIDs and Reputation
