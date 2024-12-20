@@ -1,0 +1,164 @@
+{
+  "specs": [
+    {
+      "title": "The did:webvh DID Method -- did:web + Verifiable History - Editors Draft",
+      "spec_directory": "./spec",
+      "markdown_paths": [
+        "header.md",
+        "abstract.md",
+        "overview.md",
+        "specification.md",
+        "security_and_privacy.md",
+        "definitions.md",
+        "references.md",
+        "version.md"
+      ],
+      "source": {
+        "host": "github",
+        "account": "decentralized-identity",
+        "repo": "didwebvh"
+      },
+      "output_path": "./next",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
+      "katex": true,
+      "external_specs": [
+        {
+          "multiformats": {
+            "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
+            "title": "Multiformats",
+            "rawDate": "2024-02-21",
+            "authors": [
+              "Juan Benet",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        },
+        {
+          "di-eddsa-v1.0": {
+            "href": "https://www.w3.org/TR/vc-di-eddsa",
+            "title": "Data Integrity EdDSA Cryptosuites v1.0",
+            "rawDate": "2024-12-08",
+            "authors": [
+              "Dave Longley",
+              "Manu Sporny"
+            ],
+            "status": "W3C Technical Recommendation"
+          }
+        }
+      ]
+    },
+    {
+      "title": "The did:webvh DID Method -- did:web + Verifiable History - Version 0.5",
+      "spec_directory": "./spec-v0.5",
+      "markdown_paths": [
+        "header.md",
+        "abstract.md",
+        "overview.md",
+        "specification.md",
+        "security_and_privacy.md",
+        "definitions.md",
+        "references.md",
+        "version.md"
+      ],
+      "source": {
+        "host": "github",
+        "account": "decentralized-identity",
+        "repo": "didwebvh"
+      },
+      "output_path": "./",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
+      "katex": true,
+      "external_specs": [
+        {
+          "multiformats": {
+            "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
+            "title": "Multiformats",
+            "rawDate": "2024-02-21",
+            "authors": [
+              "Juan Benet",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        },
+        {
+          "di-eddsa-v1.0": {
+            "href": "https://www.w3.org/TR/vc-di-eddsa",
+            "title": "Data Integrity EdDSA Cryptosuites v1.0",
+            "rawDate": "2024-12-08",
+            "authors": [
+              "Dave Longley",
+              "Manu Sporny"
+            ],
+            "status": "W3C Technical Recommendation"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Trust DID Web - The did:tdw DID Method - Version 0.4",
+      "spec_directory": "./spec-v0.4",
+      "markdown_paths": [
+        "header.md",
+        "abstract.md",
+        "overview.md",
+        "specification.md",
+        "security_and_privacy.md",
+        "definitions.md",
+        "references.md",
+        "version.md"
+      ],
+      "source": {
+        "host": "github",
+        "account": "decentralized-identity",
+        "repo": "didwebvh"
+      },
+      "output_path": "./v0.4",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/tdw.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
+      "katex": true,
+      "external_specs": [
+        {
+          "multiformats": {
+            "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
+            "title": "Multiformats",
+            "rawDate": "2024-02-21",
+            "authors": [
+              "Juan Benet",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Trust DID Web - The did:tdw DID Method - Version 0.3",
+      "spec_directory": "./spec-v0.3",
+      "markdown_paths": [
+        "header.md",
+        "abstract.md",
+        "definitions.md",
+        "overview.md",
+        "specification.md",
+        "security_and_privacy.md",
+        "implementors_guide.md",
+        "example.md",
+        "references.md",
+        "version.md"
+      ],
+      "source": {
+        "host": "github",
+        "account": "decentralized-identity",
+        "repo": "didwebvh"
+      },
+      "output_path": "./v0.3",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/tdw.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
+      "katex": true
+    }
+  ]
+}
