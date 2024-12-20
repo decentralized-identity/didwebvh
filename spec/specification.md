@@ -624,12 +624,12 @@ properties are defined below.
   - `updateKeys` **SHOULD** be set to `null` when deactivating the DID. See the
     [deactivate](#deactivate-revoke) section of this specification for more
     details.
-  - `updateKeys` **MUST NOT** be set to an empty list `[]`.
+  - `updateKeys` **MUST** have at least 1 entry and **MUST NOT** be set to an empty list `[]`.
 - `portable`: A boolean (`true` / `false`) indicating if the DID is portable and
   thus can be renamed to change the Web location of the DID.
   - The value can **ONLY** be set to `true` in the first [[ref: log entry]], the initial version of the DID.
   - If not explicitly set in the first [[ref: log entry]], it **MUST** be set to `false`.
-  - Once the value has been explicitly to `false` in a [[ref: DID log entry]], it **MUST NOT** be set back to `true`.
+  - Once the value has been explicitly set to `false` in a [[ref: DID log entry]], it **MUST NOT** be set back to `true`.
   - See the section of this specification on [DID Portability](#did-portability)
     for more details about renaming a `did:webvh` DID.
 - `nextKeyHashes`: An array of strings that are hashes of [[ref: multikey]]
@@ -652,7 +652,7 @@ properties are defined below.
     pre-rotation. For additional details about turning off [[ref: pre-rotation]]
     see the [pre-rotation](#pre-rotation-key-hash-generation-and-verification)
     section of this specification.
-  - `nextKeyHashes` **MUST NOT** be set to an empty list `[]`.
+  - `nextKeyHashes` **MUST** have at least 1 entry and **MUST NOT** be set to an empty list `[]`.
 - `witness`: A JSON object containing the [[ref: parameters]] for declaring the witnesses
   for the DID, and the [[ref: parameters]] for the process of updating a DID via a
   collaboration with [[ref: witnesses]] prior to publication. For details of
@@ -666,7 +666,7 @@ properties are defined below.
     `witnesses` from a **prior** [[ref: DID log]] entry.
   - If the `witness` property is not set in the first [[ref: DID log entry]],
     its value **MUST** be null.
-  - `witness` **MUST NOT** be set to an empty list `[]`.
+  - `witness` **MUST** have at least 1 entry and **MUST NOT** be set to an empty list `[]`.
 - `deactivated`: A JSON boolean that **MUST** be initialized to `false` and
   **SHOULD** be set to `true` when the DID is to be deactivated but remains
   resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this
