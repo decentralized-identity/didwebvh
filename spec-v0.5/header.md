@@ -1,20 +1,27 @@
-The `did:webvh` DID Method<br>v0.5 / Editors Draft
+The `did:webvh` DID Method v0.5
 ==================
 
 ![did:webvh Logo](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg)
 
-**Specification Status:** EDITORS DRAFT
+**Specification Status:** CURRENT STABLE
 
-This **Editors Draft** currently contains only clarifications, with no breaking
-changes from the [current stable version](../). Should that change, this message
-will be updated.
+**Specification Version:** v0.5 (see [Changelog](#didtdw-version-changelog))
 
-**Current Specification:** [v0.5](../)
+With this version of the specification the DID Method hame is changed to
+`did:webvh` ("`did:web` + Verifiable History"). It used to be named `did:tdw`.
 
-**Specification Version:** v0.5 (see [Changelog](#didwebvh-version-changelog))
+**Next Version:** [Editors Draft](./next)
 
-**Source of Latest Draft:**
-  [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
+:::warning
+
+You are looking at the current stable version of the specification. The [Editors
+Draft](../next) version currently contains only clarifications to this version,
+with no breaking changes. Should that change, this message will be updated.
+
+:::
+
+**Source For This Version:**
+  [https://github.com/decentralized-identity/didwebvh/tree/main/spec-v0.5](https://github.com/decentralized-identity/didwebvh/tree/main/spec-v0.5)
 
 **Previous Drafts:**
 - [v0.4](../v0.4)

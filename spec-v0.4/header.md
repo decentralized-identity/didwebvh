@@ -1,24 +1,16 @@
 Trust DID Web - `did:tdw` - v0.4
 ==================
 
-**Specification Status:** CURRENT DRAFT
-
-**Specification Version:** 0.4 (see [Changelog](#didtdw-version-changelog))
+**Specification Status:** HISTORICAL -- **THIS IS NOT THE CURRENT VERSION OF THE SPECIFICATION**
 
 This version of the specification was released at the time the OLD name for the DID Method was in use. The DID Method hame has since changed to `did:webvh` ("`did:web` + Verifiable History").
 
-**Next Specification:** [Draft](./next)
+**Specification Version:** 0.4 (see [Changelog](#didtdw-version-changelog))
 
-:::warning
+**Latest Version:**
 
-The [next version of the specification](../next) is in process, with breaking
-changes around pre-rotation and witnesses. We are also be changing the name of
-the DID Method from `did:tdw` to `did:webvh`.
-
-:::
-
-**Source For This Version:**
-  [https://github.com/decentralized-identity/didwebvh/tree/main/spec-v0.4](https://github.com/decentralized-identity/didwebvh/tree/main/spec-v0.4)
+- Specification: [https://identity.foundation/didwebvh/](../)
+- Repository: [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
 **Previous Drafts:**
 - [v0.3](./v0.3)
