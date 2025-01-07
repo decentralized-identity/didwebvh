@@ -12,7 +12,7 @@ This version of the specification was released at the time the OLD name for the 
 - Specification: [https://identity.foundation/didwebvh/](../)
 - Repository: [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
-**Previous Drafts:**
+**Previous Versions:**
 - [v0.3](./v0.3)
 
 **Information Site:**
