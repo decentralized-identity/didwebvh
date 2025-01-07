@@ -5,7 +5,7 @@ The `did:webvh` DID Method<br>v0.5 / Editors Draft
 
 **Specification Status:** EDITORS DRAFT
 
-This **Editors Draft** currently contains only clarifications, with no breaking
+At this time, the **Editors Draft** contains only clarifications, with no breaking
 changes from the [current stable version](../). Should that change, this message
 will be updated.
 
@@ -16,7 +16,7 @@ will be updated.
 **Source of Latest Draft:**
   [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
-**Previous Drafts:**
+**Previous Versions:**
 - [v0.4](../v0.4)
 - [v0.3](../v0.3)
 

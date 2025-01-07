@@ -128,25 +128,26 @@ the spec is on the specification landing page -- the spec version whose
 
 Here's how we do that in different situations:
 
-- When the specification is stable, the `spec` folder is the landing page, and
-  past versions are linked in that folder's `header.md` file as "past versions".
-- When a new version of the specification with breaking changes is ready to be worked on:
-  - Snapshot the stable specification version by creating a new directory (e.g.,
-    `spec-v0.4`) and copying the files from the `spec` folder into the new
+- The specification website landing page is always the current stable version of
+  the specification, and past versions plus the next version ("Editor's Draft")
+  are linked in that folder's `header.md` file.
+- The `spec` folder is the `./next` folder and is called the `Editor's Draft`.
+  Immediately after a stable version is announced, it is a copy of the newly
+  stable version, but will evolve from there. Clarifications may be applied
+  `spec-vx.x` folder, and if so, they **MUST** also be applied to the Editor's
+  Draft.
+- When a new, stable version of the specification is ready:
+  - Snapshot the editor's version by creating a new directory (e.g.,
+    `spec-v0.6`) and copying the files from the `spec` folder into the new
     folder.
   - Create a new entry in the `specs.json` file for that new snapshot version.
-  - Set the `output_path` of the new version (e.g., `spec-v0.4`) to be `"./"`,
+  - Set the `output_path` of the new version (e.g., `spec-v0.6`) to be `"./"`,
     so that it becomes the landing page.
-  - Change the `output_path` of the primary `spec` folder entry to `"./next"`.
-  - Update the `header.json` files in both the new folder and the `spec` folder
-    to link to one another, adding any notes to help readers understand the
+  - Change the `output_path` of the new version (e.g., `spec-v0.5`) to be `"./vx.x`.
+  - Update the `header.json` files in the new folder, the `spec` folder, and the
+    previously stable version as needed. Remember that,
+    - the newly declared and created version is the landing page, `./`,
+    - the editor's draft is `./next`, and
+    - the former stable version, now a "Previous Version" is `./vx.x`.
+  - Add any notes to the heard to help readers understand the
     status of the current and next versions of the specification.
-- When the "next" version of the specification stabilizes, revert to the
-  "normal" state of the `spec` folder being the landing page.
-  - Change the `output_path` of the primary `spec` folder to `"./"`.
-  - Change the `output_path` of the formerly "current" spec version to a path
-    that includes its version (e.g., `"./v0.4"`).
-  - Update the `header.json` files in both the (now past version) folder and the
-    `spec` folder to link to one another's new `output_path` values, remove any
-    clarification notes that no longer apply, and make the past version "just
-    another" past version (e.g., like `spec-v0.3`)

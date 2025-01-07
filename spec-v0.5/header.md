@@ -12,10 +12,10 @@ With this version of the specification the DID Method hame is changed to
 
 **Next Version:** [Editors Draft](./next)
 
-:::warning
+:::note
 
-You are looking at the current stable version of the specification. The [Editors
-Draft](../next) version currently contains only clarifications to this version,
+You are looking at the current stable version of the specification. At this
+time, the [Editors Draft](../next) contains only clarifications to this version,
 with no breaking changes. Should that change, this message will be updated.
 
 :::
@@ -23,9 +23,9 @@ with no breaking changes. Should that change, this message will be updated.
 **Source For This Version:**
   [https://github.com/decentralized-identity/didwebvh/tree/main/spec-v0.5](https://github.com/decentralized-identity/didwebvh/tree/main/spec-v0.5)
 
-**Previous Drafts:**
-- [v0.4](../v0.4)
-- [v0.3](../v0.3)
+**Previous Versions:**
+- [v0.4](./v0.4)
+- [v0.3](./v0.3)
 
 **Information Site:**
   [https://didwebvh.info/](https://didwebvh.info/)
