@@ -1166,24 +1166,20 @@ with the semantic simplicity of using them with a web-based DID method.
 Specifically, a `did:webvh` implementation **MUST**:
 
 - Resolve the `/whois` DID URL path using a [[spec:LINKED-VP]] service, whether
-  or not it exists in the `did:webvh` [[ref: DIDDoc]], returning a
-  [[ref: Verifiable Presentation]], if published by the [[ref: DID Controller]],
-  found at the same path as the `did.jsonl` file, using the `/whois.vp` filename
-  component, and the `application/vp' media type, as per the
-  [IANA Verifiable Presentation Assignment](https://www.iana.org/assignments/media-types/application/vp).
-  - For example, `did:webvh:{SCID}.example.com/whois` returns the
-    [[ref: verifiable presentation]] from `https://{SCID}.example.com/.well-known/whois.vp`.
+  or not it exists in the `did:webvh` [[ref: DIDDoc]], returning a [[ref:
+  Verifiable Presentation]], if published by the [[ref: DID Controller]], found
+  at the same path as the `did.jsonl` file (excluding the `.well-known` folder,
+  if present), using the `/whois.vp` filename component, and the
+  `application/vp' media type, as per the [IANA Verifiable Presentation
+  Assignment](https://www.iana.org/assignments/media-types/application/vp).
+  - For example, `did:webvh:{SCID}:example.com/whois` returns the
+    [[ref: verifiable presentation]] from `https://example.com/whois.vp`.
 - Resolve any `did:webvh` DID URL using a [[spec:DID-CORE]] `relativeRef` DID
   [[ref: parameter]], whether or not a supporting service exists in the `did:webvh` [[ref: DIDDoc]],
   returning the file found at web location corresponding to the DID-to-HTTPS
-  transformation.
-  - For example, resolving `did:webvh:example.com:{SCID}/governance/issuers.json` returns
-    the file `https://example.com/{SCID}/governance/issuer.json`
-  - When the `{SCID}` is placed as a subdomain, the file is found relative to
-    that subdomain, and not in the `.well-known` folder where the `did.jsonl`
-    file is found. For example, resolving
-    `did:webvh:{SCID}.example.com/governance/issuers.json` returns the file
-    `https://{SCID}.example.com/governance/issuer.json`.
+  transformation (excluding the `.well-known` folder, if present).
+  - For example, resolving `did:{SCID}:webvh:example.com/governance/issuers.json` returns
+    the file `https://example.com/governance/issuer.json`
 
 In both cases, a [[ref: DID Controller]] **MAY** define services in the DIDDoc
 that override the default services that **MUST** be resolved by the `did:webvh`

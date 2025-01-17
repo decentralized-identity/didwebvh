@@ -1003,30 +1003,25 @@ The risk of publishing the `did:web` in parallel with the `did:tdw` is that the
 added security and convenience of using `did:tdw` are lost.
 
 ### DID URL Resolution
-
 The `did:tdw` DID Method embraces the power and usefulness of DID URLs, along
 with the semantic simplicity of using them with a web-based DID method.
 Specifically, a `did:tdw` implementation **MUST**:
 
 - Resolve the `/whois` DID URL path using a [[spec:LINKED-VP]] service, whether
-  or not it exists in the `did:tdw` [[ref: DIDDoc]], returning a [[ref: Verifiable
-  Presentation]], if published by the [[ref: DID Controller]], found at the same
-  path as the `did.jsonl` file, using the `/whois.vp` filename component, and
-  the `application/vp' media type, as per the [IANA Verifiable Presentation
+  or not it exists in the `did:tdw` [[ref: DIDDoc]], returning a [[ref:
+  Verifiable Presentation]], if published by the [[ref: DID Controller]], found
+  at the same path as the `did.jsonl` file (excluding the `.well-known` folder,
+  if present), using the `/whois.vp` filename component, and the
+  `application/vp' media type, as per the [IANA Verifiable Presentation
   Assignment](https://www.iana.org/assignments/media-types/application/vp).
-  - For example, `did:tdw:{SCID}.example.com/whois` returns the [[ref: verifiable
-    presentation]] from `https://{SCID}.example.com/.well-known/whois.vp`.
+  - For example, `did:tdw:{SCID}:example.com/whois` returns the
+    [[ref: verifiable presentation]] from `https://example.com/whois.vp`.
 - Resolve any `did:tdw` DID URL using a [[spec:DID-CORE]] `relativeRef` DID
   [[ref: parameter]], whether or not a supporting service exists in the `did:tdw` [[ref: DIDDoc]],
   returning the file found at web location corresponding to the DID-to-HTTPS
-  transformation.
-  - For example, resolving `did:tdw:example.com:{SCID}/governance/issuers.json` returns
-    the file `https://example.com/{SCID}/governance/issuer.json`
-  - When the `{SCID}` is placed as a subdomain, the file is found relative to
-    that subdomain, and not in the `.well-known` folder where the `did.jsonl`
-    file is found. For example, resolving
-    `did:tdw:{SCID}.example.com/governance/issuers.json` returns the file
-    `https://{SCID}.example.com/governance/issuer.json`.
+  transformation (excluding the `.well-known` folder, if present).
+  - For example, resolving `did:{SCID}:tdw:example.com/governance/issuers.json` returns
+    the file `https://example.com/governance/issuer.json`
 
 In both cases, a [[ref: DID Controller]] **MAY** define services in the DIDDoc
 that override the default services that **MUST** be resolved by the `did:tdw`
