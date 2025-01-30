@@ -2,7 +2,7 @@
 
 Zoom Link: [https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1](https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1)
 
-Agenda: [did:webvh Info Site](https://didwebvh.info/latest/agenda/), [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [did:webvh Repository](https://github.com/decentralized-identity/trustdidweb/blob/main/agenda.md) (synchronized after each meeting)
+Agenda: [did:webvh Info Site](https://didwebvh.info/latest/agenda/), [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [did:webvh Repository](https://github.com/decentralized-identity/didwebvh/blob/main/agenda.md) (synchronized after each meeting)
 
 [**WG projects**](https://github.com/decentralized-identity?q=wg-cc&type=&language=) | [DIF page](https://identity.foundation/working-groups/claims-credentials.html) | [Mailing list and Wiki](https://lists.identity.foundation/g/cc-wg) | [Meeting recordings](https://docs.google.com/spreadsheets/d/1wgccmMvIImx30qVE9GhRKWWv3vmL2ZyUauuKx3IfRmA/edit?gid=111226877#gid=111226877)
 
@@ -112,15 +112,16 @@ Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/shar
     5. PROGRESS - Patrick to focus on implementing uploading of an AnonCreds object on the web server. Internal demo given of a full issue-present-verify flow using credentials rooted in a did:webvh DID. Next up: including revocation.
     6. PROGRESS - Jamie to work on DIDComm protocol for requesting witness signatures. In ACA-Py plugin.
     7. PROGRESS - Patrick to implement witness and DID rotation features for the server.
-    9. FUTURE - did:webvh team to consider implementing the witness proofs as VCs in the`/whois` VP in a future version (v0.6 or later). See notes below on resolution.
+    9. RESOLVED -- WON'T DO - did:webvh team to consider implementing the witness proofs as VCs in the`/whois` VP in a future version (v0.6 or later). See notes below on resolution.
     10. DONE - did:webvh team to further discuss and decide on the implementation of revocation registry entries.
 
 5. Discussion: the path to v1.0?
     1. [Current Issues](https://github.com/decentralized-identity/didwebvh/issues)
-    2. Potential change - @andrewwhitehead wants to reevaluate witnesses and weights.
-    3. Portability -- is it solid enough?
-    4. Watchers -- some thoughts were generated at the meeting and in issues raised.
-    5. Clarification -- the step-by-step details of the verification, based on the experience of implementations, but general.
+    2. Resolved [Issue 165 - Using /whois for witness proofs](https://github.com/decentralized-identity/didwebvh/issues/165) and agreed we wouldn't use `/whois` for witness proofs. It might be used by a witness to attest to the DID itself (not in the spec -- perhaps implementer's guide), but not for proofs on specific versions of the DID.
+    3. Potential change - @andrewwhitehead wants to reevaluate witnesses and weights.
+    4. Portability -- is it solid enough? @PatStLouis is considering this and may raise an issue.
+    5. Watchers -- some thoughts were generated at the meeting and in issues raised. Specific issues with defined actions may follow.
+    6. Clarification -- the step-by-step details of the verification, based on the experience of implementations, at a  general level. Likely for the implementers guide.
 
 6. Revisiting DID Key references for rotated keys
     1. [Best practices document](https://didwebvh.info/latest/implementers-guide/did-valid-keys/) from Daniel Bluhm and Char Howland added to the [info site](https://didwebvh.info).
@@ -146,13 +147,13 @@ Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/shar
             2. The `did:webvh` AnonCreds method will not use deltas (as does Indy), but will use full state, as does Cheqd.
     6. Evolving design document: [AnonCreds in did:webvh](https://hackmd.io/@SpWXgFH9Rbyoa0JW3agDcg/HJU-4azPJl)
 
-7. Plans for updates to the spec.
+8. Plans for updates to the spec.
     1. A ChatGPT pass, likely using the using the "Academic Assistant Pro" GPT. That should include DRYing the spec to remove duplication.
     2. Cleaning up `[[spec]]` references -- Brian has enabled us to add our own spec references.
     3. Security and Privacy sections. Anyone able to help?
     4. Getting "spec to a standard" advice and applying those changes.
 
-8. [Spec. PRs and Issues](https://github.com/decentralized-identity/trustdidweb/issues)
+9. [Spec. PRs and Issues](https://github.com/decentralized-identity/trustdidweb/issues)
 
 ## Meeting - 16 Jan 2025
 
