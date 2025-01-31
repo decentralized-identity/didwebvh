@@ -98,7 +98,7 @@ Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/shar
 2. Announcements:
 
 3. Status updates on the implementations
-    1. TS -- At v0.5 and deployed to npm as webvh-ts. Next up testing the NPM package.
+    1. TS -- At v0.5 and deployed to npm as didwebvh-ts. Next up testing the NPM package.
     2. PY -- At v0.5 on PyPi. Compatible with the TS version based on some minimal testing. Plan a tweak to the witness verification approach. Planning some interop tests that can be run across all implementations.  A few test cases are needed - especially around witness cases.
     3. Server -- Gave a demo of AnonCreds objects published and resolved to implement a full credential flow. Developed with the ACA-Py plugin. Main focus security and loading/resolving. Working on revocation flow.
     4. did:webvh AnonCreds Method -- to be discussed.
