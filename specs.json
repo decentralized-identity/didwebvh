@@ -159,6 +159,76 @@
       "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/tdw.jpg",
       "logo_link": "https://github.com/decentralized-identity/didwebvh",
       "katex": true
+    },
+    {
+      "title": "did:webvh AnonCreds Method",
+      "spec_directory": "./spec-anoncreds-method",
+      "markdown_paths": [
+        "header.md",
+        "abstract.md",
+        "definitions.md",
+        "specification.md",
+        "references.md",
+        "version.md"
+      ],
+      "source": {
+        "host": "github",
+        "account": "decentralized-identity",
+        "repo": "didwebvh"
+      },
+      "output_path": "./anoncreds-method",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
+      "katex": true,
+      "external_specs": [
+        {
+          "draft-msporny-base58-03": {
+            "href": "https://datatracker.ietf.org/doc/html/draft-msporny-base58-03",
+            "title": "The Base58 Encoding Scheme",
+            "rawDate": "2021-03-31",
+            "authors": [
+              "S. Nakamoto",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        },        {
+          "multiformats": {
+            "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
+            "title": "The Multibase Data Format",
+            "rawDate": "2024-02-21",
+            "authors": [
+              "Juan Benet",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        },
+        {
+          "di-eddsa-v1.0": {
+            "href": "https://www.w3.org/TR/vc-di-eddsa",
+            "title": "Data Integrity EdDSA Cryptosuites v1.0",
+            "rawDate": "2024-12-08",
+            "authors": [
+              "Dave Longley",
+              "Manu Sporny"
+            ],
+            "status": "W3C Technical Recommendation"
+          }
+        },
+        {
+          "anoncreds": {
+            "href": "https://hyperledger.github.io/anoncreds-spec/",
+            "title": "AnonCreds",
+            "rawDate": "2023-01-27",
+            "authors": [
+              "Mike Lodder",
+              "Stephen Curran"
+            ],
+            "status": "Internet Draft"
+          }
+        }
+      ]
     }
   ]
 }
