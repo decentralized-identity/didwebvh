@@ -2,15 +2,15 @@
 
 ### Overview
 
-The `did:webvh` AnonCreds Method defines how AnonCreds objects ([[ref: Schemas]], [[ref: CredDefs]], [[ref: RevRegDefs]], and [[ref: RevRegEntries]]) are registered (published, written) by a [[ref: DID Controller]] using a `did:webvh` DID, and how others can resolve and verify those objects. The method makes use of [[ref: Attested Resources]], resources (objects, files) that are generated with a deterministic ID, attested to by the [[ref: DID Controller]], and published at a resolvable web location -- typically (but not necessarily) to the same web server as the [[ref: DID Controller]]'s `did:webvh` DID Log. The next section of the specification focuses on the publication and resolution of the AnonCreds objects.
+The `did:webvh` AnonCreds Method defines how AnonCreds objects ([[ref: Schemas]], [[ref: CredDefs]], [[ref: RevRegDefs]], and [[ref: RevRegEntries]]) are registered (published, written) by a [[ref: DID Controller]] using a `did:webvh` DID, and how others can resolve and verify those objects. The method makes use of [[ref: Attested Resources]], resources (objects, files) that are generated with a deterministic, _verifiable_ identifier, that contains a hash of the resource, published at a resolvable web location -- typically (but not necessarily) to the same web server as the [[ref: DID Controller]]'s `did:webvh` DID Log, and attested to by the [[ref: DID Controller]]. The next section of the specification focuses on the publication and resolution of the AnonCreds objects.
 
-The specification of an [[ref: Attested Resource]] is found [later in this specification](#attested-resources) and may later be extracted into a standalone specification.  For those unfamiliar with [[ref: Attested Resources]], here is a brief summary of their important attributes:
+The specification of an [[ref: Attested Resource]] is found [later in this specification](#attested-resources) and may later be extracted into a standalone specification.  For those new to [[ref: Attested Resources]], here is a brief summary of their important attributes:
 
-- [[ref: Attested Resources]] are a JSON structure that embed a complete resource (e.g., an AnonCred object, an encoded image, a [Bitstring Status List](https://www.w3.org/TR/vc-bitstring-status-list/), an [OCA Bundle](https://bcgov.github.io/aries-oca-bundles/), or any other resource published by the [[ref: DID Controller]]), plus metadata about the resource.
-  - Note that a `did:webvh` using [[ref: DID Controller]] does not have to publish resources as [[ref: Attested Resources]]. It is just a usefully verifiable data model.
-- The identifier from an Attested Resource is resolvable and contains a deterministic hash of the resource, allowing a resolver to verify that the content of the identified resource has not been altered.
-- The Attested Resource includes a [[ref: Data Integrity]] proof signed by the [[ref: DID Controller]] of the Attested Resource JSON (the resource, and metadata).
-- A `did:webvh` [[ref: Attested Resource]] is typically found at a relative path on the DID's web server. However, the DID's DIDDoc **MAY** use a DID `service` ([[spec:DID-CORE]]) to indicate the resources are based on a different URI.
+- [[ref: Attested Resources]] are JSON structures that embed a complete resource (e.g., an AnonCred object, an encoded image, or any other resource published by the [[ref: DID Controller]]), plus metadata about the resource.
+  - Note that a [[ref: DID Controller]] using `did:webvh` does not have to publish resources as [[ref: Attested Resources]]. It is just a usefully verifiable data model.
+- The identifier for an Attested Resource is resolvable and verifiable, in that it contains a deterministic hash of the resource, allowing a resolver to verify that the content of the identified resource has not been altered. A resolver typically gets the identifier from another party and resolves it some later date, so there is value in verifying that the resolved resource is bound to the identifier. For example, a Verifier gets the identifier for an AnonCreds [[ref: CredDef]] from the Holder who has embedded it in the generated AnonCreds verifiable presentation, possibly years after the Issuer created the [[ref: CredDef]] and issued the credential.
+- The Attested Resource includes a [[ref: Data Integrity]] proof of the Attested Resource JSON (the resource, and metadata), signed by the [[ref: DID Controller]].
+- A `did:webvh` [[ref: Attested Resource]] is typically found at a relative path on the same web server as the DID Log. However, the DID's DIDDoc **MAY** use a DID `service` ([[spec:DID-CORE]]) to indicate resources are based on a different URI.
 
 ### AnonCreds Objects as Attested Resources
 
@@ -304,7 +304,7 @@ The [[ref: Data Integrity]] proof ([[spec:VC-DATA-INTEGRITY]]) attached to [[ref
 
 #### Creation and Publishing
 
-The following process **MUST** be followed to create the an [[ref: Attested Resource]]. The input to this process is the resource -- a JSON item.
+The following process **MUST** be followed to create an [[ref: Attested Resource]]. The input to this process is the resource -- a JSON item.
 
 - Take the `<resource>` and calculate the `digestMultibase` value using the [`digestMultibase algorithm](#calculating-the-attested-resource-digestmultibase).
 - Set the `metadata.ResourceId` to be the value of the calculated `digestMultibase`.
@@ -346,10 +346,6 @@ The following is the [[spec:JSON-LD]] context file for an attested-resource obje
         "digestMultibase": {
           "@id": "https://w3id.org/security#digestMultibase",
           "@type": "https://w3id.org/security#multibase"
-        },
-        "mirrorLink": {
-          "@id": "undefined:mirrorLink",
-          "@type": "https://schema.org/URL"
         },
         "AttestedResource": {
             "@id": "undefined:AttestedResource",
