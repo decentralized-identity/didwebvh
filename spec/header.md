@@ -5,7 +5,7 @@ The `did:webvh` DID Method<br>v0.5+ / Editors Draft
 
 **Specification Status:** EDITORS DRAFT
 
-This **Editors Draft** contains small breaking changes from the [current v0.5 stable version](../), and clarifications. See the [Changelog](#didwebvh-version-changelog) for details about what has changed in this version from [v0.5](../). The goal of the Editors is that this next version will be the v1.0 specification.
+This **Editors Draft** contains breaking changes from the [current v0.5 stable version](../), and clarifications. See the [Changelog](#didwebvh-version-changelog) for details about what has changed in this version from [v0.5](../). The goal of the Editors is that this next version will be the v1.0 specification.
 
 **Current Specification:** [v0.5](../)
 
