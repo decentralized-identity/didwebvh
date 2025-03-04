@@ -141,6 +141,8 @@ path w/ port
 
 :::
 
+A client resolving a `did:webvh` DID **MAY** choose to use a [[ref: watcher]] as the source of data about a `did:webvh` DID, rather than resolving the DID's HTTPS location to retrieve the [[ref: DID Log]]. See the specification section [Witnesses and Watchers](#witnesses-and-watchers) for information about `did:webvh` and [[ref: watchers]].
+
 The location of the `did:webvh` `did.jsonl` [[ref:DID Log]] file is the same as
 where the comparable `did:web`'s `did.json` file is published. A [[ref: DID
 Controller]] **MAY** publish both DIDs and so, both files. The process
@@ -975,6 +977,16 @@ witnesses]] to monitor and approve each version update, a malicious actor cannot
 rewrite the previous history without having compromised a sufficient number of
 [[ref: witnesses]], the [[ref: DID Controller]]'s key(s), and the Web Server on
 which the [[ref: DID Log]] is published.
+
+##### Witnesses and Watchers
+
+[[ref: Watchers]] are components found in some digital trust and DID ecosystems that monitor DIDs on behalf of a set of clients. While a `did:webvh` [[ref: witness]] might fulfill some watcher functions, there is no separately formalized `did:webvh` watcher role because there are no specified interactions between [[ref: DID Controllers]] and `did:webvh` [[ref: watchers]]. Anyone is free to deploy a [[ref: watcher]] that monitors `did:webvh` DIDs for various purposes, such as:
+
+- **Caching verified DIDs:** Storing verified DID documents on behalf of watcher clients.
+- **Ensuring persistence:** Maintaining long-lasting access to DIDs—even after a DID has been removed by its [[ref: DID Controller]]. For instance, the [Verifiable Data Gateway](https://github.com/LedgerDomain/did-webplus?tab=readme-ov-file#verifiable-data-gateway-vdg) concept from [did:webplus](https://github.com/LedgerDomain/did-webplus/blob/main/README.md) could function as [[ref: watcher]] of enduring DIDs.
+- **Detecting malicious behavior:** Identifying potential malfeasance by the [[ref: DID Controller]]—for example, if the controller (in collusion with [[ref: witnesses]] and the web server) publishes inconsistent [[ref: DID Logs]] by republishing a log with altered trailing [[ref: entries]]. A network of [[ref: watchers]] could be set up to reach consensus on DID updates independently of the [[ref: DID Controller]] and [[ref: witnesses]].
+
+The interactions (if any) between a [[ref: DID Controller]] and [[ref: watchers]] are outside the scope of this specification. A `did:webvh` implementation may, for example, offer notifications of DID updates to a set of [[ref: watchers]], and how clients resolving `did:webvh` DIDs discover and interact with these [[ref: watchers]] is similarly not defined here.
 
 ##### Witness Lists
 
