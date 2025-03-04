@@ -139,11 +139,21 @@ internationalized domain
 
 :::
 
+A client resolving a `did:webvh` DID **MAY** choose to use a [[ref: watcher]] as the source of data about a `did:webvh` DID, rather than resolving the DID's HTTPS location to retrieve the [[ref: DID Log]]. See the specification section [Witnesses and Watchers](#witnesses-and-watchers) for information about `did:webvh` and [[ref: watchers]].
+
 The location of the `did:webvh` `did.jsonl` [[ref:DID Log]] file is the same as
 where the comparable `did:web`'s `did.json` file is published. A [[ref: DID
 Controller]] **MAY** publish both DIDs and so, both files. The process
 to do so is described in the [publishing a parallel `did:web`
 DID](#publishing-a-parallel-didweb-did) section of this specification.
+
+::: warning
+
+While the transformation from a did:webvh identifier to an HTTPS resource relies on DNS resolution, clients should not assume  that a `did:webvh` identifier is inherently bound to or controlled by the entity associated with the corresponding DNS domain. In fact, a `did:webvh` [[ref: DID Log]] may be obtained from sources other than its corresponding HTTPS location (perhaps indexed by its [[ref: SCID]]), and in such cases, the same verification steps may be applied to determine its validity.
+
+Verification of a did:webvh identifier using this specification ensures cryptographic validity, but that does not imbue "trust" in the identifier itself. Trust in a did:webvh DID should be derived from external sources, such as verifiable credentials issued by trusted parties (possibly discovered by resolving the DID's [/whois](#whois-linkedvp-service) URL) or via Trust Registries that maintain authoritative records of trusted DIDs in a given context. Implementers should exercise caution and avoid conflating technical verification with trustworthiness, ensuring that reliance on a `did:webvh` identifier is informed by independent verification mechanisms.
+
+:::
 
 ### The DID Log File
 
@@ -507,7 +517,7 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
 8. The proof JSON object **MUST** be added as the value of the `proof` property in the [[ref: log entry]].
 9. The entry **MUST** be made a [[ref JSON Line]] by removing extra whitespace, adding a `\n`
    to the entry. 
-10. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]] for the
+10. If the [[ref: DID Controller]] opts to use [[ref: witnesses]] for the
    DID, the [[ref: DID Controller]] **MUST** collect the [[ref: threshold]] of proofs
    from the DID's [[ref: witnesses]], and update and publish the DID's
    `did-witness.json` file. The updated `did-witness.json` file **MUST** be published
@@ -533,9 +543,9 @@ true`. A [[ref: DID Controller]] **SHOULD** update the [[ref: DIDDoc]] and
 `parameters` object to further indicate the deactivation of the DID, such as
 setting to `null` the `updateKeys` in the [[ref: parameters]], preventing
 further versions of the DID. If the DID is using [[ref: pre-rotation]], two
-[[ref: DID log entries]] are required, the first to stop the use of
-pre-rotation, and the second for setting `updateKeys` to `null`. For additional
-details about turning off [[ref: pre-rotation]] see the
+[[ref: DID log entries]] are required to accomplish that state, the first to
+stop the use of pre-rotation, and the second for setting `updateKeys` to `null`.
+For additional details about turning off [[ref: pre-rotation]] see the
 [pre-rotation](#pre-rotation-key-hash-generation-and-verification) section of
 this specification.
 
@@ -573,7 +583,7 @@ An example of the JSON prettified `parameters` property in the first [[ref: DID 
     "nextKeyHashes": [
       "enkkrohe5ccxyc7zghic6qux5inyzthg2tqka4b57kvtorysc3aa"
     ],
-    "method": "did:webvh:0.3",
+    "method": "did:webvh:0.5",
     "scid": "{SCID}"
 }
 ```
@@ -663,8 +673,11 @@ properties are defined below.
     -- meaning its [[ref: log entry]] **MUST** be witnessed by active
     `witnesses` from a **prior** [[ref: DID log]] entry.
   - If the `witness` property is not set in the first [[ref: DID log entry]],
-    its value **MUST** be null.
-  - `witness` **MUST** have at least 1 entry and **MUST NOT** be set to an empty list `[]`.
+    its value **MUST** be set to null.
+  - The `witness` [[ref: parameter]] **MAY** be set to `null` to indicate that
+    witnesses are no longer being used. If witnesses are active when the
+    `witness` [[ref: parameter]] is set to `null`, that [[ref: DID log entry]]
+    **MUST** be [[ref: witnessed]].
 - `deactivated`: A JSON boolean that **MUST** be initialized to `false` and
   **SHOULD** be set to `true` when the DID is to be deactivated but remains
   resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this
@@ -963,6 +976,16 @@ rewrite the previous history without having compromised a sufficient number of
 [[ref: witnesses]], the [[ref: DID Controller]]'s key(s), and the Web Server on
 which the [[ref: DID Log]] is published.
 
+##### Witnesses and Watchers
+
+[[ref: Watchers]] are components found in some digital trust and DID ecosystems that monitor DIDs on behalf of a set of clients. While a `did:webvh` [[ref: witness]] might fulfill some watcher functions, there is no separately formalized `did:webvh` watcher role because there are no specified interactions between [[ref: DID Controllers]] and `did:webvh` [[ref: watchers]]. Anyone is free to deploy a [[ref: watcher]] that monitors `did:webvh` DIDs for various purposes, such as:
+
+- **Caching verified DIDs:** Storing verified DID documents on behalf of watcher clients.
+- **Ensuring persistence:** Maintaining long-lasting access to DIDs—even after a DID has been removed by its [[ref: DID Controller]]. For instance, the [Verifiable Data Gateway](https://github.com/LedgerDomain/did-webplus?tab=readme-ov-file#verifiable-data-gateway-vdg) concept from [did:webplus](https://github.com/LedgerDomain/did-webplus/blob/main/README.md) could function as [[ref: watcher]] of enduring DIDs.
+- **Detecting malicious behavior:** Identifying potential malfeasance by the [[ref: DID Controller]]—for example, if the controller (in collusion with [[ref: witnesses]] and the web server) publishes inconsistent [[ref: DID Logs]] by republishing a log with altered trailing [[ref: entries]]. A network of [[ref: watchers]] could be set up to reach consensus on DID updates independently of the [[ref: DID Controller]] and [[ref: witnesses]].
+
+The interactions (if any) between a [[ref: DID Controller]] and [[ref: watchers]] are outside the scope of this specification. A `did:webvh` implementation may, for example, offer notifications of DID updates to a set of [[ref: watchers]], and how clients resolving `did:webvh` DIDs discover and interact with these [[ref: watchers]] is similarly not defined here.
+
 ##### Witness Lists
 
 The list of DIDs that witness DID updates are defined in the `witness`
@@ -997,8 +1020,7 @@ has the following data structure:
   "threshold": n,
   "witnesses" : [
       {
-         "id": "<did:key DID of witness>",
-         "weight": n
+         "id": "<did:key DID of witness>"
       }
    ]
 }
@@ -1007,24 +1029,18 @@ has the following data structure:
 
 where:
 
-- threshold: an integer that must be attained or surpassed by the sum of the witnesses weights for a DID log entry to be considered approved.
-- witnesses: an array of witnesses, each including the required fields:
+- threshold: an integer that must be attained or surpassed by the count of the witnesses for a DID log entry to be considered approved. `threshold` **MUST** be between 1 and the number of items in the `witnesses` array, inclusive.
+- witnesses: the array of witnesses that **MUST** be non-empty, with each entry including the required field:
   - id: the DID of the witness. The DID **MUST** be a `did:key` DID.
-  - weight: an integer that is the weight given to this witness's approval
 
 ##### Witness Threshold Algorithm
 
-The use of the [[ref: threshold]] and weighted approvals (versus needing
-approvals from all [[ref: witnesses]]) is to prevent faulty [[ref: witnesses]]
-from blocking the publishing of a new version of the DID. To determine if the
-[[ref: threshold]] has been met, all participants **MUST** sum the `weight`
-integer of the received approvals. and if it is equal to or more than the
-`threshold` **MUST** be accepted as "[[ref: witnessed]]".
-
-For example, if there are three [[ref: witnesses]] with a `weight` of `1`, a
-fourth with a weight of `2`, and a `threshold` of `3`, the [[ref: threshold]] is met
-by either the fourth plus any one of the other [[ref: witnesses]] (`2+1`), or
-all of the first three witness (`1+1+1`) providing an approving `proof`.
+The use of the [[ref: threshold]] versus needing approvals from all [[ref:
+witnesses]] is to prevent faulty [[ref: witnesses]] from blocking the publishing
+of a new version of the DID. To determine if the [[ref: threshold]] has been
+met, all participants **MUST** count the verified [[ref: witness]] approvals,
+and if it is equal to or more than the `threshold`, the update **MUST** be
+accepted as "[[ref: witnessed]]".
 
 ##### The Witness Proofs File
 
@@ -1058,7 +1074,7 @@ Where:
   as input data.  The permitted [[ref: Data Integrity]] cryptosuites used by the
   [[ref: witnesses]] **MUST** be `eddsa-jcs-2022` as referenced in [[spec:di-eddsa-v1.0]].
 
-A valid proof from a [[ref: witness]] carries the implication that all prior
+A valid proof from a [[ref: witness]] carries the implication that **ALL** prior
 [[ref: DID Log entries]] are also approved by that witness. To maintain a
 manageable `did-witness.json` file size, the [[ref: DID Controller]] **SHOULD**
 remove all older proofs for **published** [[ref: DID Log entries]], keeping only the
@@ -1079,9 +1095,8 @@ there may be two proofs in the `did-witness.json` file for a [[ref: witness]]:
 - The most recent proof for a published [[ref: DID Log entry]].
 - An additional proof that applies to an unpublished [[ref: DID Log entry]].
 
-To ensure file cleanliness and avoid unnecessary clutter any `did-witness.json`
-array entry without proofs (containing only the `versionId`) **SHOULD** be
-removed.
+To avoid unnecessary clutter in the `did-witness.json` file, array entries
+without proofs (e.g., containing only the `versionId`) **SHOULD** be removed.
 
 ##### Witnessing a DID Version Update
 
@@ -1102,7 +1117,7 @@ The following process is used to witness a DID version update:
   proof signed using the [[ref: witness]]'s `did:key` DID.
   - The specification leaves to implementers how [[ref: witness]] proofs are
     conveyed to the [[ref: DID Controller]].
-- The [[ref: DID Controller]] **MUST** create or add the proof to the record for
+- The [[ref: DID Controller]] **MUST** add the proof to the record for
   the applicable `versionId` for the unpublished [[ref: DID log entry]].
   to the `did-witness.json` file.
   - The [[ref: DID Controller]] **MAY** publish the updated `did-witness.json` file
@@ -1120,7 +1135,7 @@ approving the [[ref: log entry]]. To do so, resolvers must:
 - Successfully complete the non-[[ref: witness]] verifications of the [[ref: DID Log]].
 - Verify the [[ref: witness]] proofs in the `did-witness.json` file.
   - The resolver **MUST** ignore the proofs of any unpublished [[ref: DID Log entries]].
-  - If any of the proofs of published [[ref: DID Log entries]] do not validate,
+  - If any of the proofs of published [[ref: DID Log entries]] fail validation,
   terminate the resolution process with an error.
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
   confirm that the `did-witness.json` file contains verified [[ref: witness]]
