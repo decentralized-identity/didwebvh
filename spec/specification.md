@@ -83,9 +83,9 @@ retrieve the [[ref: DID Log]]. The process described here includes the appropria
    - If the domain contains a port, decode percent-encoding and preserve the port.
    - Apply Unicode normalisation as defined in [[spec:rfc3491]] (see this explainer on [Unicode normalization](https://dencode.com/en/string/unicode-normalization)).
    - Apply IDNA (Punycode) encoding as per IDNA2008 [[spec:rfc9233]]. See the [FAQ on IDNA](https://corp.unicode.org/~asmus/proposed_faq/idn.html) for more details. For domains that do not contain international domain name elements, this should result in no change.
-4. **Transform the path**, the 0 or more path segments after the first `:` character, separated by `:` characters.
+4. **Transform the path**, the 0 or more segments after the first `:` character, delimited by `:` characters.
    - Percent-encoded each path segment per [[spec:rfc3986]] to ensure a valid HTTP URL.
-   - Replace each separator (`:` character) between the segments with a `/` character to create the encoded path (`{encoded_path}`).
+   - Replace each `:` character separator between the segments with a `/` character to create the encoded path (`{encoded_path}`).
 5. **Reconstruct the HTTPS URL**:
    - Format as `https://{domain}:{port}/{encoded_path}/did.jsonl` if a port is present.
    - Format as `https://{domain}/{encoded_path}/did.jsonl` if there are path segments and no port.
