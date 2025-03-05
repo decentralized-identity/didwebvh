@@ -4,6 +4,8 @@ The following lists the substantive changes in each version of the specification
 
 - Version 0.5+ (final number to be determined -- ideally it will be 1.0)
   - Removes the `weight` value and clarifies permitted values of `threshold`.
+  - Adds the concept of a `watcher` to the specification, including the technical details of deploying and using a `watcher`.
+  - Clarifies the [DID-to-HTTPS Transformation](#the-did-to-https-transformation) to include support for domain names using Unicode international languages.
 
 - Version 0.5
   - Remove the `prerotation` parameter. The feature is automatically enforced
