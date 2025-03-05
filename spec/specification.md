@@ -414,17 +414,19 @@ For each entry:
          `nextKeyHashes` list in the [[ref: parameters]].
       6. All other `did:webvh` processing configuration settings as defined by in the
          `parameters` object.
-9.  If the `parameters` for any of the versions define that some or all of
+9. If the `parameters` for any of the versions define that some or all of
   the [[ref: DID Log entries]] must be witnessed, further verification of
   the [[ref: witness]] proofs must be carried out, as defined in the [DID
   Witnesses](#did-witnesses) section of this specification.
-10.  If any of the DID verifications outlined in this process fail, discard the
-    DID as invalid with an error message.
 
-On completing the processing and successful verification of all [[ref: entries]] in the
-[[ref: DID Log]], respond to the DID resolution request, including the
-application of DID query [[ref: parameters]] such as `?versionId=` and `?versionTime=` with
-the appropriate [[ref: DIDDoc]] version and content.
+10. Flag failed verifications appropriately, either invalidating the entire DID or marking all entries from the first invalid entry to the end of the log as invalid.
+
+11. Respond to the resolution request based on verification results:
+      1. If all verifications pass, resolve the DID, applying any query parameters as requested.
+      2. If the DID itself is invalid, return an appropriate error status code.
+      3. If the request includes query parameters (e.g., `?versionId=` or `?versionTime=`) that reference valid [[ref: DID log entries]], return the corresponding [[ref: DIDDoc]] version with a successful status code—even if later entries in the log are invalid.
+
+While resolver caching policies are an implementation matter and largely outside the scope of this specification, resolvers **SHOULD NOT** cache a DID that fails verification. This ensures that the DID’s [[ref: DID Controller]] has the opportunity to recover a DID that may have been erroneously or maliciously invalidated.
 
 The following error codes and descriptions may be returned when resolving a DID.
 
