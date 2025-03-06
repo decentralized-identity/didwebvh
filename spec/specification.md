@@ -295,7 +295,7 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
    5. **Generate the [[ref: Data Integrity]] proof** A [[ref: Data Integrity]]
    proof on the preliminary JSON object as updated in the previous step **MUST**
    be generated using an authorized key in the required `updateKeys` property in the
-   [[ref: parameters]] object.
+   [[ref: parameters]] object and the `proofPurpose` set to `assertionMethod`.
 
    6. **Add the [[ref: Data Integrity]] proof** The [[ref Data Integrity]] proof
    is added to the preliminary JSON object. The resultant JSON object is the
@@ -371,7 +371,7 @@ For each entry:
      *after* the entry in which they are defined has been published.
 2. The [[ref: Data Integrity]] proof in the entry **MUST** be valid and signed by
    an authorized key as defined in the [Authorized Keys](#authorized-keys)
-   section of this specification.
+   section of this specification, and with a `proofPurpose` set to `assertionMethod`.
    1. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]]
       resolvers **MUST** retrieve and verify the DID's `did-witness.json` file. For
       details, see the [DID Witnesses](#did-witnesses) section of this
@@ -510,7 +510,7 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
    Entry]] with the value produced in the previous step.
 6. Generate a [[ref: Data Integrity]] proof on the [[ref: DID log entry]] using
    an authorized key, as defined in the [Authorized Keys](#authorized-keys)
-   section of this specification.
+   section of this specification, and the `proofPurpose` set to `assertionMethod`.
 7. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
    in the `parameters` property **MUST** match a hash in
    the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]] entry with exception of the first entry, as defined in the
@@ -839,7 +839,7 @@ Resolver **MUST** execute the following process:
 
 Each entry in the [[ref: DID Log]] **MUST** include a [[ref: Data Integrity]]
 `proof` property signed by a key **authorized** to control (create, update, deactivate) the
-DID. The authorized verification keys for `did:webvh` are the [[ref: multikey]]-formatted
+DID, and with the `proofPurpose` set to `assertionMethod`. The authorized verification keys for `did:webvh` are the [[ref: multikey]]-formatted
 public keys in the **active** `updateKeys` list from the `parameters` property of
 the [[ref: log entries]]. Any of the authorized verification keys may be referenced
 in the [[ref: Data Integrity]] proof.
@@ -1076,7 +1076,7 @@ Where:
   [[ref: witness]] proofs apply.
 - `proof` is an array of [[ref: Data Integrity]] proofs that use the `versionId`
   as input data.  The permitted [[ref: Data Integrity]] cryptosuites used by the
-  [[ref: witnesses]] **MUST** be `eddsa-jcs-2022` as referenced in [spec:di-eddsa-v1.0].
+  [[ref: witnesses]] **MUST** be `eddsa-jcs-2022` as referenced in [spec:di-eddsa-v1.0] and the `proofPurpose` set to `assertionMethod`.
 
 A valid proof from a [[ref: witness]] carries the implication that **ALL** prior
 [[ref: DID Log entries]] are also approved by that witness. To maintain a
