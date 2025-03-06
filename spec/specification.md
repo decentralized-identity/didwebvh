@@ -556,6 +556,8 @@ property key:value pair `"deactivated": true` **MUST** return in the [[ref:
 DIDDoc]] Metadata the property key:value `"deactivated": true`, as per the
 [[spec:DID-RESOLUTION]] specification.
 
+A [[ref: DID Controller]] can “deactivate” a DID by removing the published [[ref: DID Log]] and associated files and resources. Once removed, attempts to retrieve the [[ref: DID Log]] will result in an `HTTP 404 Not Found` (or an equivalent error status when resolving the DID). [[ref: Watchers]] monitoring a removed DID SHOULD continue to cache the last known valid state of the DID indefinitely so that their clients can still resolve and reference it, even after the [[ref: DID Log]] has been deleted.
+
 ### DID Method Processes
 
 The [DID Method Operations](#did-method-operations) reference several processes
@@ -884,6 +886,7 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
   [DID Method Parameters](#didwebvh-did-method-parameters) section.
 - The [[ref: SCID]] **MUST** be the same in the original and renamed DID.
 - The [[ref: DIDDoc]] **MUST** contain the prior DID string as an `alsoKnownAs` entry.
+- [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
 
 #### Pre-Rotation Key Hash Generation and Verification
 
