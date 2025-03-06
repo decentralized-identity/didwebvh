@@ -1074,7 +1074,7 @@ Where:
   [[ref: witness]] proofs apply.
 - `proof` is an array of [[ref: Data Integrity]] proofs that use the `versionId`
   as input data.  The permitted [[ref: Data Integrity]] cryptosuites used by the
-  [[ref: witnesses]] **MUST** be `eddsa-jcs-2022` as referenced in [[spec:di-eddsa-v1.0]].
+  [[ref: witnesses]] **MUST** be `eddsa-jcs-2022` as referenced in [spec:di-eddsa-v1.0] and the `proofPurpose` set to `assertionMethod`.
 
 A valid proof from a [[ref: witness]] carries the implication that **ALL** prior
 [[ref: DID Log entries]] are also approved by that witness. To maintain a
