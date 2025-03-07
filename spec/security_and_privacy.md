@@ -30,16 +30,10 @@ followed.
 
 ### International Domain Names
 
-[[spec:DID-CORE]] identifier syntax does not allow Unicode in method name nor
-method specific identifiers.
-
-Implementers should be cautious when implementing support for DID URLs that rely
-on domain names or path components that contain Unicode characters.
-
-See also:
-
-- [UTS-46](https://unicode.org/reports/tr46/)
-- [[spec:RFC5895]]
+`did:webvh` implementers **MAY** publish [[ref: DID Logs]] on domains that use international domains.
+ The [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section of this specification
+ **MUST** be followed by [[ref: DID Controllers]] and DID resolvers to ensure the proper
+ handling of international domains.
 
 ### Cross-Origin Resource Sharing (CORS) Policy Considerations
 
