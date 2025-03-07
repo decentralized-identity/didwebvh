@@ -886,6 +886,7 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
   [DID Method Parameters](#didwebvh-did-method-parameters) section.
 - The [[ref: SCID]] **MUST** be the same in the original and renamed DID.
 - The [[ref: DIDDoc]] **MUST** contain the prior DID string as an `alsoKnownAs` entry.
+- [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
 
 #### Pre-Rotation Key Hash Generation and Verification
 
