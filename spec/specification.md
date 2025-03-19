@@ -423,8 +423,12 @@ For each entry:
 
 11. Respond to the resolution request based on verification results:
       1. If all verifications pass, resolve the DID, applying any query parameters as requested.
-      2. If the DID itself is invalid, return an appropriate error status code.
-      3. If the request includes query parameters (e.g., `?versionId=` or `?versionTime=`) that reference valid [[ref: DID log entries]], return the corresponding [[ref: DIDDoc]] version with a successful status code—even if later entries in the log are invalid.
+      2. The DID being resolved **MUST** meet one of the following conditions; otherwise, the resolution **MUST** be flagged as invalid:
+         1. It matches the top-level id in the [[ref: DIDDoc]] of the specified entry in the [[ref: DID Log]] being returned, OR
+         2. It matches the top-level id in the [[ref: DIDDoc]] of the last entry in the [[ref: DID Log]].
+
+      3. If the DID being resolved is invalid, return an appropriate error status code.
+      4. If the request includes query parameters (e.g., `?versionId=` or `?versionTime=`) that reference valid [[ref: DID log entries]], return the corresponding [[ref: DIDDoc]] version with a successful status code—even if later entries in the log are invalid.
 
 While resolver caching policies are an implementation matter and largely outside the scope of this specification, resolvers **SHOULD NOT** cache a DID that fails verification. This ensures that the DID’s [[ref: DID Controller]] has the opportunity to recover a DID that may have been erroneously or maliciously invalidated.
 
@@ -477,8 +481,8 @@ and published to the web location defined by the DID. The process to generate a
 verifiable [[ref: DID Log Entry]] follows a similar process to the
 [Create](#create-register) process, as follows:
 
-1. Make the desired changes to the [[ref: DIDDoc]]. While the contents of a new DIDDoc
-   version are (mostly) up to the [[ref: DID controller]], there are some limitations:
+1. Make the desired changes to the [[ref: DIDDoc]]. The top-level `id` in the
+   [[ref: DIDDoc]] **MUST** contain the value of the DID.
    1. If the DID is configured to support [[ref: portability]], the root `id`
       property in the [[ref: DIDDoc]] **MAY** be changed when the [[ref: DID Controller]] wants to (or
       is forced to) publish the DID at a different Internet location and wants
