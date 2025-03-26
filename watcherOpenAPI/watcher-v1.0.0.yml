@@ -1,0 +1,308 @@
+openapi: 3.0.3
+info:
+  title: did:webvh Watcher OpenAPI Definition
+  description: |-
+    This is the did:webvh watcher API definition. As per the did:webvh specification, a did:webvh watcher referenced in a did:webvh DID Log MUST implement at least this API.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.
+externalDocs:
+  description: Find out more about did:webvh and did:webvh Watchers
+  url: https://didwebvh.info
+servers: []
+tags:
+  - name: log
+    description: did:webvh DID Log related operations
+  - name: witness
+    description: did:webvh Witness related operations
+  - name: resource
+    description: did:webvh DID Resource related operations
+paths:
+  /log:
+    get:
+      tags:
+        - log
+      summary: Return the latest DID Log file
+      parameters:
+        - $ref: '#/components/parameters/SCID'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Log'      
+        '400':
+          description: Invalid SCID value
+        '404':
+          description: Unknown SCID value
+    post:
+      tags:
+        - log
+      summary: Notify the did:webvh Watcher that DID has been updated
+      parameters:
+        - $ref: '#/components/parameters/DID'
+      responses:
+        '202':
+          description: Request received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+  /log/delete:
+    post:
+      tags:
+        - log
+      summary: Request deletion of the cached did:webvh DID
+      parameters:
+        - $ref: '#/components/parameters/SCID'
+      requestBody: 
+        $ref: '#/components/requestBodies/VerifiablePresentation'
+      responses:
+        '202':
+          description: Request received
+        '400':
+          description: Invalid SCID value
+        '404':
+          description: Unknown SCID value
+  /witness:
+    get:
+      tags:
+        - witness
+      summary: Return the latest witness file for the DID with the given SCID
+      parameters:
+        - $ref: '#/components/parameters/SCID'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WitnessFile'      
+        '400':
+          description: Invalid SCID value
+        '404':
+          description: Unknown SCID value
+    post:
+      tags:
+        - witness
+      summary: Request a did:webvh witness signature for a new log entry
+      parameters:
+        - $ref: '#/components/parameters/SCID'
+      requestBody: 
+        $ref: '#/components/requestBodies/WitnessProofRequest'
+      responses:
+        '202':
+          description: Request received
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyResponse'
+        '400':
+          description: Invalid input
+        '404':
+          description: Unknown SCID value
+        '422':
+          description: Validation exception
+  /resource:
+    get:
+      tags:
+        - resource
+      summary: Return resource
+      parameters:
+        - $ref: '#/components/parameters/SCID'
+        - $ref: '#/components/parameters/resourcePath'
+      responses:
+        '200':
+          description: successful operation   
+        '400':
+          description: Invalid SCID value
+        '404':
+          description: Unknown SCID value or resource not found
+    post:
+      tags:
+        - resource
+      summary: Notify a new resource is available
+      parameters:
+        - $ref: '#/components/parameters/SCID'
+        - $ref: '#/components/parameters/resourcePath'
+      requestBody: 
+        $ref: '#/components/requestBodies/VerifiablePresentation'
+      responses:
+        '202':
+          description: Request received
+        '400':
+          description: Invalid input
+        '404':
+          description: Unknown SCID value
+        '422':
+          description: Validation exception
+  /resource/delete:
+    post:
+      tags:
+        - resource
+      summary: Request deletion of a cached resource
+      parameters:
+        - $ref: '#/components/parameters/SCID'
+        - $ref: '#/components/parameters/resourcePath'
+      requestBody: 
+        $ref: '#/components/requestBodies/VerifiablePresentation'
+      responses:
+        '202':
+          description: Request received
+        '400':
+          description: Invalid SCID value
+        '404':
+          description: Unknown SCID value or resource not found
+components:
+    schemas:
+    EmptyResponse:
+        type: object
+    DidDocument:
+        type: object
+        properties:
+        '@context': 
+            type: string
+            example: 'https://www.w3.org/ns/did/v1'
+        id: 
+            type: string
+            example: 'did:webvh:{SCID}:example.com'
+    LogEntryParameters:
+        type: object
+        properties:
+        updateKeys: 
+            type: array
+            items:
+            type: string
+            example: 'z6Mkf5rGMoatrSj1f4CyvuHBeXJELe9RPdzo2PKGNCKVtZxP'
+    DataIntegrityProof:
+        type: object
+        properties:
+        type: 
+            type: string
+            example: 'DataIntegrityProof'
+        cryptosuite: 
+            type: string
+            example: 'eddsa-jcs-2022'
+        verificationMethod:
+            type: string
+        proofValue:
+            type: string
+        proofPurpose:
+            type: string
+            example: 'assertionMethod'
+    VerifiablePresentation:
+        type: object
+        properties:
+            '@context': 
+                type: array
+                items:
+                    type: string
+                example: 'https://www.w3.org/ns/credentials/v2'
+            type:
+                type: string
+                example: 'VerifiablePresentation'
+            proof:
+                type: object
+                properties:
+            type: 
+                type: string
+                example: 'DataIntegrityProof'
+            cryptosuite: 
+                type: string
+                example: 'eddsa-jcs-2022'
+            verificationMethod:
+                type: string
+                example: 'did:key:{updateKey}'
+            proofPurpose:
+                type: string
+                example: 'authentication'
+            proofValue:
+                type: string
+            challenge:
+                type: string
+                example: "{SCID}"
+            domain:
+                type: string
+                example: 'https://watcher.example.com'
+    WitnessProof:
+        type: object
+        properties:
+            versionId:
+                type: string
+            proof:
+                $ref: '#/components/schemas/DataIntegrityProof'
+    WitnessProofResponse:
+        type: object
+        properties:
+            witnessProof:
+                $ref: '#/components/schemas/WitnessProof'
+    WitnessFile:
+        type: array
+        items:
+        $ref: '#/components/schemas/WitnessProof'
+    Log:
+        type: object
+        properties:
+            logFile:
+                type: string
+                example: '<base64 of the did:webvh Log File>'
+    LogEntry:
+        type: object
+        properties:
+            versionId:
+                type: string
+                example: '1-Q'
+            versionTime:
+                type: string
+                format: date-time
+            parameters:
+                $ref: '#/components/schemas/LogEntryParameters'
+            state:
+                $ref: '#/components/schemas/DidDocument'
+            proof:
+                $ref: '#/components/schemas/DataIntegrityProof'
+    WitnessProofRequest:
+        type: object
+        properties:
+            logEntry: 
+                $ref: '#/components/schemas/LogEntry'
+            options: 
+                type: object
+                properties:
+                callbackUrl:
+                    type: string
+                    example: 'https://example.com'
+parameters:
+    SCID:
+        name: scid
+        in: query
+        description: SCID
+        required: true
+        schema:
+            type: string
+    resourcePath:
+        name: path
+        in: query
+        description: Resource Path, this value needs to be url encoded.
+        required: true
+        schema:
+            type: string
+requestBodies:
+    WitnessProofRequest:
+        description: New log entry which needs to be witnessed
+        content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/WitnessProofRequest'
+    VerifiablePresentation:
+        description: A DataIntegrityProof used for Authentication
+        content:
+           application/json:
+                schema:
+                    $ref: '#/components/schemas/VerifiablePresentation'

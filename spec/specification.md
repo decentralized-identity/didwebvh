@@ -1189,54 +1189,16 @@ A [[ref: watcher]] is a web server accessible via HTTP that **MUST** support the
 
 ### API Operations
 
-The following API operations define the interaction between [[ref: watchers]] and other components:
+The following API operations define the interaction between [[ref: watchers]] and other components. Included with the specification is the [did:webvh v1.0 Watcher OpenAPI YML Definition](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/watcherOpenAPI/watcher-v1.0.0.yml).
 
 - **GET `<WATCHER URL>/log?scid=<SCID>`**: Returns the latest [[ref: DID Log]] for the given [[ref: SCID]].
-
-  Example response:
-
-  ```json
-  {
-      "log": { ... }
-  }
-  ```
-
 - **POST `<WATCHER URL>/log?did=<DID>`**: Notifies the [[ref: watcher]] of a log update, prompting retrieval of the latest [[ref: DID Log]] and [[ref: witness]] file. This endpoint uses the `did` as the query parameter instead of the [[ref: SCID]] to ensure that the [[ref: watcher]] is notified in the case of the DID moving to a new web location. The [[ref: watcher]] is expected to continue indexing the DID using its [[ref: SCID]].
-- **DELETE `<WATCHER URL>/log?scid=<SCID>`**: Notifies the [[ref: watcher]] that the given `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` from clients should return a `404 Not Found` status. The governance around the use of this endpoint and the [[ref: watcher]]'s response is out of scope of this specification. For example, a [[ref: watcher]] might require a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint can be used, for example, to implement a "right to be forgotten" order, such as might be required by Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/)
+- **POST `<WATCHER URL>/log/delete?scid=<SCID>`**: Notifies the [[ref: watcher]] that the given `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` from clients should return a `404 Not Found` status. The body of the URL is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
 - **GET `<WATCHER URL>/witness?scid=<SCID>`**: Returns the latest `witness.json` file for the given [[ref: SCID]].
-
-  Example response:
-
-  ```json
-  {
-      "witness": { ... }
-  }
-  ```
-
-- **POST `<WATCHER URL>/witness?scid=<SCID>`**: Notifies a [[ref: witness]]-[[ref: watcher]] about a new [[ref: DID log entry]], including a `callbackUrl` for returning the witness proof.
-
-Example request body:
-
-```json
-{
-    "logEntry": {...},
-    "options": {
-        "callbackUrl": "https://..."
-    }
-}
-```
-
+- **POST `<WATCHER URL>/witness?scid=<SCID>`**: Notifies a [[ref: witness]]-[[ref: watcher]] about a new [[ref: DID log entry]] to be witnessed. The body of the request includes the [[ref: DID log entry]] and a `callbackUrl` to be used by the [[ref: witness]] to provide the witness proof.
 - **GET `<WATCHER URL>/resource?scid=<SCID>&path=<resourcePath>`**: Retrieves the requested resource.
-
-  Example response:
-
-  ```json
-  {
-      "resource": { ... }
-  }
-  ```
-
 - **POST `<WATCHER URL>/resource?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] of a new or updated resource.
+- **POST `<WATCHER URL>/resource/delete?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] that the given `<resourcePath>` associated with the `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` and `<resourcePath>` from clients should return a `404 Not Found` status. The body of the URL is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
 
 ### HTTP Status Codes
 
@@ -1257,7 +1219,6 @@ Watchers **SHOULD** return the following HTTP status codes:
   This ensures that even if a DID is no longer actively maintained, its last published state remains accessible for verification and historical reference.
 
 - **202 Accepted** – Received; processing will be carried out asynchronously. This is the "success" response for each of the `POST` and `DELETE` endpoints, indicating that the message was received and will be processed by the service.
-
 - **400 Bad Request** – Invalid parameters.
 - **404 Not Found** – SCID, DID Log, witness file, or resource not found.
 - **412 Precondition Failed** – SCID failed verification; data not returned.
