@@ -451,36 +451,21 @@ where the items in the Metadata JSON object are:
 - `versionId` — The `versionId` from the [[ref: Log Entry]] of the resolved DIDDoc version.
 - `versionTime` — The `versionTime` from the [[ref: Log Entry]] of the resolved DIDDoc version, in [[ref: ISO8601]] timestamp format.
 - `created` — The [[ref: ISO8601]] timestamp of the DID's first [[ref: log entry]], indicating when (according to the [[ref: DID Controller]]) the DID was created.
-- `updated` — The [[ref: ISO8601]] timestamp of the DID's most recent [[ref: log entry]].
+- `updated` — The [[ref: ISO8601]] timestamp of the DID's last valid [[ref: log entry]].
 - `scid` — The [[ref: SCID]]] of the resolved DID.
 - `portable` — A boolean value indicating whether the resolved DID has [[ref: portability]] active and so may be moved in the future, as defined in the [portability](#did-portability) section of this specification.
 - `deactivated` — A boolean indicating whether the DID has been deactivated. When `true`, the DID is no longer active.
-- `witness` — An object containing the current (active in the latest [[ref: DID log entry]]) configuration of witnesses for the DID. The object is as defined as the same named object in the [witness list](#witness-lists) section of this specification. Optional (or `null`) if there are no active witnesses, otherwise required.
-- `watchers` — An array containing the current (active in the latest [[ref: DID log entry]]) list of [[ref: watcher]] URLs that have agreed to monitor and cache the DID’s state. Optional (or `null`) if there are no active [[ref: watchers]], otherwise required.
+- `witness` — An object containing the current (active in the last valid [[ref: DID log entry]]) configuration of witnesses for the DID. The object is as defined as the same named object in the [witness list](#witness-lists) section of this specification. Optional (or `null`) if there are no active witnesses, otherwise required.
+- `watchers` — An array containing the current (active in the last valid [[ref: DID log entry]]) list of [[ref: watcher]] URLs that have agreed to monitor and cache the DID’s state. Optional (or `null`) if there are no active [[ref: watchers]], otherwise required.
 
-The following [[spec:DID-RESOLUTION]] errors may be returned in the DID Resolution Metadata when resolving a `did:webvh` DID. Included are the conditions under which the different errors occur.
+The "last valid [[ref: leg entry]]" for some of the items above references the case where a DID resolution request references a DIDDoc that was valid, but where the DID Log has later [[ref: log entries]] that fail verification, as noted in the DID resolution steps earlier in this section. If all [[ref: log entries]] pass verification, the last valid [[ref: log entry]] is the last [[ref: log entry]].
 
-- `DID ${did} resolution failed.` - When the [[ref: DID log]] is found, but the resolution fails. This error **MAY** be used by a DID Resolver as a "catch-all" for all errors occuring during resolution, or they may use the more specific errors that follow to provide more detailed information. This error **SHOULD NOT** be used when the DID being resolved is not found.
-- `DID ${did} not found` - When the [[ref: DID Log]] is not found at the location expected.
-- `DID URL ${did} not found` - When in resolving a given DID URL the [[ref: DID Log]] is found and verified, but the resource referenced by the DID URL is not found.
-- `DID Log for ${did} not found` - When a [[ref: DID log]] is found at the location expected, but the `id` for the DID in the DIDDoc does not match the DID being resolved.
-- `Cannot specify both verificationMethod and version number/id` - Thrown when conflicting resolution options are provided.
-- `'${protocol}' protocol unknown.` - Thrown when the protocol in the [[ref: DID log]] doesn't match the expected protocol.
-- `version '${version}' in log doesn't match expected '${i + 1}'` - Thrown when the version number in the log doesn't match the expected sequence.
-- `SCID '${meta.scid}' not derived from logEntryHash '${logEntryHash}'` - Thrown when the SCID validation fails.
-- `version ${meta.versionId} failed verification of the proof` - Thrown when proof verification fails.
-- `Cannot move DID: portability is disabled` - Thrown when attempting to move a DID with [[ref: portability]] disabled.
-- `Hash chain broken at '${meta.versionId}'` - Thrown when the hash chain validation fails.
-- `Verification method ${vm} not found` - Thrown when a specified verification method cannot be found.
-- `Error resolving VM ${vm}` - General error when resolving a verification method.
-- `Key ${proof.verificationMethod} is not authorized to update` - Thrown when a key used for a [[ref: DID log entry]] proof is not in the authorized update keys list.
-- `Key ${proof.verificationMethod} is not from an authorized witness` - Thrown when a [[ref: witness]] key is not authorized.
-- `Unsupported verification method: ${proof.verificationMethod}` - Thrown when the verification method format is not supported.
-- `Unknown proof type ${proof.type}` - Thrown when the proof type is not recognized.
-- `Unknown proof purpose ${proof.proofPurpose}` - Thrown when the proof purpose is not recognized.
-- `Unknown cryptosuite ${proof.cryptosuite}` - Thrown when the [[ref: Data Integrity]] cryptosuite in a proof is not supported by the version of the specification in use for a given [[ref: DID log entry]].
-- `MultiKey header not supported` - Thrown when the multikey key is of a type not supported by the version of the specification in use for a given [[ref: DID log entry]].
-- `Proof ${i} failed verification` - Thrown when signature verification fails.
+The following [[spec:DID-EXTENSION-RESOLUTION]] errors **MUST** be returned in the `error` DID Resolution Metadata item when resolving a `did:webvh` DID for the conditions under which the different errors occur.
+
+- `notFound` -- the [[ref: DID Log]] to be resolved was not found, or the resource referenced in a DID URL was not found. If the [[ref: DID Log]] does not exist at the DID's designated HTTPS location (based on the [DID-to-HTTPS-Transformation](#the-did-to-https-transformation)), a DID resolver **MAY** use other sources, such as [[ref: Watchers]], to find the [[ref: DID Log]] (or DID Resource) for verification and resolution.
+- `invalidDid` -- any `did:webvh` error that occurs during DID resolution.
+
+A resolver **SHOULD** include a `reason` item in the DID Resolution Metadata that provides additional information about why the error occured. A non-normative document on the [did:webvh Information Site](https://didwebvh.info) provides a list of reasons defined by resolver implementers to aid in debugging DID resolution errors.
 
 ##### Reading did:webvh DID URLs
 
