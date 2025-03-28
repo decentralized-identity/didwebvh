@@ -460,12 +460,25 @@ where the items in the Metadata JSON object are:
 
 The "last valid [[ref: leg entry]]" for some of the items above references the case where a DID resolution request references a DIDDoc that was valid, but where the DID Log has later [[ref: log entries]] that fail verification, as noted in the DID resolution steps earlier in this section. If all [[ref: log entries]] pass verification, the last valid [[ref: log entry]] is the last [[ref: log entry]].
 
-The following [[spec:DID-EXTENSION-RESOLUTION]] errors **MUST** be returned in the `error` DID Resolution Metadata item when resolving a `did:webvh` DID for the conditions under which the different errors occur.
+When a DID resolution error occurs, the `error` field **MUST** be included in the `didResolutionMetadata`, as defined by the [[spec:DID-RESOLUTION]] specification. In addition, resolvers **SHOULD** provide supplemental "Problem Details" metadata following [[spec:rfc9457]], using the following structure:
 
-- `notFound` -- the [[ref: DID Log]] to be resolved was not found, or the resource referenced in a DID URL was not found. If the [[ref: DID Log]] does not exist at the DID's designated HTTPS location (based on the [DID-to-HTTPS-Transformation](#the-did-to-https-transformation)), a DID resolver **MAY** use other sources, such as [[ref: Watchers]], to find the [[ref: DID Log]] (or DID Resource) for verification and resolution.
-- `invalidDid` -- any `did:webvh` error that occurs during DID resolution.
+```json
+"didResolutionMetadata": {
+  "error": "invalidDid",
+  "problemDetails": {
+    "type": "https://w3id.org/security#INVALID_CONTROLLED_IDENTIFIER_DOCUMENT_ID",
+    "title": "The resolved DID is invalid.",
+    "detail": "Parse error of the resolved DID at character 3, expected ':'."
+  }
+}
+```
 
-A resolver **SHOULD** include a `reason` item in the DID Resolution Metadata that provides additional information about why the error occured. A non-normative document on the [did:webvh Information Site](https://didwebvh.info) provides a list of reasons defined by resolver implementers to aid in debugging DID resolution errors.
+As described in [[spec:DID-EXTENSION-RESOLUTION]], the following values **MUST** be used in the `error` field of the resolution metadata when resolving a `did:webvh` DID under the corresponding error conditions:
+
+- `notFound` — The [[ref: DID Log]] or the resource referenced by a DID URL was not found. If the [[ref: DID Log]] does not exist at the DID's designated HTTPS location (according to the [DID-to-HTTPS Transformation](#the-did-to-https-transformation)), the resolver **MAY** attempt to retrieve it from alternative sources, such as [[ref: Watchers]], for verification and resolution.
+- `invalidDid` — Any error that renders the `did:webvh` DID invalid during resolution.
+
+Resolvers **SHOULD** populate the `problemDetails` field to aid in diagnosing and understanding resolution failures. The [did:webvh information site](https://didwebvh.info) may serve as a non-normative reference for common `did:webvh` resolution error types and explanations.
 
 ##### Reading did:webvh DID URLs
 
