@@ -206,9 +206,9 @@ components:
       type: string
       description: The DID log file contains a list of entries, one for each version of the DID. Each entry has (per the JSON Lines specification) all extra whitespace removed, a \n character appended, and the result added to the DID Log.
       example: |
-          {"versionId": "", "versionTime": "", "parameters": {}, "state": {}, "proof": {}}
-          {"versionId": "", "versionTime": "", "parameters": {}, "state": {}, "proof": {}}
-          {"versionId": "", "versionTime": "", "parameters": {}, "state": {}, "proof": {}}
+          {"versionId":"","versionTime":"","parameters":{},"state":{},"proof":[]}
+          {"versionId":"","versionTime":"","parameters":{},"state":{},"proof":[]}
+          {"versionId":"","versionTime":"","parameters":{},"state":{},"proof":[]}
   parameters:
     SCID:
       name: scid
