@@ -1180,13 +1180,15 @@ did:webvh provides two mechanisms for notifying resolvers (and their clients via
 1. Witness-watchers: A [[ref: witness]] **MAY** also act as a [[ref: watcher]], indicated by the watcherURL attribute in the witnesses [[ref: parameter]]. If a [[ref: witness]] is removed, it ceases to be a [[ref: watcher]].
 2. Standalone watchers: The watchers [[ref: parameter]] lists URIs that identify independent [[ref: watchers]].
 
+[[ref: Watchers]] can be used by `did:webvh` resolvers and resolver clients. When resolving a `did:webvh` DID, `did:webvh` resolvers **MUST** provide the active list of [[ref: watchers]] and [[ref: witnesses]] in the DID metadata, as noted in the [read/resolve](#read-resolve) section of this specification.
+
 Watcher URIs MAY use schemes other than HTTP(S), such as a DID ([[spec:DID-CORE]]), depending on the specific implementation or network requirements. However, this specification does not define how non-HTTP(S) [[ref: watcher]] URIs should be resolved or interacted with. If a [[ref: watcher]] uses an HTTP(S) URL, it **MUST** support the HTTP-based interaction model defined in the [Watcher Endpoints and Behavior](#watcher-endpoints-and-behavior) section.
 
 If a `watchers` entry is included in a [[ref: DID log entry]], it replaces the active set of [[ref:watchers]] (excluding [[ref: witness]]-[[ref: watchers]]).
 
 If a new [[ref: watcher]] is added after a DID has existed for some time, the [[ref: DID Controller]] **SHOULD** notify the new [[ref: watcher]] about previously created [[ref: DID Resources]].
 
-[[ref: Watchers]] do not need to be listed in the [[ref: DID log]]. [[ref: Watchers]] can operate independently of the [[ref: DID Controller]] by polling for updates.
+[[ref: Watchers]] do not need to be listed in the [[ref: DID log]]. [[ref: Watchers]] can operate independently of the [[ref: DID Controller]] by polling for updates. [[ref: DID Controllers]] **MAY** send notifications to [[ref: watchers]] that the [[ref: DID Controller]] is aware of but does not list in the [[ref: DID Log]].
 
 ##### Watcher Endpoints and Behavior
 
@@ -1199,7 +1201,6 @@ A [[ref: watcher]] is a web server accessible via HTTP that **MUST** support the
 - **Notifications (typically) from the [[ref: DID Controller]]:**
   - Notify the [[ref: watcher]] about a new log entry for a DID.
   - Notify the [[ref: watcher]] about a new or updated [[ref: DID resource]].
-  - Request a [[ref: witness]] signature (if the [[ref: watcher]] also functions as a [[ref: witness]]).
   - Request removal of a given [[ref: SCID]] from the [[ref: watcher]]'s cache.
   - Request removal of a given DID resource [[ref: SCID]] from the [[ref: watcher]]'s cache.
 
@@ -1211,20 +1212,9 @@ The following HTTP API operations define the interaction between [[ref: watchers
 - **POST `<WATCHER URL>/log?did=<DID>`**: Notifies the [[ref: watcher]] of a log update, prompting retrieval of the latest [[ref: DID Log]] and [[ref: witness]] file. This endpoint uses the `did` as the query parameter instead of the [[ref: SCID]] to ensure that the [[ref: watcher]] is notified in the case of the DID moving to a new web location. The [[ref: watcher]] is expected to continue indexing the DID using its [[ref: SCID]].
 - **POST `<WATCHER URL>/log/delete?scid=<SCID>`**: Notifies the [[ref: watcher]] that the given `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` from clients should return a `404 Not Found` status. The body of the URL is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
 - **GET `<WATCHER URL>/witness?scid=<SCID>`**: Returns the latest `witness.json` file for the given [[ref: SCID]].
-- **POST `<WATCHER URL>/witness?scid=<SCID>`**: Notifies a [[ref: witness]]-[[ref: watcher]] about a new [[ref: DID log entry]] to be witnessed. The body of the request includes the [[ref: DID log entry]] and a `callbackUrl` to be used by the [[ref: witness]] to provide the witness proof.
 - **GET `<WATCHER URL>/resource?scid=<SCID>&path=<resourcePath>`**: Retrieves the requested resource.
 - **POST `<WATCHER URL>/resource?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] of a new or updated resource.
 - **POST `<WATCHER URL>/resource/delete?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] that the given `<resourcePath>` associated with the `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` and `<resourcePath>` from clients should return a `404 Not Found` status. The body of the URL is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
-
-##### Using DID Watchers
-
-[[ref: Watchers]] can be used by `did:webvh` resolvers and resolver clients. When resolving a `did:webvh` DID, `did:webvh` resolvers **MUST** provide the active list of [[ref: watchers]] in the DID metadata.
-
-Potential uses include:
-
-- Monitoring [[ref: DID log]] and `witness.json` files from different watchers for inconsistencies.
-- Caching the list of [[ref: watchers]] in case of DID migration or deletion.
-- Resolving DIDs using a [[ref: watcher]] as a primary data source.
 
 #### Publishing a Parallel `did:web` DID
 

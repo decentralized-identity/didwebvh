@@ -88,27 +88,6 @@ paths:
           description: Invalid SCID value
         '404':
           description: Unknown SCID value
-    post:
-      tags:
-        - witness
-      summary: Request a did:webvh witness signature for a new log entry
-      parameters:
-        - $ref: '#/components/parameters/SCID'
-      requestBody: 
-        $ref: '#/components/requestBodies/WitnessProofRequest'
-      responses:
-        '202':
-          description: Request received
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EmptyResponse'
-        '400':
-          description: Invalid input
-        '404':
-          description: Unknown SCID value
-        '422':
-          description: Validation exception
   /resource:
     get:
       tags:
@@ -163,23 +142,6 @@ components:
   schemas:
     EmptyResponse:
       type: object
-    DidDocument:
-      type: object
-      properties:
-        '@context': 
-          type: string
-          example: 'https://www.w3.org/ns/did/v1'
-        id: 
-          type: string
-          example: 'did:webvh:{SCID}:example.com'
-    LogEntryParameters:
-      type: object
-      properties:
-        updateKeys: 
-          type: array
-          items:
-            type: string
-            example: 'z6Mkf5rGMoatrSj1f4CyvuHBeXJELe9RPdzo2PKGNCKVtZxP'
     DataIntegrityProof:
       type: object
       properties:
@@ -238,11 +200,6 @@ components:
           type: string
         proof:
           $ref: '#/components/schemas/DataIntegrityProof'
-    WitnessProofResponse:
-      type: object
-      properties:
-        witnessProof:
-          $ref: '#/components/schemas/WitnessProof'
     WitnessFile:
       type: array
       items:
@@ -253,32 +210,6 @@ components:
           {"versionId": "", "versionTime": "", "parameters": {}, "state": {}, "proof": {}}
           {"versionId": "", "versionTime": "", "parameters": {}, "state": {}, "proof": {}}
           {"versionId": "", "versionTime": "", "parameters": {}, "state": {}, "proof": {}}
-    LogEntry:
-      type: object
-      properties:
-        versionId:
-          type: string
-          example: '1-Q'
-        versionTime:
-          type: string
-          format: date-time
-        parameters:
-          $ref: '#/components/schemas/LogEntryParameters'
-        state:
-          $ref: '#/components/schemas/DidDocument'
-        proof:
-          $ref: '#/components/schemas/DataIntegrityProof'
-    WitnessProofRequest:
-      type: object
-      properties:
-        logEntry: 
-          $ref: '#/components/schemas/LogEntry'
-        options: 
-          type: object
-          properties:
-            callbackUrl:
-              type: string
-              example: 'https://example.com'
   parameters:
     SCID:
       name: scid
@@ -302,12 +233,6 @@ components:
       schema:
         type: string
   requestBodies:
-    WitnessProofRequest:
-      description: New log entry which needs to be witnessed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/WitnessProofRequest'
     VerifiablePresentation:
       description: A DataIntegrityProof used for Authentication
       content:
