@@ -436,7 +436,6 @@ For each entry:
 
 While resolver caching policies are an implementation matter and largely outside the scope of this specification, resolvers **SHOULD NOT** cache a DID that fails verification. This ensures that the DID’s [[ref: DID Controller]] has the opportunity to recover a DID that may have been erroneously or maliciously invalidated.
 
-
 A resolver **MAY** use a DID [[ref: watcher]] in addition to, or in place of retrieving the DID information from the source, and use that information based on their knowledge of the governance of the [[ref: watcher]]. See the [Watchers](#did-watchers) section of this specification for more details.
 
 As defined in the [[spec:DID-RESOLUTION]] specification, a did:webvh resolver should return the following DID Document Metadata when resolving a `did:webvh` DID Document:
