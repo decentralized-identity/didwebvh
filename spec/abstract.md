@@ -23,7 +23,6 @@ limitations as a long-lasting DID. `did:webvh` features include:
   control of a DID in cases where an active private key is compromised.
 - An optional mechanism for having collaborating [[ref: witnesses]]
   that approve of updates to the DID by a [[ref: DID Controller]] before publication.
-- Supports the same [High Assurance DIDs with DNS] mechanism.
 - An optional mechanism for publishing the location of `did:webvh` [[ref:
   watchers]] in the [[ref: DID log]] that resolvers can use as another
   source DID data for long term resolution or detection of malicious [[ref: DID Controllers]].
@@ -36,8 +35,6 @@ limitations as a long-lasting DID. `did:webvh` features include:
   `credentialSubject`, signed by the DID. It draws inspiration from the
   traditional WHOIS protocol [[spec:rfc3912]], offering an easy-to-use,
   decentralized, trust registry.
-
-[High Assurance DIDs with DNS]: https://datatracker.ietf.org/doc/draft-carter-high-assurance-dids-with-dns/
 
 Combined, the additional features enable greater trust, security and verifiability without
 compromising the simplicity of `did:web`.
