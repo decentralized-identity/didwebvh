@@ -193,17 +193,15 @@ components:
             domain:
               type: string
               example: 'https://watcher.example.com'
-    WitnessProof:
+    WitnessFile:
       type: object
       properties:
         versionId:
           type: string
         proof:
-          $ref: '#/components/schemas/DataIntegrityProof'
-    WitnessFile:
-      type: array
-      items:
-        $ref: '#/components/schemas/WitnessProof'
+          type: array
+          items:
+            $ref: '#/components/schemas/DataIntegrityProof'
     LogFile:
       type: string
       example: |
