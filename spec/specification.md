@@ -436,8 +436,6 @@ While resolver caching policies are an implementation matter and largely outside
 
 A resolver **MAY** use a DID [[ref: watcher]] in addition to, or in place of retrieving the DID information from the source, and use that information based on their knowledge of the governance of the [[ref: watcher]]. See the [Watchers](#did-watchers) section of this specification for more details.
 
-The following error codes and descriptions may be returned when resolving a DID.
-
 :::todo
 
 Document the full list of error codes that can be generated in resolving a DID.
