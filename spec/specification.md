@@ -395,6 +395,7 @@ For each entry:
    of this specification.
 6. Get the value of the [[ref: log entry]] property `state`, which is the [[ref:
    DIDDoc]] for the version.
+      1. Track and check that the DID being resolved matches the top-level `id` in at least one version of the [[ref: DIDDoc]]; otherwise, the resolution **MUST** be flagged as invalid.
 7. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
    in the `parameters` property **MUST** match a hash in
    the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]]
@@ -414,17 +415,18 @@ For each entry:
          `nextKeyHashes` list in the [[ref: parameters]].
       6. All other `did:webvh` processing configuration settings as defined by in the
          `parameters` object.
+      7. Add the value of top level `id` 
 9. If the `parameters` for any of the versions define that some or all of
   the [[ref: DID Log entries]] must be witnessed, further verification of
   the [[ref: witness]] proofs must be carried out, as defined in the [DID
   Witnesses](#did-witnesses) section of this specification.
 
-10. Flag failed verifications appropriately, either invalidating the entire DID or marking all entries from the first invalid entry to the end of the log as invalid.
+10.  Flag failed verifications appropriately, either invalidating the entire DID or marking all entries from the first invalid entry to the end of the log as invalid.
 
-11. Respond to the resolution request based on verification results:
+11.  Respond to the resolution request based on verification results:
       1. If all verifications pass, resolve the DID, applying any query parameters as requested.
-      2. If the DID itself is invalid, return an appropriate error status code.
-      3. If the request includes query parameters (e.g., `?versionId=` or `?versionTime=`) that reference valid [[ref: DID log entries]], return the corresponding [[ref: DIDDoc]] version with a successful status code—even if later entries in the log are invalid.
+      2. If the request includes query parameters (e.g., `?versionId=` or `?versionTime=`) that reference valid [[ref: DID log entries]], return the corresponding [[ref: DIDDoc]] version with a successful status code—even if later entries in the log are invalid.
+      3. If the DID or DID version being resolved is invalid, return an appropriate error code.
 
 While resolver caching policies are an implementation matter and largely outside the scope of this specification, resolvers **SHOULD NOT** cache a DID that fails verification. This ensures that the DID’s [[ref: DID Controller]] has the opportunity to recover a DID that may have been erroneously or maliciously invalidated.
 
@@ -519,8 +521,8 @@ and published to the web location defined by the DID. The process to generate a
 verifiable [[ref: DID Log Entry]] follows a similar process to the
 [Create](#create-register) process, as follows:
 
-1. Make the desired changes to the [[ref: DIDDoc]]. While the contents of a new DIDDoc
-   version are (mostly) up to the [[ref: DID controller]], there are some limitations:
+1. Make the desired changes to the [[ref: DIDDoc]]. The top-level `id` in the
+   [[ref: DIDDoc]] **MUST** contain the value of the DID.
    1. If the DID is configured to support [[ref: portability]], the root `id`
       property in the [[ref: DIDDoc]] **MAY** be changed when the [[ref: DID Controller]] wants to (or
       is forced to) publish the DID at a different Internet location and wants
