@@ -401,6 +401,7 @@ For each entry:
    of this specification.
 6. Get the value of the [[ref: log entry]] property `state`, which is the [[ref:
    DIDDoc]] for the version.
+      1. Track and check that the DID being resolved matches the top-level `id` in at least one version of the [[ref: DIDDoc]]; otherwise, the resolution **MUST** be flagged as invalid.
 7. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
    in the `parameters` property **MUST** match a hash in
    the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]]
@@ -420,29 +421,75 @@ For each entry:
          `nextKeyHashes` list in the [[ref: parameters]].
       6. All other `did:webvh` processing configuration settings as defined by in the
          `parameters` object.
+      7. Add the value of top level `id` 
 9. If the `parameters` for any of the versions define that some or all of
   the [[ref: DID Log entries]] must be witnessed, further verification of
   the [[ref: witness]] proofs must be carried out, as defined in the [DID
   Witnesses](#did-witnesses) section of this specification.
 
-10. Flag failed verifications appropriately, either invalidating the entire DID or marking all entries from the first invalid entry to the end of the log as invalid.
+10.  Flag failed verifications appropriately, either invalidating the entire DID or marking all entries from the first invalid entry to the end of the log as invalid.
 
-11. Respond to the resolution request based on verification results:
+11.  Respond to the resolution request based on verification results:
       1. If all verifications pass, resolve the DID, applying any query parameters as requested.
-      2. If the DID itself is invalid, return an appropriate error status code.
-      3. If the request includes query parameters (e.g., `?versionId=` or `?versionTime=`) that reference valid [[ref: DID log entries]], return the corresponding [[ref: DIDDoc]] version with a successful status code—even if later entries in the log are invalid.
+      2. If the request includes query parameters (e.g., `?versionId=` or `?versionTime=`) that reference valid [[ref: DID log entries]], return the corresponding [[ref: DIDDoc]] version with a successful status code—even if later entries in the log are invalid.
+      3. If the DID or DID version being resolved is invalid, return an appropriate error code.
 
 While resolver caching policies are an implementation matter and largely outside the scope of this specification, resolvers **SHOULD NOT** cache a DID that fails verification. This ensures that the DID’s [[ref: DID Controller]] has the opportunity to recover a DID that may have been erroneously or maliciously invalidated.
 
+
 A resolver **MAY** use a DID [[ref: watcher]] in addition to, or in place of retrieving the DID information from the source, and use that information based on their knowledge of the governance of the [[ref: watcher]]. See the [Watchers](#did-watchers) section of this specification for more details.
 
-:::todo
+As defined in the [[spec:DID-RESOLUTION]] specification, a did:webvh resolver should return the following DID Document Metadata when resolving a `did:webvh` DID Document:
 
-Document the full list of error codes that can be generated in resolving a DID.
+```json
+{
+  "versionId": "1-QmRRaLXwc6BjBuBPosSupJwEQ8w9f3znP7yfbpGfwcnLr6",
+  "versionTime": "2025-01-23T04:12:36Z",
+  "created": "2025-01-23T04:12:36Z",
+  "updated": "2025-01-23T04:12:36Z",
+  "scid": "QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p",
+  "portable": false,
+  "deactivated": false,
+  "witness": { ...
+  },
+  "watchers: [ ...
+  ]
+}
+```
 
-:::
+where the items in the Metadata JSON object are:
 
-- Code 404: The `did:webvh` [[ref: DID Log]] file `did.jsonl` was not found.
+- `versionId` — The `versionId` from the [[ref: Log Entry]] of the resolved DIDDoc version.
+- `versionTime` — The `versionTime` from the [[ref: Log Entry]] of the resolved DIDDoc version, in [[ref: ISO8601]] timestamp format.
+- `created` — The [[ref: ISO8601]] timestamp of the DID's first [[ref: log entry]], indicating when (according to the [[ref: DID Controller]]) the DID was created.
+- `updated` — The [[ref: ISO8601]] timestamp of the DID's last valid [[ref: log entry]].
+- `scid` — The [[ref: SCID]]] of the resolved DID.
+- `portable` — A boolean value indicating whether the resolved DID has [[ref: portability]] active and so may be moved in the future, as defined in the [portability](#did-portability) section of this specification.
+- `deactivated` — A boolean indicating whether the DID has been deactivated. When `true`, the DID is no longer active.
+- `witness` — An object containing the current (active in the last valid [[ref: DID log entry]]) configuration of witnesses for the DID. The object is as defined as the same named object in the [witness list](#witness-lists) section of this specification. Optional (or `null`) if there are no active witnesses, otherwise required.
+- `watchers` — An array containing the current (active in the last valid [[ref: DID log entry]]) list of [[ref: watcher]] URLs that have agreed to monitor and cache the DID’s state. Optional (or `null`) if there are no active [[ref: watchers]], otherwise required.
+
+The "last valid [[ref: leg entry]]" for some of the items above references the case where a DID resolution request references a DIDDoc that was valid, but where the DID Log has later [[ref: log entries]] that fail verification, as noted in the DID resolution steps earlier in this section. If all [[ref: log entries]] pass verification, the last valid [[ref: log entry]] is the last [[ref: log entry]].
+
+When a DID resolution error occurs, the `error` field **MUST** be included in the `didResolutionMetadata`, as defined by the [[spec:DID-RESOLUTION]] specification. In addition, resolvers **SHOULD** provide supplemental "Problem Details" metadata following [[spec:rfc9457]], using the following structure:
+
+```json
+"didResolutionMetadata": {
+  "error": "invalidDid",
+  "problemDetails": {
+    "type": "https://w3id.org/security#INVALID_CONTROLLED_IDENTIFIER_DOCUMENT_ID",
+    "title": "The resolved DID is invalid.",
+    "detail": "Parse error of the resolved DID at character 3, expected ':'."
+  }
+}
+```
+
+As described in [[spec:DID-EXTENSION-RESOLUTION]], the following values **MUST** be used in the `error` field of the resolution metadata when resolving a `did:webvh` DID under the corresponding error conditions:
+
+- `notFound` — The [[ref: DID Log]] or the resource referenced by a DID URL was not found. If the [[ref: DID Log]] does not exist at the DID's designated HTTPS location (according to the [DID-to-HTTPS Transformation](#the-did-to-https-transformation)), the resolver **MAY** attempt to retrieve it from alternative sources, such as [[ref: Watchers]], for verification and resolution.
+- `invalidDid` — Any error that renders the `did:webvh` DID invalid during resolution.
+
+Resolvers **SHOULD** populate the `problemDetails` field to aid in diagnosing and understanding resolution failures. The [did:webvh information site](https://didwebvh.info) may serve as a non-normative reference for common `did:webvh` resolution error types and explanations.
 
 ##### Reading did:webvh DID URLs
 
@@ -483,8 +530,8 @@ and published to the web location defined by the DID. The process to generate a
 verifiable [[ref: DID Log Entry]] follows a similar process to the
 [Create](#create-register) process, as follows:
 
-1. Make the desired changes to the [[ref: DIDDoc]]. While the contents of a new DIDDoc
-   version are (mostly) up to the [[ref: DID controller]], there are some limitations:
+1. Make the desired changes to the [[ref: DIDDoc]]. The top-level `id` in the
+   [[ref: DIDDoc]] **MUST** contain the value of the DID.
    1. If the DID is configured to support [[ref: portability]], the root `id`
       property in the [[ref: DIDDoc]] **MAY** be changed when the [[ref: DID Controller]] wants to (or
       is forced to) publish the DID at a different Internet location and wants
