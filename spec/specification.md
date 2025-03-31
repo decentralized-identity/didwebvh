@@ -430,15 +430,57 @@ For each entry:
 
 While resolver caching policies are an implementation matter and largely outside the scope of this specification, resolvers **SHOULD NOT** cache a DID that fails verification. This ensures that the DID’s [[ref: DID Controller]] has the opportunity to recover a DID that may have been erroneously or maliciously invalidated.
 
-The following error codes and descriptions may be returned when resolving a DID.
+As defined in the [[spec:DID-RESOLUTION]] specification, a did:webvh resolver should return the following DID Document Metadata when resolving a `did:webvh` DID Document:
 
-:::todo
+```json
+{
+  "versionId": "1-QmRRaLXwc6BjBuBPosSupJwEQ8w9f3znP7yfbpGfwcnLr6",
+  "versionTime": "2025-01-23T04:12:36Z",
+  "created": "2025-01-23T04:12:36Z",
+  "updated": "2025-01-23T04:12:36Z",
+  "scid": "QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p",
+  "portable": false,
+  "deactivated": false,
+  "witness": { ...
+  },
+  "watchers: [ ...
+  ]
+}
+```
 
-Document the full list of error codes that can be generated in resolving a DID.
+where the items in the Metadata JSON object are:
 
-:::
+- `versionId` — The `versionId` from the [[ref: Log Entry]] of the resolved DIDDoc version.
+- `versionTime` — The `versionTime` from the [[ref: Log Entry]] of the resolved DIDDoc version, in [[ref: ISO8601]] timestamp format.
+- `created` — The [[ref: ISO8601]] timestamp of the DID's first [[ref: log entry]], indicating when (according to the [[ref: DID Controller]]) the DID was created.
+- `updated` — The [[ref: ISO8601]] timestamp of the DID's last valid [[ref: log entry]].
+- `scid` — The [[ref: SCID]]] of the resolved DID.
+- `portable` — A boolean value indicating whether the resolved DID has [[ref: portability]] active and so may be moved in the future, as defined in the [portability](#did-portability) section of this specification.
+- `deactivated` — A boolean indicating whether the DID has been deactivated. When `true`, the DID is no longer active.
+- `witness` — An object containing the current (active in the last valid [[ref: DID log entry]]) configuration of witnesses for the DID. The object is as defined as the same named object in the [witness list](#witness-lists) section of this specification. Optional (or `null`) if there are no active witnesses, otherwise required.
+- `watchers` — An array containing the current (active in the last valid [[ref: DID log entry]]) list of [[ref: watcher]] URLs that have agreed to monitor and cache the DID’s state. Optional (or `null`) if there are no active [[ref: watchers]], otherwise required.
 
-- Code 404: The `did:webvh` [[ref: DID Log]] file `did.jsonl` was not found.
+The "last valid [[ref: leg entry]]" for some of the items above references the case where a DID resolution request references a DIDDoc that was valid, but where the DID Log has later [[ref: log entries]] that fail verification, as noted in the DID resolution steps earlier in this section. If all [[ref: log entries]] pass verification, the last valid [[ref: log entry]] is the last [[ref: log entry]].
+
+When a DID resolution error occurs, the `error` field **MUST** be included in the `didResolutionMetadata`, as defined by the [[spec:DID-RESOLUTION]] specification. In addition, resolvers **SHOULD** provide supplemental "Problem Details" metadata following [[spec:rfc9457]], using the following structure:
+
+```json
+"didResolutionMetadata": {
+  "error": "invalidDid",
+  "problemDetails": {
+    "type": "https://w3id.org/security#INVALID_CONTROLLED_IDENTIFIER_DOCUMENT_ID",
+    "title": "The resolved DID is invalid.",
+    "detail": "Parse error of the resolved DID at character 3, expected ':'."
+  }
+}
+```
+
+As described in [[spec:DID-EXTENSION-RESOLUTION]], the following values **MUST** be used in the `error` field of the resolution metadata when resolving a `did:webvh` DID under the corresponding error conditions:
+
+- `notFound` — The [[ref: DID Log]] or the resource referenced by a DID URL was not found. If the [[ref: DID Log]] does not exist at the DID's designated HTTPS location (according to the [DID-to-HTTPS Transformation](#the-did-to-https-transformation)), the resolver **MAY** attempt to retrieve it from alternative sources, such as [[ref: Watchers]], for verification and resolution.
+- `invalidDid` — Any error that renders the `did:webvh` DID invalid during resolution.
+
+Resolvers **SHOULD** populate the `problemDetails` field to aid in diagnosing and understanding resolution failures. The [did:webvh information site](https://didwebvh.info) may serve as a non-normative reference for common `did:webvh` resolution error types and explanations.
 
 ##### Reading did:webvh DID URLs
 
