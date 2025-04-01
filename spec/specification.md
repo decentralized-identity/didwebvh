@@ -1084,7 +1084,7 @@ has the following data structure:
 where:
 
 - threshold: an integer that must be attained or surpassed by the count of the witnesses for a DID log entry to be considered approved. `threshold` **MUST** be between 1 and the number of items in the `witnesses` array, inclusive.
-- `witnesses`: the array of [[ref; witnesses]] that **MUST** be non-empty, with each entry including the fields:
+- `witnesses`: the array of [[ref; witnesses]] that **MUST** be non-empty, with each entry including the field:
   - `id`: (required) the DID of the witness. The DID **MUST** be a `did:key` DID.
 
 ##### Witness Threshold Algorithm
