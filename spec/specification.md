@@ -1074,7 +1074,7 @@ has the following data structure:
   "threshold": n,
   "witnesses" : [
       {
-         "id": "<did:key DID of witness>",
+         "id": "<did:key DID of witness>"
       }
    ]
 }
