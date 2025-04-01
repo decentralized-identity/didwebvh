@@ -1075,7 +1075,6 @@ has the following data structure:
   "witnesses" : [
       {
          "id": "<did:key DID of witness>",
-         "watcherURL": "<URL>"
       }
    ]
 }
@@ -1087,7 +1086,6 @@ where:
 - threshold: an integer that must be attained or surpassed by the count of the witnesses for a DID log entry to be considered approved. `threshold` **MUST** be between 1 and the number of items in the `witnesses` array, inclusive.
 - `witnesses`: the array of [[ref; witnesses]] that **MUST** be non-empty, with each entry including the fields:
   - `id`: (required) the DID of the witness. The DID **MUST** be a `did:key` DID.
-  - `watcherURL`: (optional) an HTTP URL ([[spec:rfc9110]]) that the witness provides to serve as a witness for the `did:webvh` DID. See the [Watchers](#did-watchers) section of this specification for more details.
 
 ##### Witness Threshold Algorithm
 
@@ -1213,22 +1211,19 @@ using it in production scenarios.
 - **Ensuring persistence:** Maintaining access to DIDs even after removal by the [[ref: DID Controller]]. For example, the [Verifiable Data Gateway](https://github.com/LedgerDomain/did-webplus?tab=readme-ov-file#verifiable-data-gateway-vdg) in [did](https://github.com/LedgerDomain/did-webplus/blob/main/README.md)[:webplus](https://github.com/LedgerDomain/did-webplus/blob/main/README.md) could function as a [[ref: watcher]] for enduring DIDs.
 - **Detecting inconsistencies:** Identifying malicious behavior by the [[ref: DID Controller]], such as republishing altered [[ref: DID Logs]]. A network of [[ref: watchers]] can reach consensus independently of [[ref: witnesses]].
 
-Any party may set up a [[ref: watcher]] for `did:webvh` DIDs. However, a `did:webvh` DID Controller may opt to collaborate with specific [[ref: watchers]] by publishing their URIs in the [[ref: parameters]] of [[ref: DID log entries]]. Similarly, [[ref: witnesses]] may also provide a [[ref: watcher]] URI that the [[ref: DID Controller]] can include in the [[ref: witness]] configuration. It is outside the scope of this specification how a [[ref: DID controller]] requests a [[ref: watcher]] monitor a DID or how a [[ref: watcher]] requests it be included in the [[ref: DID Log]] of a DID.
+Any party may set up a [[ref: watcher]] for `did:webvh` DIDs. However, a `did:webvh` DID Controller may opt to collaborate with specific [[ref: watchers]] by publishing their URIs in the [[ref: parameters]] of [[ref: DID log entries]]. It is outside the scope of this specification how a [[ref: DID controller]] requests a [[ref: watcher]] monitor a DID or how a [[ref: watcher]] requests it be included in the [[ref: DID Log]] of a DID.
 
-The governance of [[ref: watchers]] is out of scope for this specification, which defines only the technical mechanisms for publishing and querying [[ref: watcher]] services.
+The governance of [[ref: watchers]] is out of scope for this specification, which defines only the technical mechanisms for notifying and querying [[ref: watcher]] services.
 
 ##### Publishing Watcher URLs
 
-did:webvh provides two mechanisms for notifying resolvers (and their clients via [[spec:DID-RESOLUTION]] metadata) about configured [[ref: watchers]]:
+did:webvh provides a mechanisms for notifying resolvers (and their clients via [[spec:DID-RESOLUTION]] metadata) about configured [[ref: watchers]].  The `watchers` [[ref: parameter]] lists URIs that identify the DID's [[ref: watchers]].
 
-1. Witness-watchers: A [[ref: witness]] **MAY** also act as a [[ref: watcher]], indicated by the watcherURL attribute in the witnesses [[ref: parameter]]. If a [[ref: witness]] is removed, it ceases to be a [[ref: watcher]].
-2. Standalone watchers: The watchers [[ref: parameter]] lists URIs that identify independent [[ref: watchers]].
-
-[[ref: Watchers]] can be used by `did:webvh` resolvers and resolver clients. When resolving a `did:webvh` DID, `did:webvh` resolvers **MUST** provide the active list of [[ref: watchers]] and [[ref: witnesses]] in the DID metadata, as noted in the [read/resolve](#read-resolve) section of this specification.
+[[ref: Watchers]] can be used by `did:webvh` resolvers and resolver clients. When resolving a `did:webvh` DID, `did:webvh` resolvers **MUST** provide the active list of [[ref: watchers]] in the DID metadata, as noted in the [read/resolve](#read-resolve) section of this specification.
 
 Watcher URIs MAY use schemes other than HTTP(S), such as a DID ([[spec:DID-CORE]]), depending on the specific implementation or network requirements. However, this specification does not define how non-HTTP(S) [[ref: watcher]] URIs should be resolved or interacted with. If a [[ref: watcher]] uses an HTTP(S) URL, it **MUST** support the HTTP-based interaction model defined in the [Watcher Endpoints and Behavior](#watcher-endpoints-and-behavior) section.
 
-If a `watchers` entry is included in a [[ref: DID log entry]], it replaces the active set of [[ref:watchers]] (excluding [[ref: witness]]-[[ref: watchers]]).
+If a `watchers` entry is included in a [[ref: DID log entry]], it replaces the active set of [[ref:watchers]].
 
 If a new [[ref: watcher]] is added after a DID has existed for some time, the [[ref: DID Controller]] **SHOULD** notify the new [[ref: watcher]] about previously created [[ref: DID Resources]].
 

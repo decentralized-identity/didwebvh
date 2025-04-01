@@ -161,7 +161,7 @@ signs the [[ref: verifiable presentation]].
 
 [[def: watcher, watchers]]
 
-~ Watchers are entities within a decentralized trust ecosystem that monitor Decentralized Identifiers (DIDs) for changes or updates on behalf of their clients. Watchers maintain a historical cache of DID document versions and verify that the [[ref: DID Controller]] is consistently following the prescribed evolution process. By ensuring integrity and traceability, watchers help foster trust among clients who rely on up-to-date and authentic DID information. `did:webvh` watchers provide endpoints for retrieving DID information and to receive [[ref: webhooks]] notifying the watcher about an update to the DID.
+~ Watchers are entities within a decentralized trust ecosystem that monitor Decentralized Identifiers (DIDs) for changes or updates on behalf of their clients. Watchers maintain a historical cache of DID document versions and verify that the [[ref: DID Controller]] is consistently following the prescribed evolution process. By ensuring integrity and traceability, watchers help foster trust among clients who rely on up-to-date and authentic DID information. `did:webvh` watchers provide endpoints for retrieving DID information and to receive [[ref: webhooks]] notifying the watcher about updates to the DID and deletion requests.
 
 [[def: webhook, webhooks]]
 
