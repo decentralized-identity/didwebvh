@@ -56,6 +56,10 @@ when forced to change (such as when an organization is acquired by another,
 resulting in a change of domain names) and when changing DID hosting service
 providers.
 
+[[def: DID Resources, DID Resource]]
+
+~ A DID Resource is an object (often a file) that is referenced by a DID URL, with a path to the resource. The DID URL allows resolvers to locate and retrieve specific content associated with a DID. Examples include configuration files, schemas, credential definitions, or other structured data linked to the DID.
+
 [[def: did:web]]
 
 ~ `did:web` as described in the [W3C specification](https://w3c-ccg.github.io/did-method-web/)
@@ -157,7 +161,11 @@ signs the [[ref: verifiable presentation]].
 
 [[def: watcher, watchers]]
 
-~ Watchers are entities within a decentralized trust ecosystem that monitor Decentralized Identifiers (DIDs) for changes or updates on behalf of their clients. Watchers maintain a historical cache of DID document versions and verify that the [[ref: DID Controller]] is consistently following the prescribed evolution process. By ensuring integrity and traceability, watchers help foster trust among clients who rely on up-to-date and authentic DID information.
+~ Watchers are entities within a decentralized trust ecosystem that monitor Decentralized Identifiers (DIDs) for changes or updates on behalf of their clients. Watchers maintain a historical cache of DID document versions and verify that the [[ref: DID Controller]] is consistently following the prescribed evolution process. By ensuring integrity and traceability, watchers help foster trust among clients who rely on up-to-date and authentic DID information. `did:webvh` watchers provide endpoints for retrieving DID information and to receive [[ref: webhooks]] notifying the watcher about updates to the DID and deletion requests.
+
+[[def: webhook, webhooks]]
+
+~ A webhook is a mechanism that enables real-time communication between systems by sending HTTP callbacks (typically POST requests) to a specified URL when an event occurs. Webhooks are commonly used for event-driven integrations and automation. Although webhooks are an implementation pattern rather than a formal standard, best practices are documented in [[spec:rfc8030]].
 
 [[def: witness, witnesses, witnessed]]
 

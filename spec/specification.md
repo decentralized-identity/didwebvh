@@ -315,11 +315,17 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
 7. **Publish the [[ref: DID Log]]**
    The complete [[ref: DID Log]] file **MUST** be published at the appropriate
    Web location defined by the `did:webvh` DID identifier (see step 1)
+
      - This is a logical operation -- how a deployment serves the `did.jsonl`
        content is not constrained.
      - Use the [DID-to-HTTPS Transformation](#the-did-to-https-transformation)
        steps to transform the DID into the Web location of the [[ref: DID Log]]
        file.
+
+   If there are [[ref: watchers]] configured for the DID, a webhook is triggered
+   to notify the [[ref: watchers]] that a new DID is available and should be
+   retrieved. See the [Watchers](#did-watchers) section of this specification for
+   more details.
 
 A controller **MAY** generate an equivalent `did:web` [[ref: DIDDoc]] and publish it as
 defined in the
@@ -429,6 +435,8 @@ For each entry:
       3. If the DID or DID version being resolved is invalid, return an appropriate error code.
 
 While resolver caching policies are an implementation matter and largely outside the scope of this specification, resolvers **SHOULD NOT** cache a DID that fails verification. This ensures that the DID’s [[ref: DID Controller]] has the opportunity to recover a DID that may have been erroneously or maliciously invalidated.
+
+A resolver **MAY** use a DID [[ref: watcher]] in addition to, or in place of retrieving the DID information from the source, and use that information based on their knowledge of the governance of the [[ref: watcher]]. See the [Watchers](#did-watchers) section of this specification for more details.
 
 As defined in the [[spec:DID-RESOLUTION]] specification, a did:webvh resolver should return the following DID Document Metadata when resolving a `did:webvh` DID Document:
 
@@ -577,6 +585,10 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
     location defined by the `did:webvh` identifier.
     - This is a logical operation -- how a deployment serves the `did.jsonl`
     content is not constrained.
+    - If there are [[ref: watchers]] configured for the DID, webhooks are triggered
+   to notify the [[ref: watchers]] that an update is available and should be
+   retrieved. See the [Watchers](#did-watchers) section of this specification for
+   more details.
 
 A controller **MAY** generate an equivalent, updated `did:web` [[ref: DIDDoc]] and
 publish it as defined in the
@@ -728,6 +740,7 @@ properties are defined below.
     witnesses are no longer being used. If witnesses are active when the
     `witness` [[ref: parameter]] is set to `null`, that [[ref: DID log entry]]
     **MUST** be [[ref: witnessed]].
+- `watchers`: An optional entry whose value is a JSON array containing a list of HTTP URLs ([[spec:rfc9110]]) that have notified the DID Controller that they are willing [[ref: watch]] the DID. See the [Watchers](#watchers) section of this specification for more details.
 - `deactivated`: A JSON boolean that **MUST** be initialized to `false` and
   **SHOULD** be set to `true` when the DID is to be deactivated but remains
   resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this
@@ -1027,16 +1040,6 @@ rewrite the previous history without having compromised a sufficient number of
 [[ref: witnesses]], the [[ref: DID Controller]]'s key(s), and the Web Server on
 which the [[ref: DID Log]] is published.
 
-##### Witnesses and Watchers
-
-[[ref: Watchers]] are components found in some digital trust and DID ecosystems that monitor DIDs on behalf of a set of clients. While a `did:webvh` [[ref: witness]] might fulfill some watcher functions, there is no separately formalized `did:webvh` watcher role because there are no specified interactions between [[ref: DID Controllers]] and `did:webvh` [[ref: watchers]]. Anyone is free to deploy a [[ref: watcher]] that monitors `did:webvh` DIDs for various purposes, such as:
-
-- **Caching verified DIDs:** Storing verified DID documents on behalf of watcher clients.
-- **Ensuring persistence:** Maintaining long-lasting access to DIDs—even after a DID has been removed by its [[ref: DID Controller]]. For instance, the [Verifiable Data Gateway](https://github.com/LedgerDomain/did-webplus?tab=readme-ov-file#verifiable-data-gateway-vdg) concept from [did:webplus](https://github.com/LedgerDomain/did-webplus/blob/main/README.md) could function as [[ref: watcher]] of enduring DIDs.
-- **Detecting malicious behavior:** Identifying potential malfeasance by the [[ref: DID Controller]]—for example, if the controller (in collusion with [[ref: witnesses]] and the web server) publishes inconsistent [[ref: DID Logs]] by republishing a log with altered trailing [[ref: entries]]. A network of [[ref: watchers]] could be set up to reach consensus on DID updates independently of the [[ref: DID Controller]] and [[ref: witnesses]].
-
-The interactions (if any) between a [[ref: DID Controller]] and [[ref: watchers]] are outside the scope of this specification. A `did:webvh` implementation may, for example, offer notifications of DID updates to a set of [[ref: watchers]], and how clients resolving `did:webvh` DIDs discover and interact with these [[ref: watchers]] is similarly not defined here.
-
 ##### Witness Lists
 
 The list of DIDs that witness DID updates are defined in the `witness`
@@ -1081,8 +1084,8 @@ has the following data structure:
 where:
 
 - threshold: an integer that must be attained or surpassed by the count of the witnesses for a DID log entry to be considered approved. `threshold` **MUST** be between 1 and the number of items in the `witnesses` array, inclusive.
-- witnesses: the array of witnesses that **MUST** be non-empty, with each entry including the required field:
-  - id: the DID of the witness. The DID **MUST** be a `did:key` DID.
+- `witnesses`: the array of [[ref; witnesses]] that **MUST** be non-empty, with each entry including the field:
+  - `id`: (required) the DID of the witness. The DID **MUST** be a `did:key` DID.
 
 ##### Witness Threshold Algorithm
 
@@ -1199,6 +1202,58 @@ Implementer's Guide section on
 [Witnesses](https://didwebvh.info/latest/implementers_guide/#witnesses) on the
 `did:webvh` information site for more discussion on the witness capability and
 using it in production scenarios.
+
+#### DID Watchers
+
+[[ref: Watchers]] are components found in some digital trust and DID ecosystems that monitor DIDs on behalf of clients for various purposes, such as:
+
+- **Caching verified DIDs:** Storing verified DID documents to facilitate efficient resolution.
+- **Ensuring persistence:** Maintaining access to DIDs even after removal by the [[ref: DID Controller]]. For example, the [Verifiable Data Gateway](https://github.com/LedgerDomain/did-webplus?tab=readme-ov-file#verifiable-data-gateway-vdg) in [did](https://github.com/LedgerDomain/did-webplus/blob/main/README.md)[:webplus](https://github.com/LedgerDomain/did-webplus/blob/main/README.md) could function as a [[ref: watcher]] for enduring DIDs.
+- **Detecting inconsistencies:** Identifying malicious behavior by the [[ref: DID Controller]], such as republishing altered [[ref: DID Logs]]. A network of [[ref: watchers]] can reach consensus independently of [[ref: witnesses]].
+
+Any party may set up a [[ref: watcher]] for `did:webvh` DIDs. However, a `did:webvh` DID Controller may opt to collaborate with specific [[ref: watchers]] by publishing their URIs in the [[ref: parameters]] of [[ref: DID log entries]]. It is outside the scope of this specification how a [[ref: DID controller]] requests a [[ref: watcher]] monitor a DID or how a [[ref: watcher]] requests it be included in the [[ref: DID Log]] of a DID.
+
+The governance of [[ref: watchers]] is out of scope for this specification, which defines only the technical mechanisms for notifying and querying [[ref: watcher]] services.
+
+##### Publishing Watcher URLs
+
+did:webvh provides a mechanisms for notifying resolvers (and their clients via [[spec:DID-RESOLUTION]] metadata) about configured [[ref: watchers]].  The `watchers` [[ref: parameter]] lists URIs that identify the DID's [[ref: watchers]].
+
+[[ref: Watchers]] can be used by `did:webvh` resolvers and resolver clients. When resolving a `did:webvh` DID, `did:webvh` resolvers **MUST** provide the active list of [[ref: watchers]] in the DID metadata, as noted in the [read/resolve](#read-resolve) section of this specification.
+
+Watcher URIs MAY use schemes other than HTTP(S), such as a DID ([[spec:DID-CORE]]), depending on the specific implementation or network requirements. However, this specification does not define how non-HTTP(S) [[ref: watcher]] URIs should be resolved or interacted with. If a [[ref: watcher]] uses an HTTP(S) URL, it **MUST** support the HTTP-based interaction model defined in the [Watcher Endpoints and Behavior](#watcher-endpoints-and-behavior) section.
+
+If a `watchers` entry is included in a [[ref: DID log entry]], it replaces the active set of [[ref:watchers]].
+
+If a new [[ref: watcher]] is added after a DID has existed for some time, the [[ref: DID Controller]] **SHOULD** notify the new [[ref: watcher]] about previously created [[ref: DID Resources]].
+
+[[ref: Watchers]] do not need to be listed in the [[ref: DID log]]. [[ref: Watchers]] can operate independently of the [[ref: DID Controller]] by polling for updates. [[ref: DID Controllers]] **MAY** send notifications to [[ref: watchers]] that the [[ref: DID Controller]] is aware of but does not list in the [[ref: DID Log]].
+
+##### Watcher Endpoints and Behavior
+
+A [[ref: watcher]] is a web server accessible via HTTP that **MUST** support the following capabilities:
+
+- **Client Requests:**
+  - Retrieve the [[ref: DID log]] file for a given [[ref: SCID]].
+  - Retrieve the witness file for a given [[ref: SCID]].
+  - Retrieve a resource for a given [[ref: SCID]] and resource path.
+- **Notifications (typically) from the [[ref: DID Controller]]:**
+  - Notify the [[ref: watcher]] about a new log entry for a DID.
+  - Notify the [[ref: watcher]] about a new or updated [[ref: DID resource]].
+  - Request removal of a given [[ref: SCID]] from the [[ref: watcher]]'s cache.
+  - Request removal of a given DID resource [[ref: SCID]] from the [[ref: watcher]]'s cache.
+
+##### Watcher HTTP API Operations
+
+The following HTTP API operations define the interaction between [[ref: watchers]] and other components. Included with the specification is the [did:webvh v1.0 Watcher OpenAPI YML Definition](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/watcherOpenAPI/watcher-v1.0.0.yml) that includes the request and response data models and status codes for each of the endpoints.
+
+- **GET `<WATCHER URL>/log?scid=<SCID>`**: Returns the latest [[ref: DID Log]] for the given [[ref: SCID]].
+- **POST `<WATCHER URL>/log?did=<DID>`**: Notifies the [[ref: watcher]] of a log update, prompting retrieval of the latest [[ref: DID Log]] and [[ref: witness]] file. This endpoint uses the `did` as the query parameter instead of the [[ref: SCID]] to ensure that the [[ref: watcher]] is notified in the case of the DID moving to a new web location. The [[ref: watcher]] is expected to continue indexing the DID using its [[ref: SCID]].
+- **POST `<WATCHER URL>/log/delete?scid=<SCID>`**: Notifies the [[ref: watcher]] that the given `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` from clients should return a `404 Not Found` status. The body of the URL is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
+- **GET `<WATCHER URL>/witness?scid=<SCID>`**: Returns the latest `witness.json` file for the given [[ref: SCID]].
+- **GET `<WATCHER URL>/resource?scid=<SCID>&path=<resourcePath>`**: Retrieves the requested resource.
+- **POST `<WATCHER URL>/resource?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] of a new or updated resource.
+- **POST `<WATCHER URL>/resource/delete?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] that the given `<resourcePath>` associated with the `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` and `<resourcePath>` from clients should return a `404 Not Found` status. The body of the URL is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
 
 #### Publishing a Parallel `did:web` DID
 
