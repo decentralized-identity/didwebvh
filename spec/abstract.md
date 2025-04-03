@@ -23,6 +23,9 @@ limitations as a long-lasting DID. `did:webvh` features include:
   control of a DID in cases where an active private key is compromised.
 - An optional mechanism for having collaborating [[ref: witnesses]]
   that approve of updates to the DID by a [[ref: DID Controller]] before publication.
+- An optional mechanism for publishing the location of `did:webvh` [[ref:
+  watchers]] in the [[ref: DID log]] that resolvers can use as another
+  source DID data for long term resolution or detection of malicious [[ref: DID Controllers]].
 - DID URL path handling that defaults (but can be overridden) to automatically
   resolving `<did>/path/to/file` by using a comparable DID-to-HTTPS translation
   as for the [[ref: DIDDoc]].
