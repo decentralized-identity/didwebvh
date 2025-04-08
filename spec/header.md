@@ -30,6 +30,7 @@ This **Editors Draft** contains breaking changes from the [current v0.5 stable v
 ~ [Michel Sahli](https://github.com/bj-ms)
 ~ [Martina Kolpondinos](https://github.com/martipos)
 ~ [Dmitri Zagdulin](https://github.com/dmitrizagidulin)
+~ [Alexander Shenshin](https://github.com/AlexanderShenshin)
 
 **Participate:**
 ~ [GitHub repo](https://github.com/decentralized-identity/didwebvh)
@@ -40,12 +41,14 @@ This **Editors Draft** contains breaking changes from the [current v0.5 stable v
 ~ [TypeScript]
 ~ [Python]
 ~ [Go] - supports v03
+~ [Rust] - work in progress
 ~ [did:webvh Server]
 ~ [did:webvh ACA-Py Plugin]
 
 [TypeScript]: https://github.com/decentralized-identity/trustdidweb-ts
 [Python]: https://github.com/decentralized-identity/trustdidweb-py
 [Go]: https://github.com/nuts-foundation/trustdidweb-go
+[Rust]: https://github.com/decentralized-identity/didwebvh-rs
 [did:webvh Server]: https://github.com/decentralized-identity/trustdidweb-server-py
 [did:webvh ACA-Py Plugin]: https://github.com/openwallet-foundation/acapy-plugins/pull/1377 
 
