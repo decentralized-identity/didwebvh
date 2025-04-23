@@ -98,6 +98,7 @@ To create a snapshot of a version:
   - Update the `"spec_directory"` property to be the name of the new folder you created.
   - Update the `"output_path"` property to be `./v<ver>`. For example `"./v0.3"`.
   - Append to the `"title"` property the version ` - Version <ver>`, For example ` - Version 0.3`.
+  - If the current version of the spec is also a named version (e.g. v0.5), create two entries for that spec -- one with the `output_path` to the landing page (`./`), and the second to the version (`./v0.5`). Later, when a new version is added, leave the `./v0.5` entry as is, and update the landing page as appropriate.
 - Add a link to the versioned specification in the `Previous Drafts` bullet list, in the `header.md` file in the main spec, so that readers can click on it from the main specification.
 - Update the `header.md` file of the new version spec folder (e.g in `spec-v0.3`) to:
   - Change the status to `HISTORICAL -- **THIS IS NOT THE CURRENT VERSION OF THE SPECIFICATION**`
