@@ -637,15 +637,14 @@ An example of the JSON prettified `parameters` property in the first [[ref: DID 
 
 ``` json
 {
-    "prerotation": true,
-    "portable": false,
+    "portable": true,
     "updateKeys": [
       "z82LkqR25TU88tztBEiFydNf4fUPn8oWBANckcmuqgonz9TAbK9a7WGQ5dm7jyqyRMpaRAe"
     ],
     "nextKeyHashes": [
       "enkkrohe5ccxyc7zghic6qux5inyzthg2tqka4b57kvtorysc3aa"
     ],
-    "method": "did:webvh:0.5",
+    "method": "did:webvh:1.0",
     "scid": "{SCID}"
 }
 ```
@@ -666,7 +665,7 @@ properties are defined below.
     the processing rules for that and later [[ref: log entries]] have been changed to a
     different specification version.
   - Acceptable values for this specification are:
-    - `did:webvh:0.5`: Requires that the rules defined in this version of the specification be used
+    - `did:webvh:1.0`: Requires that the rules defined in this version of the specification be used
       in processing the log. Implied by the value are the following:
       - The permitted hash algorithms used by the [[ref: DID Controller]] **MUST** be `SHA-256` as defined in [[spec:rfc6234]].
       - The permitted [[ref: Data Integrity]] cryptosuites used by the [[ref: DID Controller]] **MUST** be `eddsa-jcs-2022` as referenced in [[spec:di-eddsa-v1.0]].
@@ -694,11 +693,11 @@ properties are defined below.
   - `updateKeys` **SHOULD** be set to `null` when deactivating the DID. See the
     [deactivate](#deactivate-revoke) section of this specification for more
     details.
-  - `updateKeys` **MUST** have at least 1 entry and **MUST NOT** be set to an empty list `[]`.
+  - `updateKeys` **MUST NOT** be set to an empty list `[]`.
 - `portable`: A boolean (`true` / `false`) indicating if the DID is portable and
   thus can be renamed to change the Web location of the DID.
   - The value can **ONLY** be set to `true` in the first [[ref: log entry]], the initial version of the DID.
-  - If not explicitly set in the first [[ref: log entry]], it **MUST** be set to `false`.
+  - If not explicitly set in the first [[ref: log entry]], its value defaults to `false`.
   - Once the value has been explicitly set to `false` in a [[ref: DID log entry]], it **MUST NOT** be set back to `true`.
   - See the section of this specification on [DID Portability](#did-portability)
     for more details about renaming a `did:webvh` DID.
@@ -708,11 +707,11 @@ properties are defined below.
   - The process for generating the hashes and additional details for using [[ref: pre-rotation]] are defined in the
     [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
     section of this specification.
-  - If not explicitly set in the first [[ref: DID Log entry]], its value **MUST** be `null`.
+  - If not explicitly set in the first [[ref: DID Log entry]], its value defaults to `null`.
   - Once the [[ref: parameter]] `nextKeyHashes` has been set to a non-empty
     list, the [[ref: Key Pre-Rotation]] feature becomes active. While active the
     properties `nextKeyHashes` and `updateKeys` **MUST** be present in all
-    [[ref: DID log entry]].
+    [[ref: DID log entries]].
   - All [[ref: multikey]] formatted public keys added in a new `updateKeys` list **MUST** have their
     hashes listed in the `nextKeyHashes` list from the previous [[ref: DID log entry]].
   - A [[ref: DID Controller]] **MAY** put extra strings in the `nextKeyHashes`
@@ -722,25 +721,26 @@ properties are defined below.
     pre-rotation. For additional details about turning off [[ref: pre-rotation]]
     see the [pre-rotation](#pre-rotation-key-hash-generation-and-verification)
     section of this specification.
-  - `nextKeyHashes` **MUST** have at least 1 entry and **MUST NOT** be set to an empty list `[]`.
+  - `nextKeyHashes` **MUST NOT** be set to an empty list `[]`.
 - `witness`: A JSON object containing the [[ref: parameters]] for declaring the witnesses
   for the DID, and the [[ref: parameters]] for the process of updating a DID via a
   collaboration with [[ref: witnesses]] prior to publication. For details of
   this data and its usage in the approvals process, see the
-  [DID Witnesses](#did-witnesses) section of this specification.
+  [DID Witnesses](#did-witnesses) section of this specification that includes the [witness parameter data structure  details](#the-witness-parameter).
   - A `witness` property in the first [[ref: DID log entry]] is immediately
     "active" and used to define the [[ref: witnesses]] and necessary [[ref: threshold]]
     for witnessing the initial [[ref: log entry]]. In all other [[ref: DID log entries]],
     a `witness` property becomes active **after** the publication of its entry
     -- meaning its [[ref: log entry]] **MUST** be witnessed by active
-    `witnesses` from a **prior** [[ref: DID log]] entry.
+    `witnesses` from the most recent **prior** [[ref: DID log]] entry.
   - If the `witness` property is not set in the first [[ref: DID log entry]],
-    its value **MUST** be set to null.
+    its value defaults to `null`.
   - The `witness` [[ref: parameter]] **MAY** be set to `null` to indicate that
-    witnesses are no longer being used. If witnesses are active when the
+    witnesses are not being used. If witnesses are active when the
     `witness` [[ref: parameter]] is set to `null`, that [[ref: DID log entry]]
     **MUST** be [[ref: witnessed]].
-- `watchers`: An optional entry whose value is a JSON array containing a list of HTTP URLs ([[spec:rfc9110]]) that have notified the DID Controller that they are willing [[ref: watch]] the DID. See the [Watchers](#watchers) section of this specification for more details.
+- `watchers`: An optional entry whose value is a JSON array containing a list of URLs ([[spec:rfc9110]]) that have notified the DID Controller that they are willing to [[ref: watch]] the DID. See the [Watchers](#watchers) section of this specification for more details.
+  - If the `watchers` property is not set in the first [[ref: DID log entry]], its value defaults to `null`.
 - `deactivated`: A JSON boolean that **MUST** be initialized to `false` and
   **SHOULD** be set to `true` when the DID is to be deactivated but remains
   resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this
@@ -858,10 +858,11 @@ produce an [[ref: entry hash]]. As this is a first entry in a [[ref: DID Log]], 
 `versionId` is the [[ref: SCID]] of the DID.
 
 ```json
-{"versionId": "QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ", "versionTime": "2024-09-26T23:22:26Z", "parameters": {"prerotation": true, "updateKeys": ["z6MkhbNRN2Q9BaY9TvTc2K3izkhfVwgHiXL7VWZnTqxEvc3R"], "nextKeyHashes": ["QmXC3vvStVVzCBHRHGUsksGxn6BNmkdETXJGDBXwNSTL33"], "method": "did:webvh:0.5", "scid": "QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ"}, "state": {"@context": ["https://www.w3.org/ns/did/v1"], "id": "did:webvh:QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ:domain.example"}}
+{"versionId": "QmdmPkUdYzbr9txmx8gM2rsHPgr5L6m3gHjJGAf4vUFoGE", "versionTime": "2025-04-01T17:39:50Z", "parameters": {"witness": {"threshold": 2, "witnesses": [{"id": "did:key:z6Mkkc51mg2vpQzKWAbWQZupeGYhowaBjYkmvcKMTqteqHB4", "weight": 1}, {"id": "did:key:z6MkuDdJdKLCgwZuQuEi9xG6LVgJJ9Tebr74CXPYPSumqgJs", "weight": 1}, {"id": "did:key:z6MkoSWmQyp4fTk4ZQy4KUsss9dFX51XfEUzKKKj1J1JUsrF", "weight": 1}]}, "updateKeys": ["z6MkgzBDcBFV3sk4ypPE5YXMZHmS213A3HpYY2LmcVKV15jr"], "nextKeyHashes": ["QmZreDcjvWEpyRFznQeExWNCsvMLk5i59AcRJJuQC8UodJ"], "method": "did:webvh:0.5", "scid": "QmdmPkUdYzbr9txmx8gM2rsHPgr5L6m3gHjJGAf4vUFoGE"}, "state": {"@context": ["https://www.w3.org/ns/did/v1"], "id": "did:webvh:QmdmPkUdYzbr9txmx8gM2rsHPgr5L6m3gHjJGAf4vUFoGE:domain.example"}}
+
 ```
 
-Resulting [[ref: entryHash]]: `QmQq6Kg4ZZ1p49znzxnWmes4LkkWgMWLrnrfPre8UD56bz`
+Resulting [[ref: entryHash]]: `QmQ6FJ4fk2xheSSQoEjVpTgx9AQPKhJgtR9hn1nr4EeCrZ`
 
 ##### Verify The Entry Hash
 
@@ -1056,12 +1057,11 @@ active, updates to the DID are not [[ref: witnessed]].
 
 ##### Witness DIDs and Reputation
 
-`did:webvh` witness DIDs **MUST** be `did:key` DIDs.
-
-If there is a need in an ecosystem to identify who the witnesses are, a
-mechanism should be defined by the governance of the ecosystem, such as the
-entry of the DID in a trust registry. Such mechanisms are outside the
-scope of this specification.
+Since `did:webvh` witness DIDs must be `did:key` DIDs, there is not an
+explicitly published identifier for each witness. If there is a need in an ecosystem
+to identify who the witnesses are, a mechanism should be defined by the
+governance of the ecosystem, such as the entry of the DID in a trust registry.
+Such mechanisms are outside the scope of this specification.
 
 ##### The `witness` Parameter
 
