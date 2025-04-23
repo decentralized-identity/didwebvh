@@ -698,6 +698,7 @@ properties are defined below.
   thus can be renamed to change the Web location of the DID.
   - The value can **ONLY** be set to `true` in the first [[ref: log entry]], the initial version of the DID.
   - If not explicitly set in the first [[ref: log entry]], its value defaults to `false`.
+  - If not explicitly set in other [[ref: DID log entries]], its value is retained from the prior [[ref: DID log entry]].
   - Once the value has been explicitly set to `false` in a [[ref: DID log entry]], it **MUST NOT** be set back to `true`.
   - See the section of this specification on [DID Portability](#did-portability)
     for more details about renaming a `did:webvh` DID.
@@ -707,7 +708,7 @@ properties are defined below.
   - The process for generating the hashes and additional details for using [[ref: pre-rotation]] are defined in the
     [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
     section of this specification.
-  - If not explicitly set in the first [[ref: DID Log entry]], its value defaults to `null`.
+  - If not explicitly set in the first [[ref: DID Log entry]], its value defaults to `null` and remains so in succeeding [[ref: DID log entries]] until explicitly set.
   - Once the [[ref: parameter]] `nextKeyHashes` has been set to a non-empty
     list, the [[ref: Key Pre-Rotation]] feature becomes active. While active the
     properties `nextKeyHashes` and `updateKeys` **MUST** be present in all
@@ -735,12 +736,14 @@ properties are defined below.
     `witnesses` from the most recent **prior** [[ref: DID log]] entry.
   - If the `witness` property is not set in the first [[ref: DID log entry]],
     its value defaults to `null`.
+  - If the `witness` property is not set in [[ref: DID log entries]] after the first, its value is retained from the prior [[ref: DID log entry]].
   - The `witness` [[ref: parameter]] **MAY** be set to `null` to indicate that
     witnesses are not being used. If witnesses are active when the
     `witness` [[ref: parameter]] is set to `null`, that [[ref: DID log entry]]
     **MUST** be [[ref: witnessed]].
 - `watchers`: An optional entry whose value is a JSON array containing a list of URLs ([[spec:rfc9110]]) that have notified the DID Controller that they are willing to [[ref: watch]] the DID. See the [Watchers](#watchers) section of this specification for more details.
   - If the `watchers` property is not set in the first [[ref: DID log entry]], its value defaults to `null`.
+  - If the `watchers` property is not set in [[ref: DID log entries]] after the first, its value is retained from the prior [[ref: DID log entry]].
 - `deactivated`: A JSON boolean that **MUST** be initialized to `false` and
   **SHOULD** be set to `true` when the DID is to be deactivated but remains
   resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this
