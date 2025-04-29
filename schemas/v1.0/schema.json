@@ -67,7 +67,7 @@
                     "minItems": 1,
                     "uniqueItems": true
                 },
-                "watcher": {
+                "watchers": {
                     "type": "array",
                     "items": {
                         "type": "string"
