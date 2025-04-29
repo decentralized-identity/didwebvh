@@ -261,6 +261,9 @@
                 "proofValue": {
                     "type": "string"
                 },
+                "verificationMethod": {
+                    "const": "assertionMethod"
+                },
                 "created": {
                     "type": "string"
                 },
