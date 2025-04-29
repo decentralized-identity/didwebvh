@@ -1,0 +1,280 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "DID WebVH 1.0 Log Entry",
+    "description": "A log entry from a log file for webvh 1.0.",
+    "type": "object",
+    "properties": {
+        "versionId": {
+            "type": "string"
+        },
+        "versionTime": {
+            "type": "string"
+        },
+        "parameters": {
+            "$ref": "#/schemas/didParameters"
+        },
+        "state": {
+            "$ref": "#/schemas/didDocument"
+        },
+        "proof": {
+            "oneOf": [
+                {
+                    "$ref": "#/schemas/dataIntegrityProof"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/schemas/dataIntegrityProof",
+                        "minItems": 1
+                    }
+                }
+            ]
+        }
+    },
+    "required": [
+        "versionId",
+        "versionTime",
+        "parameters",
+        "state",
+        "proof"
+    ],
+    "schemas": {
+        "didParameters": {
+            "type": "object",
+            "properties": {
+                "method": {
+                    "const": "did:webvh:1.0"
+                },
+                "scid": {
+                    "type": "string"
+                },
+                "portable": {
+                    "type": "boolean"
+                },
+                "updateKeys": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
+                "nextKeyHashes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
+                "watcher": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1,
+                    "uniqueItems": true
+                },
+                "witness": {
+                    "type": "object",
+                    "properties": {
+                        "threshold": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "witnesses": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "minItems": 1,
+                            "uniqueItems": true
+                        }
+                    }
+                },
+                "deactivated": {
+                    "type": "boolean"
+                },
+                "ttl": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "updateKeys"
+            ]
+        },
+        "verificationMethod": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "type",
+                "id"
+            ]
+        },
+        "didDocument": {
+            "type": "object",
+            "properties": {
+                "@context": {
+                    "oneOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "minItems": 1,
+                            "uniqueItems": true
+                        }
+                    ]
+                },
+                "id": {
+                    "type": "string"
+                },
+                "verificationMethod": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/schemas/verificationMethod"
+                    }
+                },
+                "assertionMethod": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/schemas/verificationMethod"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "authentication": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/schemas/verificationMethod"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "capabilityInvocation": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/schemas/verificationMethod"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "capabilityDelegation": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/schemas/verificationMethod"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "keyAgreement": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/schemas/verificationMethod"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ]
+                    }
+                },
+                "service": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "serviceEndpoint": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "type",
+                            "id",
+                            "serviceEndpoint"
+                        ]
+                    }
+                }
+            },
+            "required": [
+                "@context",
+                "id"
+            ]
+        },
+        "dataIntegrityProof": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "type": {
+                    "const": "DataIntegrityProof"
+                },
+                "cryptosuite": {
+                    "const": "eddsa-jcs-2022"
+                },
+                "proofPurpose": {
+                    "const": "assertionMethod"
+                },
+                "proofValue": {
+                    "type": "string"
+                },
+                "created": {
+                    "type": "string"
+                },
+                "expires": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "type",
+                "cryptosuite",
+                "verificationMethod",
+                "proofPurpose",
+                "proofValue"
+            ]
+        }
+    }
+}
