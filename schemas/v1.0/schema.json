@@ -262,7 +262,7 @@
                     "type": "string"
                 },
                 "verificationMethod": {
-                    "const": "assertionMethod"
+                    "type": "string"
                 },
                 "created": {
                     "type": "string"
