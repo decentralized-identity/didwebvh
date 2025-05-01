@@ -3,22 +3,17 @@ The `did:webvh` DID Method v0.5
 
 ![did:webvh Logo](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg)
 
-**Specification Status:** CURRENT STABLE
+**Specification Status:** HISTORICAL -- **THIS IS NOT THE CURRENT VERSION OF THE SPECIFICATION**
 
 **Specification Version:** v0.5 (see [Changelog](#didtdw-version-changelog))
 
 With this version of the specification the DID Method hame is changed to
 `did:webvh` ("`did:web` + Verifiable History"). It used to be named `did:tdw`.
 
-**Next Version:** [Editors Draft](./next)
+**Latest Version:**
 
-:::note
-
-You are looking at the current stable version of the specification. At this
-time, the [Editors Draft](../next) contains only clarifications to this version,
-with no breaking changes. Should that change, this message will be updated.
-
-:::
+- Specification: [https://identity.foundation/didwebvh/](../)
+- Repository: [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
 **Source For This Version:**
   [https://github.com/decentralized-identity/didwebvh/tree/main/spec-v0.5](https://github.com/decentralized-identity/didwebvh/tree/main/spec-v0.5)
@@ -48,11 +43,11 @@ with no breaking changes. Should that change, this message will be updated.
 ~ [TypeScript]
 ~ [Python]
 ~ [Go]
-~ [DIDTDW Server in Python]
+~ [did:webvh Server in Python]
 
-[TypeScript]: https://github.com/decentralized-identity/trustdidweb-ts
-[Python]: https://github.com/decentralized-identity/trustdidweb-py
-[Go]: https://github.com/nuts-foundation/trustdidweb-go
-[DIDTDW Server in Python]: https://github.com/decentralized-identity/trustdidweb-server-py
+[TypeScript]: https://github.com/decentralized-identity/didwebvh-ts
+[Python]: https://github.com/decentralized-identity/didwebvh-py
+[Go]: https://github.com/nuts-foundation/didwebvh-go
+[did:webvh Server in Python]: https://github.com/decentralized-identity/didwebvh-server-py
 
 ------------------------------------
