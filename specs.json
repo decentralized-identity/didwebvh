@@ -67,55 +67,6 @@
         "account": "decentralized-identity",
         "repo": "didwebvh"
       },
-      "output_path": "./",
-      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg",
-      "logo_link": "https://github.com/decentralized-identity/didwebvh",
-      "katex": true,
-      "external_specs": [
-        {
-          "multiformats": {
-            "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
-            "title": "Multiformats",
-            "rawDate": "2024-02-21",
-            "authors": [
-              "Juan Benet",
-              "Manu Sporny"
-            ],
-            "status": "Internet Draft"
-          }
-        },
-        {
-          "di-eddsa-v1.0": {
-            "href": "https://www.w3.org/TR/vc-di-eddsa",
-            "title": "Data Integrity EdDSA Cryptosuites v1.0",
-            "rawDate": "2024-12-08",
-            "authors": [
-              "Dave Longley",
-              "Manu Sporny"
-            ],
-            "status": "W3C Technical Recommendation"
-          }
-        }
-      ]
-    },
-    {
-      "title": "The did:webvh DID Method -- did:web + Verifiable History - v1.0",
-      "spec_directory": "./spec-v1.0",
-      "markdown_paths": [
-        "header.md",
-        "abstract.md",
-        "overview.md",
-        "specification.md",
-        "security_and_privacy.md",
-        "definitions.md",
-        "references.md",
-        "version.md"
-      ],
-      "source": {
-        "host": "github",
-        "account": "decentralized-identity",
-        "repo": "didwebvh"
-      },
       "output_path": "./v1.0",
       "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg",
       "logo_link": "https://github.com/decentralized-identity/didwebvh",

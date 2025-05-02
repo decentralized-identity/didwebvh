@@ -74,7 +74,7 @@ installed. Follow these steps:
 - Edit the spec documents (in the `/spec` folder).
 - Run `npm run render`'
   - Use `npm run edit` to interactively edit, render and review the spec.
-- Review the resulting `index.html` file in a browser.
+- Load the root `index.html` file in a browser to be redirected to the current default version of the specification.
 
 The specification is currently in [Spec-Up] format. See the
 [Spec-Up Documentation] for a list of Spec-Up features and functionality.
@@ -90,15 +90,14 @@ previous versions of the spec for reference.
 
 To create a snapshot of a version:
 
-- Make a new folder in the root of the repository for the new version, called `spec-v<ver>`. For example `v0.3`.
-- Copy the `spec` folder markdown files from the point of that version into the new folder. If you are doing this process as you are starting a new version, you can just copy the files from the `spec` folder of the main branch. Otherwise, you have to find the last commit of the version and get the files from that point in the GitHub history.
+- Make a new folder in the root of the repository for the new version, called `spec-v<ver>`. For example `spec-v0.3`.
+- Copy the current `spec` folder markdown files from the point of that version into the new folder. If you are doing this process as you are starting a new version, you can just copy the files from the `spec` folder of the main branch. Otherwise, you have to find the last commit of the version and get the files from that point in the GitHub history.
 - Update the `specs.json` file to include a new specification:
   - Copy the primary spec entry text.
   - Paste that text into a new spec entry in the `"specs"` array.
   - Update the `"spec_directory"` property to be the name of the new folder you created.
   - Update the `"output_path"` property to be `./v<ver>`. For example `"./v0.3"`.
   - Append to the `"title"` property the version ` - Version <ver>`, For example ` - Version 0.3`.
-  - If the current version of the spec is also a named version (e.g. v0.5), create two entries for that spec -- one with the `output_path` to the landing page (`./`), and the second to the version (`./v0.5`). Later, when a new version is added, leave the `./v0.5` entry as is, and update the landing page as appropriate.
 - Add a link to the versioned specification in the `Previous Drafts` bullet list, in the `header.md` file in the main spec, so that readers can click on it from the main specification.
 - Update the `header.md` file of the new version spec folder (e.g in `spec-v0.3`) to:
   - Change the status to `HISTORICAL -- **THIS IS NOT THE CURRENT VERSION OF THE SPECIFICATION**`
@@ -113,42 +112,34 @@ To create a snapshot of a version:
 
 ```
 
-## Handling Version Transitions
+## Setting the Default Landing Page Version
 
-In the lifecycle of the specification, there will be times when the latest version is
-stable, with clarifications being added, and other times when new versions are being defined
-with breaking changes.  We use the Spec-Up multiple versions feature
-(as described above) to support that, but it can get a little tricky. Notably, we want
-the landing page for the specification to **always** be the current version of
-the specification, **and** we want all "in progress" work to be to made to the
-single, primary specification -- the files in the `spec` folder -- so that GitHub
-holds the full history of the specification.  To enable that, we adjust as
-needed the `"output_path"` in the `specs.json` file to define what version of
-the spec is on the specification landing page -- the spec version whose
-`"output_path"` is set to `"./"`).
+In the lifecycle of the specification, there will be times when the latest
+version is stable, with clarifications being added, and other times when new
+versions are being defined with breaking changes. At all times we want to
+control which version is the default spec. that comes up when a user goes to the
+base spec URL
+[https://identity.foundation/didwebvh/](:https://identity.foundation/didwebvh/).
+We control that via the `index.html` file in the root folder. That is just a
+redirect to one of the versions of the spec.
 
-Here's how we do that in different situations:
+To change the default landing page spec. version, change the root folder
+`index.html` line:
+
+```html
+window.location.replace("v1.0");
+```
+
+Notably -- set the `v1.0` to the appropriate version, which might be `next`, if
+the we want the landing page to be the `Editor's Draft` for a period of time.
+
+Here's how we manage things in different situations:
 
 - The specification website landing page is always the current stable version of
   the specification, and past versions plus the next version ("Editor's Draft")
   are linked in that folder's `header.md` file.
 - The `spec` folder is the `./next` folder and is called the `Editor's Draft`.
   Immediately after a stable version is announced, it is a copy of the newly
-  stable version, but will evolve from there. Clarifications may be applied
-  `spec-vx.x` folder, and if so, they **MUST** also be applied to the Editor's
+  stable version, but will evolve from there. Clarifications may be applied to the latest
+  `spec-vx.x` folder, and if so, those changes **MUST** also be applied to the Editor's
   Draft.
-- When a new, stable version of the specification is ready:
-  - Snapshot the editor's version by creating a new directory (e.g.,
-    `spec-v0.6`) and copying the files from the `spec` folder into the new
-    folder.
-  - Create a new entry in the `specs.json` file for that new snapshot version.
-  - Set the `output_path` of the new version (e.g., `spec-v0.6`) to be `"./"`,
-    so that it becomes the landing page.
-  - Change the `output_path` of the new version (e.g., `spec-v0.5`) to be `"./vx.x`.
-  - Update the `header.json` files in the new folder, the `spec` folder, and the
-    previously stable version as needed. Remember that,
-    - the newly declared and created version is the landing page, `./`,
-    - the editor's draft is `./next`, and
-    - the former stable version, now a "Previous Version" is `./vx.x`.
-  - Add any notes to the heard to help readers understand the
-    status of the current and next versions of the specification.
