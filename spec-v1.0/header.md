@@ -1,13 +1,15 @@
-The `did:webvh` DID Method<br>v1.0 / Editors Draft
+The `did:webvh` DID Method<br>v1.0
 ==================
 
 ![did:webvh Logo](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg)
 
-**Specification Status:** v1.0 - EDITORS DRAFT
+**Specification Status:** v1.0
 
-This **v1.0 - Editors Draft** is being maintained in sync with the v1.0 specification (other than this header) while cleanups and clarifications are made to the specification. Once a breaking change is identified, we will stop keeping the two versions of the specification in sync.
+This is the specification of the `did:webvh` DID Method, Version 1.0. Please note that we continue to make cleanups (e.g., fixing typos, broken links, missing references, etc.) and making wording clarifications in this version of the specification. With that work there will be no changes to the meaning of the specification.
 
-**Current Specification:** [v1.0](../v1.0)
+The current [Editor's Draft](../next) of the specification will be maintained in sync with this version as the cleanups and clarifications to v1.0 are made. When a change to the meaning of the specification is identified, the Editor's Draft synchronization with this version will be stopped, and this message will be updated.
+
+**Current Specification:** [v1.0](../)
 
 **Specification Version:** v1.0 (see [Changelog](#didwebvh-version-changelog))
 
@@ -16,7 +18,7 @@ This **v1.0 - Editors Draft** is being maintained in sync with the v1.0 specific
 
 **Previous Versions:**
 
-- [v0.4](../v0.5)
+- [v0.5](../v0.5)
 - [v0.4](../v0.4)
 - [v0.3](../v0.3)
 
@@ -51,6 +53,6 @@ This **v1.0 - Editors Draft** is being maintained in sync with the v1.0 specific
 [Go]: https://github.com/nuts-foundation/trustdidweb-go
 [Rust]: https://github.com/decentralized-identity/didwebvh-rs
 [did:webvh Server]: https://github.com/decentralized-identity/trustdidweb-server-py
-[did:webvh ACA-Py Plugin]: https://github.com/openwallet-foundation/acapy-plugins/pull/1377 
+[did:webvh ACA-Py Plugin]: https://plugins.aca-py.org/latest/webvh/
 
 ------------------------------------
