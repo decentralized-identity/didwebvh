@@ -8,7 +8,7 @@
             "type": "string"
         },
         "versionTime": {
-            "type": "string"
+            "type": "date-time"
         },
         "parameters": {
             "$ref": "#/schemas/didParameters"
@@ -35,8 +35,7 @@
         "versionId",
         "versionTime",
         "parameters",
-        "state",
-        "proof"
+        "state"
     ],
     "schemas": {
         "didParameters": {
@@ -103,10 +102,7 @@
                 "ttl": {
                     "type": "integer"
                 }
-            },
-            "required": [
-                "updateKeys"
-            ]
+            }
         },
         "verificationMethod": {
             "type": "object",
@@ -265,10 +261,10 @@
                     "type": "string"
                 },
                 "created": {
-                    "type": "string"
+                    "type": "date-time"
                 },
                 "expires": {
-                    "type": "string"
+                    "type": "date-time"
                 }
             },
             "required": [
