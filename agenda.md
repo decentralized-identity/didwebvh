@@ -23,7 +23,7 @@
 
 Earlier meetings:
 
-- [2024](./agenda-2024.md)
+- [2024](https://github.com/decentralized-identity/didwebvh/blob/main/agenda-2024.md)
 
 ## Meeting Information
 
