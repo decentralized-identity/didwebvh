@@ -79,8 +79,8 @@ retrieve the [[ref: DID Log]]. The process described here includes the appropria
 
  1. **Remove the 'did:webvh:' prefix** from the input identifier.
  2. **Remove the SCID segment**, which is the first segment after the prefix.
- 3. **Transform the domain name**, the first segment (up to the first `:` character) of the remaining string.
-    - If the domain contains a port, decode percent-encoding and preserve the port.
+ 3. **Transform the domain segment**, the first segment (up to the first `:` character) of the remaining string.
+    - If the domain segment contains a port, decode percent-encoding and preserve the port.
     - Apply Unicode normalisation as defined in [[spec:rfc3491]] (see this explainer on [Unicode normalization](https://dencode.com/en/string/unicode-normalization)).
     - Apply IDNA (Punycode) encoding as per IDNA2008 [[spec:rfc9233]]. See the [FAQ on IDNA](https://corp.unicode.org/~asmus/proposed_faq/idn.html) for more details. For domains that do not contain international domain name elements, this should result in no change.
  4. **Transform the path**, the 0 or more segments after the first `:` character, delimited by `:` characters.
