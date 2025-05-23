@@ -21,6 +21,10 @@
 - [Meeting - 30 Jan 2025](#meeting---30-jan-2025)
 - [Meeting - 16 Jan 2025](#meeting---16-jan-2025)
 
+Earlier meetings:
+
+- [2024](./agenda-2024.md)
+
 ## Meeting Information
 
 - Before you contribute - **[join DIF]** and [sign the WG charter] (both are required!)
