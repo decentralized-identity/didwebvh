@@ -625,136 +625,88 @@ of those processes is specified in the following sections.
 
 #### `did:webvh` DID Method Parameters
 
-Entries in the `did:webvh` [[ref: DID Log]] contain the JSON object `parameters`
-that define the DID processing [[ref: parameters]] being used by the [[ref: DID
-Controller]] when publishing the current and subsequent [[ref: DID log
-entries]]. A DID Resolver **MUST** use the same [[ref: parameters]] when
-processing the [[ref: DID Log]] to resolve the DID. The `parameters` object
-**MUST** only include properties defined in this specification.
+All `did:webvh` [[ref: Log entries]] contain the JSON object `parameters`. This object defines the DID processing [[ref: parameters]] used by the [[ref: DID Controller]] when publishing the current and subsequent [[ref: DID log entries]]. DID Resolvers **MUST** use the same [[ref: parameters]] to process the [[ref: DID Log]] to resolve the DID. The `parameters` object **MUST** only include properties defined in the version of the `did:wenbvh` DID Method specification being used.
+
+**General Rules for Parameters:**
+
+- **Default Values**: When the `method` parameter (see below) sets the version of this specification to be used for a DID, any parameter introduced by that version but not explicitly set in the same [[ref: log entry]] **MUST** assume the default value defined in this section. The `method` parameter is required in the first [[ref: log entry]] and may appear in later entries to upgrade the DID to a newer version of the `did:webvh` specification.
+
+- **Allowed Values**: Each parameter is constrained by the data type, structure and allowed values specified in this section.  If a value does not conform, the parameter is invalid and resolvers **MUST** reject the [[ref: log entry]].
+
+- **Deactivation**: Parameters that support deactivation (such as `witness` or `nextKeyHashes`) are set to defined values, described below, to indicate they are no longer active.
+
+- The JSON `null` value **MUST NOT** be used to indicate default or deactivated values, as it removes the typing information required for proper interpretation.
 
 ::: example
+An example of the `parameters` property in the first [[ref: DID Log]] entry:
 
-An example of the JSON prettified `parameters` property in the first [[ref: DID Log]] entry for a DID:
-
-``` json
+```json
 {
-    "portable": true,
-    "updateKeys": [
-      "z82LkqR25TU88tztBEiFydNf4fUPn8oWBANckcmuqgonz9TAbK9a7WGQ5dm7jyqyRMpaRAe"
-    ],
-    "nextKeyHashes": [
-      "enkkrohe5ccxyc7zghic6qux5inyzthg2tqka4b57kvtorysc3aa"
-    ],
-    "method": "did:webvh:1.0",
-    "scid": "{SCID}"
+  "portable": true,
+  "updateKeys": [
+    "z82LkqR25TU88tztBEiFydNf4fUPn8oWBANckcmuqgonz9TAbK9a7WGQ5dm7jyqyRMpaRAe"
+  ],
+  "nextKeyHashes": [
+    "enkkrohe5ccxyc7zghic6qux5inyzthg2tqka4b57kvtorysc3aa"
+  ],
+  "method": "did:webvh:1.0",
+  "scid": "{SCID}"
 }
 ```
-
 :::
 
-The allowed [[ref: parameter]] properties and (where applicable) enumerated values for those
-properties are defined below.
+The following lists the [[ref: parameters]], their data types, and enumerated values.
 
-- `method`: Defines the `did:webvh` specification version to use when processing a
-  given DID's log file. As new versions of this specifications are defined,
-  additional [[ref: parameters]] and enumerated values will be associated with
-  the `method` values. This allows a long lasting DID to evolve the settings
-  being used by the DID over time, such as changing the hash algorithms
-  permitted, or allowing other [[ref: Data Integrity]] cryptosuites. See the [Cryptographic Agility section]() for more details.
-  - This property **MUST** appear in the first [[ref: DID log entry]].
-  - This property **MAY** appear in later [[ref: DID log entries]] to indicate that
-    the processing rules for that and later [[ref: log entries]] have been changed to a
-    different specification version.
-  - Acceptable values for this specification are:
-    - `did:webvh:1.0`: Requires that the rules defined in this version of the specification be used
-      in processing the log. Implied by the value are the following:
-      - The permitted hash algorithms used by the [[ref: DID Controller]] **MUST** be `SHA-256` as defined in [[spec:rfc6234]].
-      - The permitted [[ref: Data Integrity]] cryptosuites used by the [[ref: DID Controller]] **MUST** be `eddsa-jcs-2022` as referenced in [[spec:di-eddsa-v1.0]].
-- `scid`: The value of the [[ref: SCID]] for this DID.
-  - This property **MUST** appear in the first [[ref: DID log entry]].
-- `updateKeys`: An array of [[ref: multikey]] formatted public keys
-  associated with the private keys that are authorized to sign the log entries
-  that update the DID from one version to the next. An instance of the list in
-  an entry replaces the previously active list. If an entry does not have the
-  `updateKeys` property, the currently active list continues to apply. See the
-  [Authorized Keys](#authorized-keys) section of this specification for
-  additional details.
-  - This property **MUST** appear in the first [[ref: DID log entry]] and **MAY**
-    appear in subsequent entries, at the discretion of the
-    [[ref: DID Controller]].
-  - A key from the `updateKeys` array in the first [[ref: DID log entry]]
-    **MUST** be used to authorize the initial [[ref: log entry]]. In all other
-    [[ref: DID log entries]] without the [[ref: Key Pre-Rotation]] feature, an `updateKeys` property becomes active *after* the
-    publication of its entry -- meaning its [[ref: log entry]] **MUST** be
-    signed by a key the most recent `updateKeys` list from a **prior** [[ref:
-    DID log]] entry. In [[ref: DID log entries]] with the [[ref: Key Pre-Rotation]] feature, an `updateKeys` property becomes 
-    active *before* the publication of its entry -- meaning its [[ref: log entry]] **MUST** be
-    signed by a key the `updateKeys` list from the **current** [[ref:
-    DID log]] entry.
-  - `updateKeys` **SHOULD** be set to `null` when deactivating the DID. See the
-    [deactivate](#deactivate-revoke) section of this specification for more
-    details.
-  - `updateKeys` **MUST NOT** be set to an empty list `[]`.
-- `portable`: A boolean (`true` / `false`) indicating if the DID is portable and
-  thus can be renamed to change the Web location of the DID.
-  - The value can **ONLY** be set to `true` in the first [[ref: log entry]], the initial version of the DID.
-  - If not explicitly set in the first [[ref: log entry]], its value defaults to `false`.
-  - If not explicitly set in other [[ref: DID log entries]], its value is retained from the prior [[ref: DID log entry]].
-  - Once the value has been explicitly set to `false` in a [[ref: DID log entry]], it **MUST NOT** be set back to `true`.
-  - See the section of this specification on [DID Portability](#did-portability)
-    for more details about renaming a `did:webvh` DID.
-- `nextKeyHashes`: An array of strings that are hashes of [[ref: multikey]]
-  formatted public keys that **MAY** be added to the `updateKeys` list in the next
-  [[ref: log entry]]. At least one entry of `nextKeyHashes` **MUST** be added to the next `updateKeys` list.
-  - The process for generating the hashes and additional details for using [[ref: pre-rotation]] are defined in the
-    [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
-    section of this specification.
-  - If not explicitly set in the first [[ref: DID Log entry]], its value defaults to `null` and remains so in succeeding [[ref: DID log entries]] until explicitly set.
-  - Once the [[ref: parameter]] `nextKeyHashes` has been set to a non-empty
-    list, the [[ref: Key Pre-Rotation]] feature becomes active. While active the
-    properties `nextKeyHashes` and `updateKeys` **MUST** be present in all
-    [[ref: DID log entries]].
-  - All [[ref: multikey]] formatted public keys added in a new `updateKeys` list **MUST** have their
-    hashes listed in the `nextKeyHashes` list from the previous [[ref: DID log entry]].
-  - A [[ref: DID Controller]] **MAY** put extra strings in the `nextKeyHashes`
-    array that are not subsequently used in an `updateKeys` entry.
-  - Any unused hashes in the prior `nextKeyHashes` are ignored.
-  - The value of `nextKeyHashes` **MAY** be set to `null` to deactivate
-    pre-rotation. For additional details about turning off [[ref: pre-rotation]]
-    see the [pre-rotation](#pre-rotation-key-hash-generation-and-verification)
-    section of this specification.
-  - `nextKeyHashes` **MUST NOT** be set to an empty list `[]`.
-- `witness`: A JSON object containing the [[ref: parameters]] for declaring the witnesses
-  for the DID, and the [[ref: parameters]] for the process of updating a DID via a
-  collaboration with [[ref: witnesses]] prior to publication. For details of
-  this data and its usage in the approvals process, see the
-  [DID Witnesses](#did-witnesses) section of this specification that includes the [witness parameter data structure  details](#the-witness-parameter).
-  - A `witness` property in the first [[ref: DID log entry]] is immediately
-    "active" and used to define the [[ref: witnesses]] and necessary [[ref: threshold]]
-    for witnessing the initial [[ref: log entry]]. In all other [[ref: DID log entries]],
-    a `witness` property becomes active **after** the publication of its entry
-    -- meaning its [[ref: log entry]] **MUST** be witnessed by active
-    `witnesses` from the most recent **prior** [[ref: DID log]] entry.
-  - If the `witness` property is not set in the first [[ref: DID log entry]],
-    its value defaults to `null`.
-  - If the `witness` property is not set in [[ref: DID log entries]] after the first, its value is retained from the prior [[ref: DID log entry]].
-  - The `witness` [[ref: parameter]] **MAY** be set to `null` to indicate that
-    witnesses are not being used. If witnesses are active when the
-    `witness` [[ref: parameter]] is set to `null`, that [[ref: DID log entry]]
+- `method`: Specifies the `did:webvh` specification version to be used for processing the DID's log. Each acceptable value in turn defines what cryptographic algorithms are permitted for the current and subsequent [[ref: DID log entries]]. An update to the specification version in the middle of a [[ref: DID Log]] could introduce new [[ref: parameters]].
+  - **MUST** appear in the first [[ref: DID log entry]].
+  - If not present in later [[ref: DID log entries]], the previous value continues to apply.
+  - **MAY** appear in later entries to change the DID processing rules to that of a new version of the specification.
+  - Acceptable values:
+    - `did:webvh:1.0`
+      - Permitted hash algorithms: `SHA-256` [[spec:rfc6234]]
+      - Permitted [[ref: Data Integrity]] cryptosuites: `eddsa-jcs-2022` [[spec:di-eddsa-v1.0]]
+- `scid`: The [[ref: SCID]] value for the DID.
+  - **MUST** appear in the first [[ref: log entry]].
+  - **MUST NOT** appear in later [[ref: log entries]].
+- `updateKeys`: A JSON array of [[ref: multikey]] formatted public keys associated with the private keys that are authorized to sign the log entries that update the DID. See the [Authorized Keys](#authorized-keys) section of this specification for additional details.
+  - This property **MUST** appear in the first [[ref: log entry]] and **MAY** appear in subsequent entries.
+  - If not present in later [[ref: DID log entries]], the previous value continues to apply.
+  - A key from the active `updateKeys` array **MUST** be used to authorize the each [[ref: log entry]], where active is defined as follows.
+    - In the first [[ref: log entry]], the active `updateKeys` is the one defined in that entry.
+    - In all other [[ref: log entries]] *without* [[ref: Key Pre-Rotation]] active, the active `updateKeys` is that of the most recent **prior** [[ref: log entry]].
+    - In all other [[ref: log entries]] *without* [[ref: Key Pre-Rotation]] active, the active `updateKeys` is that of the most current [[ref: log entry]].
+  - `updateKeys` **SHOULD** be set to an empty array `[]` when deactivating the DID. See the [deactivate](#deactivate-revoke) section of this specification for more details.
+- `nextKeyHashes`: A JSON array of strings that are hashes of [[ref: multikey]] formatted public keys that **MAY** be added to the `updateKeys` list in the next [[ref: log entry]]. At least one entry of `nextKeyHashes` **MUST** be added to the next `updateKeys` list.
+  - The process for generating the hashes and additional details for using [[ref: pre-rotation]] are defined in the [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification) section of this specification.
+  - If not set in the first [[ref: log entry]], its value defaults to an empty array (`[]`).
+  - If not set in other [[ref: log entries]], its value is retained from the most recent prior value.
+  - Once the `nextKeyHashes` parameter has been set to a non-empty array, [[ref: Key Pre-Rotation]] is active. While active, the properties `nextKeyHashes` and `updateKeys` **MUST** be present in all [[ref: log entries]].
+  - While [[ref: Key Pre-Rotation]] is active, all [[ref: multikey]] formatted public keys added in a new `updateKeys` list **MUST** have their hashes listed in the `nextKeyHashes` list from the previous [[ref: log entry]].
+  - A [[ref: DID Controller]] **MAY** include extra hashes in the `nextKeyHashes` array that are not subsequently used in an `updateKeys` entry. Any unused hashes in `nextKeyHashes` arrays are ignored.
+  - The value of `nextKeyHashes` **MAY** be set to an empty array (`[]`) to deactivate [[ref: pre-rotation]]. For additional details about turning off [[ref: pre-rotation]], see the [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification) section of this specification.
+- `witness`: A JSON object declaring the set of witnesses and threshold number of witness proofs required to update the DID. For details of this data and its usage in the DID update approval process, see the [DID Witnesses](#did-witnesses) section of this specification..
+  - Defaults to `{}` if not set in the first [[ref: log entry]].
+  - If not set in other [[ref: log entries]], its value is retained from the most recent prior value.
+  - If the `witness` property is updated from `{}`, the change is immediately active, and the corresponding [[ref: log entry]] **MUST** be [[ref: witnessed]].
+  - The `witness` [[ref: parameter]] **MAY** be set to `{}` to indicate that
+    witnesses are not (or no longer) being used. If witnesses are active when the
+    `witness` [[ref: parameter]] is set to `{}`, that [[ref: log entry]]
     **MUST** be [[ref: witnessed]].
 - `watchers`: An optional entry whose value is a JSON array containing a list of URLs ([[spec:rfc9110]]) that have notified the DID Controller that they are willing to watch the DID. See the [Watchers](#watchers) section of this specification for more details.
-  - If the `watchers` property is not set in the first [[ref: DID log entry]], its value defaults to `null`.
-  - If the `watchers` property is not set in [[ref: DID log entries]] after the first, its value is retained from the prior [[ref: DID log entry]].
-- `deactivated`: A JSON boolean that **MUST** be initialized to `false` and
-  **SHOULD** be set to `true` when the DID is to be deactivated but remains
-  resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this
-  specification for more details.
-- `ttl`: A number, the number of seconds that a cache entry for a resolved
-  `did:webvh` DID **SHOULD** last, as recommended by the [[ref: DID
-  Controller]]. A resolver can use this value in deciding whether to retrieve a
-  new version of the DID's `did.jsonl` file. If not specified, its value
-  **MUST** be `null` and resolvers **MAY** set a default based on the business
-  needs of the resolver clients.
+  - Defaults to `[]` if not set in the first [[ref: log entry]].
+  - If not set in other [[ref: log entries]], its value is retained from the most recent prior value.
+  - **MAY** be set to an empty array `[]` to indicate that watchers are not (or no longer) being used.
+- `portable`: Boolean (JSON `true` / `false`) indicating if the DID is portable, allowing a DID Controller to control if a DID can be moved, while retaining its [[ref: SCID]] and verifiable history. See the [DID Portability](#did-portability) section of this specification for more details.
+  - Can **ONLY** be set to `true` in the first entry.
+  - Defaults to `false` if omitted in the first entry.
+  - Retains value if omitted in later entries.
+  - Once set to `false`, **MUST NOT** be changed to `true`.
+- `deactivated`: A JSON boolean that indicates whether the DID has been deactivated. A deactivated DID is no longer subject to updates but remains resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this specification for more details.
+  - Defaults to `false` if not set in the first [[ref: DID log entry]].
+  - If set to `true`, the DID is considered deactivated and no further updates to the DID are permitted.
+- `ttl`: A number that indicates how long, in seconds, a resolver should cache the resolved `did:webvh` DID before refreshing. It provides guidance from the [[ref: DID Controller]] on cache duration.
+  - Defaults to `3600` (1 hour) if not set in the first [[ref: DID log entry]].
+  - If set to `0`, it indicates that the DID should not be cached.
   - Caching a `did:webvh` can be valuable in places where the business rules
     require resolving a number of DID URLs for the same DID. For example, a
     client might want call the resolver to the current [[ref: DIDDoc]], and then make
