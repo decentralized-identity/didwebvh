@@ -449,6 +449,7 @@ As defined in the [[spec:DID-RESOLUTION]] specification, a did:webvh resolver sh
   "scid": "QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p",
   "portable": false,
   "deactivated": false,
+  "ttl": "3600",
   "witness": { ...
   },
   "watchers: [ ...
@@ -465,9 +466,10 @@ where the items in the Metadata JSON object are:
 - `scid` — The [[ref: SCID]]] of the resolved DID.
 - `portable` — A boolean value indicating whether the resolved DID has [[ref: portability]] active and so may be moved in the future, as defined in the [portability](#did-portability) section of this specification.
 - `deactivated` — A boolean indicating whether the DID has been deactivated. When `true`, the DID is no longer active.
-- `witness` — An object containing the current (active in the last valid [[ref: DID log entry]]) configuration of witnesses for the DID. The object is as defined as the same named object in the [witness list](#witness-lists) section of this specification. Optional (or `null`) if there are no active witnesses, otherwise required.
-  - The [[spec: DID-RESOLUTION]] specification does not permit JSON `integers` as values in the Metadata object. As such, the `threshold` value in the MetaData JSON `witness` object **MUST** be a string containing the integer value of the `threshold`. A resolver client receiving the Metadata object **MUST** convert the string to an integer before using it.
-- `watchers` — An array containing the current (active in the last valid [[ref: DID log entry]]) list of [[ref: watcher]] URLs that have agreed to monitor and cache the DID’s state. Optional (or `null`) if there are no active [[ref: watchers]], otherwise required.
+- `ttl` - A string containing the unsigned integer value of the DID's `ttl` [[ref; parameter]] (time-to-live) in seconds. The TTL is guidance from the [[ref: DID Controller]] for those resolving the DID about how long to cache the DID. The value is a string containing the integer value because the [[spec: DID-RESOLUTION]] specification requires that DID metadata not be integers. The value needs to be converted to an integer by the resolver client before use.
+- `witness` — An object containing the current (active in the last valid [[ref: DID log entry]]) configuration of witnesses for the DID. The object is as defined as the same named object in the [witness list](#witness-lists) section of this specification.
+  - The value of the `threshold` attribute of the `witness` object is a string containing the integer value of `threshold` because the [[spec: DID-RESOLUTION]] specification requires that DID metadata not include integers. The value needs to be converted to an integer by the resolver client before use.
+- `watchers` — An array containing the current (active in the last valid [[ref: DID log entry]]) list of [[ref: watcher]] URLs that have agreed to monitor and cache the DID’s state.
 
 The "last valid [[ref: log entry]]" for some of the items above references the case where a DID resolution request references a DIDDoc that was valid, but where the DID Log has later [[ref: log entries]] that fail verification, as noted in the DID resolution steps earlier in this section. If all [[ref: log entries]] pass verification, the last valid [[ref: log entry]] is the last [[ref: log entry]].
 
@@ -602,10 +604,10 @@ To deactivate the DID, the [[ref: DID Controller]] **MUST** add to the [[ref:
 DID log entry]] [[ref: parameters]] the property name and value `"deactivated":
 true`. A [[ref: DID Controller]] **SHOULD** update the [[ref: DIDDoc]] and
 `parameters` object to further indicate the deactivation of the DID, such as
-setting to `null` the `updateKeys` in the [[ref: parameters]], preventing
+setting to `[]` (empty array) the `updateKeys` in the [[ref: parameters]], preventing
 further versions of the DID. If the DID is using [[ref: pre-rotation]], two
 [[ref: DID log entries]] are required to accomplish that state, the first to
-stop the use of pre-rotation, and the second for setting `updateKeys` to `null`.
+stop the use of pre-rotation, and the second for setting `updateKeys` to `[]`.
 For additional details about turning off [[ref: pre-rotation]] see the
 [pre-rotation](#pre-rotation-key-hash-generation-and-verification) section of
 this specification.
@@ -934,7 +936,7 @@ entry]] **MUST** have their hash in the  `nextKeyHashes` array from the previous
 [[ref: DID log entry]]. If not, terminate the resolution process with an error.
 
 A [[ref: DID Controller]] may turn off the use of pre-rotation by setting the
-[[ref: parameter]] `nextKeyHashes` to `null` in any [[ref: DID log entry]]. If
+[[ref: parameter]] `nextKeyHashes` to `[]` (empty array) in any [[ref: DID log entry]]. If
 there is an active set of `nextKeyHashes` at the time, the pre-rotation
 requirements remains in effect for the [[ref: DID Log entry]]. The subsequent
 [[ref: DID Log entry]] **MUST** use the non-pre-rotation rules.
@@ -1009,15 +1011,16 @@ which the [[ref: DID Log]] is published.
 
 The list of DIDs that witness DID updates are defined in the `witness`
 parameter, as described in the [Parameters](#didwebvh-did-method-parameters)
-section of this specification. After the first `witness` parameter has been
-added to a [[ref: DID log entry]], and while there are active witnesses, a
-[[ref: threshold]] of the active witnesses must provide valid proofs associated
-with each [[ref: DID log entry]] before the [[ref: DID log entry]] can be
-published. If a [[ref: DID log entry]] contains a new (replacement) list of
-witnesses (by including a new `witness` [[ref: parameter]]) that new list
-becomes active **AFTER** the new [[ref: DID log entry]] has been published. Such
-a replacement **MAY** be a `null`. Once a [[ref: witness]] set to `null` becomes
-active, updates to the DID are not [[ref: witnessed]].
+section of this specification. After the first `witness` parameter has been set
+to other than `{}` (empty object) in a [[ref: DID log entry]], and while there
+are active witnesses, a [[ref: threshold]] of the active witnesses must provide
+valid proofs associated with each [[ref: DID log entry]] before the [[ref: DID
+log entry]] can be published. If a [[ref: DID log entry]] contains a new
+(replacement) list of witnesses (by including a new `witness` [[ref:
+parameter]]) that new list becomes active **AFTER** the new [[ref: DID log
+entry]] has been published. Such a replacement **MAY** be a `{}` (empty object).
+Once the `witness` attribute set to `{}` becomes active, updates to the DID are
+not [[ref: witnessed]].
 
 ##### Witness DIDs and Reputation
 
