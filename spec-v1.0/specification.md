@@ -625,7 +625,7 @@ of those processes is specified in the following sections.
 
 #### `did:webvh` DID Method Parameters
 
-All `did:webvh` [[ref: Log entries]] contain the JSON object `parameters`. This object defines the DID processing [[ref: parameters]] used by the [[ref: DID Controller]] when publishing the current and subsequent [[ref: DID log entries]]. DID Resolvers **MUST** use the same [[ref: parameters]] to process the [[ref: DID Log]] to resolve the DID. The `parameters` object **MUST** only include properties defined in the version of the `did:wenbvh` DID Method specification being used.
+All `did:webvh` [[ref: Log entries]] contain the JSON object `parameters`. This object defines the DID processing [[ref: parameters]] used by the [[ref: DID Controller]] when publishing the current and subsequent [[ref: DID log entries]]. DID Resolvers **MUST** use the same [[ref: parameters]] to process the [[ref: DID Log]] to resolve the DID. The `parameters` object **MUST** only include properties defined in the version of the `did:webvh` DID Method specification being used.
 
 **General Rules for Parameters:**
 
@@ -704,17 +704,9 @@ The following lists the [[ref: parameters]], their data types, and enumerated va
 - `deactivated`: A JSON boolean that indicates whether the DID has been deactivated. A deactivated DID is no longer subject to updates but remains resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this specification for more details.
   - Defaults to `false` if not set in the first [[ref: DID log entry]].
   - If set to `true`, the DID is considered deactivated and no further updates to the DID are permitted.
-- `ttl`: A number that indicates how long, in seconds, a resolver should cache the resolved `did:webvh` DID before refreshing. It provides guidance from the [[ref: DID Controller]] on cache duration.
+- `ttl`: An unsigned integer that indicates how long, in seconds, a resolver should cache the resolved `did:webvh` DID before refreshing. It provides guidance from the [[ref: DID Controller]] on cache duratio, with a range of 0 to 2^31. The parameter is analogous to the `TTL` parameter used in DNS [[spec: rfc2181]]. Caching a `did:webvh` can be valuable in places where the business rules require resolving a number of DID URLs for the same DID. For example, a client might want call the resolver to the current [[ref: DIDDoc]], and then make repeated calls to get all of the previous versions of the [[ref: DIDDoc]]. By caching the [[ref: DIDDoc]] state, the resolver would not have to retrieve and process the [[ref: DID Log]] on each call.
   - Defaults to `3600` (1 hour) if not set in the first [[ref: DID log entry]].
-  - If set to `0`, it indicates that the DID should not be cached.
-  - Caching a `did:webvh` can be valuable in places where the business rules
-    require resolving a number of DID URLs for the same DID. For example, a
-    client might want call the resolver to the current [[ref: DIDDoc]], and then make
-    repeated calls to get all of the previous versions of the [[ref: DIDDoc]]. By caching
-    the [[ref: DIDDoc]] state, the resolver would not have to retrieve and process the
-    [[ref: DID Log]] on each call.
-  - A Web Server handling one or more `did.jsonl` files **MAY** be configured to
-   use a comparable HTTP TTL per [[spec-inform:rfc9111]].
+  - If set to `0`, indicates that the DID should not be cached.
 
 #### Cryptographic Agility
 
