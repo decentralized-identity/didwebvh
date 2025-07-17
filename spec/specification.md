@@ -639,6 +639,10 @@ All `did:webvh` [[ref: Log entries]] contain the JSON object `parameters`. This 
 
 - The JSON `null` value **MUST NOT** be used to indicate default or deactivated values, as it removes the typing information required for proper interpretation.
 
+:::note
+Some early `did:webvh` implementations used the JSON `null` value to indicate the deactivation of parameters such as `watchers`, `witness`, `updateKeys`, `nextKeyHashes`, and `ttl`. Although this usage is deprecated and not valid per the current specification, resolver implementations **SHOULD** gracefully accept `null` and immediately convert the value to their equivalent default value for the parameter when processing [[ref: DID Log entries]].
+:::
+
 ::: example
 An example of the `parameters` property in the first [[ref: DID Log]] entry:
 
