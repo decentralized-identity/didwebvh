@@ -1462,10 +1462,9 @@ implicit service defined above. This is required if the controller wishes to:
 To resolve the DID URL `<did:webvh DID>/whois`, a resolver MUST:
 
 1. Resolve the base `did:webvh` DID by retrieving, verifying, and processing the
-   [[ref: DID Log]].
-2. Locate the service entry with `"id": "#whois"` in the resulting [[ref:
-   DIDDoc]], or fall back to the implicit service if none is present.
-3. Construct and attempt to retrieve the resource from the `serviceEndpoint`
+   [[ref: DID Log]]. The resolver will use either an explicitly defined service
+   with `"id": "#whois"` or the implicit service defined above.
+2. Construct and attempt to retrieve the resource from the `serviceEndpoint`
    URL.
    - If the scheme of the `serviceEndpoint` is unsupported by the resolver
      (e.g., non-HTTP(S)), the resolver **MUST** return the `invalidDid` error.
@@ -1475,6 +1474,16 @@ To resolve the DID URL `<did:webvh DID>/whois`, a resolver MUST:
 The returned `whois.vp` **MUST** contain a [[ref: W3C VCDM]] [[ref: verifiable
 presentation]] signed by the DID and containing [[ref: verifiable credentials]]
 that **MUST** have the DID as the `credentialSubject`.
+
+If a [[ref: DID Controller]] publishes a parallel `did:web` DID and a `whois.vp`
+file, the `/whois` endpoint can be resolved using either DID, returning the same
+content either way. The [[ref: verifiable presentation]] proof can reference
+either DID or include two proofs, each referencing a verification method for one
+of the DIDs. If only one DID is referenced, since both DIDs will have an
+`alsoKnownAs` for one another and include the same verification methods, a
+resolver using the DID not referenced in the proof can choose to verify the
+proof with the already resolved DID, or resolve the referenced DID before
+verifying the proof.
 
 A [[ref: DID Controller]] **MAY** explicitly add to their [[ref: DIDDoc]] a
 `did:webvh` service with the `"id": "#whois"`. Such an entry **MUST** override
