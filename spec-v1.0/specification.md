@@ -667,6 +667,7 @@ The following lists the [[ref: parameters]], their data types, and enumerated va
   - **MUST** appear in the first [[ref: DID log entry]].
   - If not present in later [[ref: DID log entries]], the previous value continues to apply.
   - **MAY** appear in later entries to change the DID processing rules to that of a new version of the specification.
+  - **MUST** be set to a specification version equal to or higher than the currently active `method` setting.
   - Acceptable values:
     - `did:webvh:1.0`
       - Permitted hash algorithms: `SHA-256` [[spec:rfc6234]]
