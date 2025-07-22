@@ -168,7 +168,8 @@ Each entry is a JSON object consisting of the following properties.
 
 `{ "versionId": "", "versionTime": "", "parameters": {}, "state": {}, "proof" : [] }`
 
-1. The value of `versionId` **MUST** be a string consisting of the DID version number
+1. The [[spec: json-schema-core]] definition of the [[ref: DID log entry]] data structure can be found in the [log_entry.json](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/schemas/v1.0/log_entry.json) file in this repository.
+2. The value of `versionId` **MUST** be a string consisting of the DID version number
    (starting at `1` and incrementing by one per DID version), a literal dash
    `-`, and the `entryHash`, a hash calculated across the [[ref: log entry]]
    content. The input to the hash is chosen so as to link each entry to its
@@ -176,18 +177,18 @@ Each entry is a JSON object consisting of the following properties.
    [Entry Hash Generation and
    Verification](#entry-hash-generation-and-verification) section of this
    specification.
-2. The value of `versionTime` **MUST** be a timestamp in UTC of the entry in [[ref:
+3. The value of `versionTime` **MUST** be a timestamp in UTC of the entry in [[ref:
    ISO8601]] format, as asserted by the [[ref: DID Controller]]. The timestamp
    **MUST** be the time the DID will be retrieved by a [[ref: witness]] or resolver,
    or before.
-3. The JSON object `parameters` contains the configurations/options set by the
+4. The JSON object `parameters` contains the configurations/options set by the
    [[ref: DID Controller]] to be used in the processing of current and future
    [[ref: log entries]]. Permitted `parameters` are defined in the [`did:webvh`
    DID Method Parameters](#didwebvh-did-method-parameters) section of this
    specification.
-4. The JSON object `state` contains the [[ref: DIDDoc]] for this version of the
+5. The JSON object `state` contains the [[ref: DIDDoc]] for this version of the
    DID.
-5. The JSON array `proof` contains a [[ref: Data Integrity]] proof created for
+6. The JSON array `proof` contains a [[ref: Data Integrity]] proof created for
    the entry and signed by a key authorized to update the [[ref: DIDDoc]].
 
 After creation, each entry has (per the [[ref JSON Lines]] specification) all

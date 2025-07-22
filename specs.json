@@ -46,6 +46,20 @@
             ],
             "status": "W3C Technical Recommendation"
           }
+        },
+        {
+          "json-schema-core": {
+            "href": "https://json-schema.org/draft/2020-12/json-schema-core",
+            "title": "JSON Schema: A Media Type for Describing JSON Documents",
+            "rawDate": "2022-06-16",
+            "authors": [
+              "A. Wright",
+              "H. Andrews",
+              "B. Hutton",
+              "G. Dennis"
+            ],
+            "status": "Internet Draft"
+          }
         }
       ]
     },
@@ -94,6 +108,20 @@
               "Manu Sporny"
             ],
             "status": "W3C Technical Recommendation"
+          }
+        },
+        {
+          "json-schema-core": {
+            "href": "https://json-schema.org/draft/2020-12/json-schema-core",
+            "title": "JSON Schema: A Media Type for Describing JSON Documents",
+            "rawDate": "2022-06-16",
+            "authors": [
+              "A. Wright",
+              "H. Andrews",
+              "B. Hutton",
+              "G. Dennis"
+            ],
+            "status": "Internet Draft"
           }
         }
       ]
