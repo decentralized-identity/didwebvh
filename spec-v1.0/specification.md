@@ -1229,15 +1229,26 @@ The following HTTP API operations define the interaction between [[ref: watchers
 #### Publishing a Parallel `did:web` DID
 
 Each time a `did:webvh` version is created, the [[ref: DID Controller]] **MAY**
-generate a corresponding `did:web` to publish along with the `did:webvh`. To do
-so, the [[ref: DID Controller]] **MUST**:
+generate a corresponding `did:web` to publish along with the `did:webvh`. If
+this is being done, the `did:webvh` DIDDoc **SHOULD** have the corresponding
+`did:web` in the `alsoKnownAs` array. To publish a parallel `did:web` DIDDoc, the
+[[ref: DID Controller]] **MUST**:
 
 1. Start with the resolved version of the [[ref: DIDDoc]] from `did:webvh`.
-2. Execute a text replacement across the [[ref: DIDDoc]] of `did:webvh:<SCID>:` to
+2. If the "implicit" `did:webvh` services (as defined in the [DID URL
+   Resolution](#did-url-resolution) section) are not already present in the
+   [[ref: DIDDoc]], they **MUST** be added. These services are the `relativeRef`
+   service with `id: "#files"` and the `whois` service with `id: "#whois"`, with
+   the `serviceEndpoint` for both derived from the [DID-to-HTTPS
+   transformation](#did-to-https-transformation).
+3. Execute a text replacement across the [[ref: DIDDoc]] of `did:webvh:<SCID>:` to
    `did:web:`, where `<scid>` is the actual `did:webvh` [[ref: SCID]].
-3. Add to the [[ref: DIDDoc]] `alsoKnownAs` array, the full `did:webvh` DID. If the
-   `alsoKnownAs` array does not exist in the [[ref: DIDDoc]], it **MUST** be added.
-4. Publish the resulting [[ref: DIDDoc]] as the file `did.json` at the web location
+4. Add to the [[ref: DIDDoc]] `alsoKnownAs` array, the full `did:webvh` DID. If
+   the `alsoKnownAs` array does not exist in the [[ref: DIDDoc]], it **MUST** be
+   added.
+5. Remove any duplicate entries in the `alsoKnownAs` array, including the
+   `did:web` DID itself if it was duplicated in the earlier steps.
+6. Publish the resulting [[ref: DIDDoc]] as the file `did.json` at the web location
    determined by the specified `did:web` DID-to-HTTPS transformation.
 
 The benefit of doing this is that resolvers that have not been updated to
