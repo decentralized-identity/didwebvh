@@ -12,6 +12,7 @@
 
 - [Meeting Information](#meeting-information)
 - [Future Topics](#future-topics)
+- [Later Meetings](#later-meetings)
 - [Meeting - 19 Dec 2024](#meeting---19-dec-2024)
 - [Meeting - 05 Dec 2024](#meeting---05-dec-2024)
 - [Meeting - 21 Nov 2024](#meeting---21-nov-2024)
@@ -60,6 +61,12 @@ _This document is live-edited DURING each call, and stable/authoritative copies 
 - A did:webvh test suite -- such as proposed [here](https://github.com/nuts-foundation/trustdidweb-go/pull/1)
 
 --------------------------------
+## Later Meetings
+
+Agendas for the current set of `did:webvh` Work Item meetings can be in the [Agenda] file.
+
+[Agenda]: https://github.com/decentralized-identity/didwebvh/tree/main/agenda.md
+
 ## Meeting - 19 Dec 2024
 
 Time: 9:00 Pacific / 18:00 Central Europe
