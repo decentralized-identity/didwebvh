@@ -1158,15 +1158,16 @@ have active [[ref: witnesses]] have a [[ref: threshold]] of active witnesses
 approving the [[ref: log entry]]. To do so, resolvers must:
 
 - Successfully complete the non-[[ref: witness]] verifications of the [[ref: DID Log]].
-- Verify the [[ref: witness]] proofs in the `did-witness.json` file.
+- - Retrieve the `did-witness.json` file.
+- Verify enough of the [[ref: witness]] proofs in the `did-witness.json` file to meet the [[ref: threshold]] for all [[ref: DID log entries]] requiring [[ref: witnessing]].
   - The resolver **MUST** ignore the proofs of any unpublished [[ref: DID Log entries]].
-  - If any of the proofs of published [[ref: DID Log entries]] fail validation,
-  terminate the resolution process with an error.
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
   confirm that the `did-witness.json` file contains verified [[ref: witness]]
   [[ref: Data Integrity]] proofs from a [[ref: threshold]] of the then active
   [[ref: witnesses]] for the current or any **later** published log entries. If
   not, terminate the resolution process with an error.
+
+A [[ref: DID Controller]] is expected to prune the `did-witness.json` file to include only the last proof for each witness for a published [[ref: DID log entry]]. However, if a [[ref: DID Controller]] does not prune the file, a resolver **MAY** do the pruning as part of the resolution process, verifying only the minimum number of proofs needed to meet the [[ref: threshold]] for each [[ref: DID log entry]]. While it is expected that a [[ref: DID Controller]] will exclude any proofs that fail verification, a resolver **MAY** ignore any proofs that fail verification and still resolve the DID if there are enough valid proofs to meet the [[ref: threshold]] requirements.
 
 If you want to learn more about the practical application of witnesses, see the
 Implementer's Guide section on
