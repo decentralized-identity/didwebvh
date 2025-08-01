@@ -168,7 +168,8 @@ Each entry is a JSON object consisting of the following properties.
 
 `{ "versionId": "", "versionTime": "", "parameters": {}, "state": {}, "proof" : [] }`
 
-1. The value of `versionId` **MUST** be a string consisting of the DID version number
+1. The [[spec: json-schema-core]] definition of the [[ref: DID log entry]] data structure can be found in the [log_entry.json](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/schemas/v1.0/log_entry.json) file in this repository.
+2. The value of `versionId` **MUST** be a string consisting of the DID version number
    (starting at `1` and incrementing by one per DID version), a literal dash
    `-`, and the `entryHash`, a hash calculated across the [[ref: log entry]]
    content. The input to the hash is chosen so as to link each entry to its
@@ -176,18 +177,18 @@ Each entry is a JSON object consisting of the following properties.
    [Entry Hash Generation and
    Verification](#entry-hash-generation-and-verification) section of this
    specification.
-2. The value of `versionTime` **MUST** be a timestamp in UTC of the entry in [[ref:
+3. The value of `versionTime` **MUST** be a timestamp in UTC of the entry in [[ref:
    ISO8601]] format, as asserted by the [[ref: DID Controller]]. The timestamp
    **MUST** be the time the DID will be retrieved by a [[ref: witness]] or resolver,
    or before.
-3. The JSON object `parameters` contains the configurations/options set by the
+4. The JSON object `parameters` contains the configurations/options set by the
    [[ref: DID Controller]] to be used in the processing of current and future
    [[ref: log entries]]. Permitted `parameters` are defined in the [`did:webvh`
    DID Method Parameters](#didwebvh-did-method-parameters) section of this
    specification.
-4. The JSON object `state` contains the [[ref: DIDDoc]] for this version of the
+5. The JSON object `state` contains the [[ref: DIDDoc]] for this version of the
    DID.
-5. The JSON array `proof` contains a [[ref: Data Integrity]] proof created for
+6. The JSON array `proof` contains a [[ref: Data Integrity]] proof created for
    the entry and signed by a key authorized to update the [[ref: DIDDoc]].
 
 After creation, each entry has (per the [[ref JSON Lines]] specification) all
@@ -1159,15 +1160,16 @@ have active [[ref: witnesses]] have a [[ref: threshold]] of active witnesses
 approving the [[ref: log entry]]. To do so, resolvers must:
 
 - Successfully complete the non-[[ref: witness]] verifications of the [[ref: DID Log]].
-- Verify the [[ref: witness]] proofs in the `did-witness.json` file.
+- - Retrieve the `did-witness.json` file.
+- Verify enough of the [[ref: witness]] proofs in the `did-witness.json` file to meet the [[ref: threshold]] for all [[ref: DID log entries]] requiring [[ref: witnessing]].
   - The resolver **MUST** ignore the proofs of any unpublished [[ref: DID Log entries]].
-  - If any of the proofs of published [[ref: DID Log entries]] fail validation,
-  terminate the resolution process with an error.
 - For each [[ref: DID log entry]] requiring witnessing, the resolver **MUST**
   confirm that the `did-witness.json` file contains verified [[ref: witness]]
   [[ref: Data Integrity]] proofs from a [[ref: threshold]] of the then active
   [[ref: witnesses]] for the current or any **later** published log entries. If
   not, terminate the resolution process with an error.
+
+A [[ref: DID Controller]] is expected to prune the `did-witness.json` file to include only the last proof for each witness for a published [[ref: DID log entry]]. However, if a [[ref: DID Controller]] does not prune the file, a resolver **MAY** do the pruning as part of the resolution process, verifying only the minimum number of proofs needed to meet the [[ref: threshold]] for each [[ref: DID log entry]]. While it is expected that a [[ref: DID Controller]] will exclude any proofs that fail verification, a resolver **MAY** ignore any proofs that fail verification and still resolve the DID if there are enough valid proofs to meet the [[ref: threshold]] requirements.
 
 If you want to learn more about the practical application of witnesses, see the
 Implementer's Guide section on
@@ -1230,15 +1232,26 @@ The following HTTP API operations define the interaction between [[ref: watchers
 #### Publishing a Parallel `did:web` DID
 
 Each time a `did:webvh` version is created, the [[ref: DID Controller]] **MAY**
-generate a corresponding `did:web` to publish along with the `did:webvh`. To do
-so, the [[ref: DID Controller]] **MUST**:
+generate a corresponding `did:web` to publish along with the `did:webvh`. If
+this is being done, the `did:webvh` DIDDoc **SHOULD** have the corresponding
+`did:web` in the `alsoKnownAs` array. To publish a parallel `did:web` DIDDoc, the
+[[ref: DID Controller]] **MUST**:
 
 1. Start with the resolved version of the [[ref: DIDDoc]] from `did:webvh`.
-2. Execute a text replacement across the [[ref: DIDDoc]] of `did:webvh:<SCID>:` to
+2. If the "implicit" `did:webvh` services (as defined in the [DID URL
+   Resolution](#did-url-resolution) section) are not already present in the
+   [[ref: DIDDoc]], they **MUST** be added. These services are the `relativeRef`
+   service with `id: "#files"` and the `whois` service with `id: "#whois"`, with
+   the `serviceEndpoint` for both derived from the [DID-to-HTTPS
+   transformation](#did-to-https-transformation).
+3. Execute a text replacement across the [[ref: DIDDoc]] of `did:webvh:<SCID>:` to
    `did:web:`, where `<scid>` is the actual `did:webvh` [[ref: SCID]].
-3. Add to the [[ref: DIDDoc]] `alsoKnownAs` array, the full `did:webvh` DID. If the
-   `alsoKnownAs` array does not exist in the [[ref: DIDDoc]], it **MUST** be added.
-4. Publish the resulting [[ref: DIDDoc]] as the file `did.json` at the web location
+4. Add to the [[ref: DIDDoc]] `alsoKnownAs` array, the full `did:webvh` DID. If
+   the `alsoKnownAs` array does not exist in the [[ref: DIDDoc]], it **MUST** be
+   added.
+5. Remove any duplicate entries in the `alsoKnownAs` array, including the
+   `did:web` DID itself if it was duplicated in the earlier steps.
+6. Publish the resulting [[ref: DIDDoc]] as the file `did.json` at the web location
    determined by the specified `did:web` DID-to-HTTPS transformation.
 
 The benefit of doing this is that resolvers that have not been updated to
@@ -1403,10 +1416,9 @@ implicit service defined above. This is required if the controller wishes to:
 To resolve the DID URL `<did:webvh DID>/whois`, a resolver MUST:
 
 1. Resolve the base `did:webvh` DID by retrieving, verifying, and processing the
-   [[ref: DID Log]].
-2. Locate the service entry with `"id": "#whois"` in the resulting [[ref:
-   DIDDoc]], or fall back to the implicit service if none is present.
-3. Construct and attempt to retrieve the resource from the `serviceEndpoint`
+   [[ref: DID Log]]. The resolver will use either an explicitly defined service
+   with `"id": "#whois"` or the implicit service defined above.
+2. Construct and attempt to retrieve the resource from the `serviceEndpoint`
    URL.
    - If the scheme of the `serviceEndpoint` is unsupported by the resolver
      (e.g., non-HTTP(S)), the resolver **MUST** return the `invalidDid` error.
@@ -1416,6 +1428,16 @@ To resolve the DID URL `<did:webvh DID>/whois`, a resolver MUST:
 The returned `whois.vp` **MUST** contain a [[ref: W3C VCDM]] [[ref: verifiable
 presentation]] signed by the DID and containing [[ref: verifiable credentials]]
 that **MUST** have the DID as the `credentialSubject`.
+
+If a [[ref: DID Controller]] publishes a parallel `did:web` DID and a `whois.vp`
+file, the `/whois` endpoint can be resolved using either DID, returning the same
+content either way. The [[ref: verifiable presentation]] proof can reference
+either DID or include two proofs, each referencing a verification method for one
+of the DIDs. If only one DID is referenced, since both DIDs will have an
+`alsoKnownAs` for one another and include the same verification methods, a
+resolver using the DID not referenced in the proof can choose to verify the
+proof with the already resolved DID, or resolve the referenced DID before
+verifying the proof.
 
 A [[ref: DID Controller]] **MAY** explicitly add to their [[ref: DIDDoc]] a
 `did:webvh` service with the `"id": "#whois"`. Such an entry **MUST** override
