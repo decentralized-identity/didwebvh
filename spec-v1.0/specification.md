@@ -632,7 +632,7 @@ All `did:webvh` [[ref: Log entries]] contain the JSON object `parameters`. This 
 
 **General Rules for Parameters:**
 
-- **Default Values**: When the `method` parameter (see below) sets the version of this specification to be used for a DID, any parameter introduced by that version but not explicitly set in the same [[ref: log entry]] **MUST** assume the default value defined in this section. The `method` parameter is required in the first [[ref: log entry]] and may appear in later entries to upgrade the DID to a newer version of the `did:webvh` specification.
+- **Default Values**: When the `method` parameter (see below) sets the [[spec: semver]] version of this specification to be used for a DID, any parameter introduced by that version but not explicitly set in the same [[ref: log entry]] **MUST** assume the default value defined in this section. The `method` parameter is required in the first [[ref: log entry]] and may appear in later entries to upgrade the DID to a newer [[spec semver]] version of the `did:webvh` specification.
 
 - **Allowed Values**: Each parameter is constrained by the data type, structure and allowed values specified in this section.  If a value does not conform, the parameter is invalid and resolvers **MUST** reject the [[ref: log entry]].
 
@@ -664,10 +664,11 @@ An example of the `parameters` property in the first [[ref: DID Log]] entry:
 
 The following lists the [[ref: parameters]], their data types, and enumerated values.
 
-- `method`: Specifies the `did:webvh` specification version to be used for processing the DID's log. Each acceptable value in turn defines what cryptographic algorithms are permitted for the current and subsequent [[ref: DID log entries]]. An update to the specification version in the middle of a [[ref: DID Log]] could introduce new [[ref: parameters]].
+- `method`: Specifies the `did:webvh` [[spec: semver]] specification version to be used for processing the DID's log. Each acceptable value in turn defines what cryptographic algorithms are permitted for the current and subsequent [[ref: DID log entries]]. An update to the specification version in the middle of a [[ref: DID Log]] could introduce new [[ref: parameters]].
   - **MUST** appear in the first [[ref: DID log entry]].
   - If not present in later [[ref: DID log entries]], the previous value continues to apply.
   - **MAY** appear in later entries to change the DID processing rules to that of a new version of the specification.
+  - **MUST** be set to a specification [[spec: semver]] version string equal to or higher than the currently active `method` setting.
   - Acceptable values:
     - `did:webvh:1.0`
       - Permitted hash algorithms: `SHA-256` [[spec:rfc6234]]
@@ -1415,10 +1416,9 @@ implicit service defined above. This is required if the controller wishes to:
 To resolve the DID URL `<did:webvh DID>/whois`, a resolver MUST:
 
 1. Resolve the base `did:webvh` DID by retrieving, verifying, and processing the
-   [[ref: DID Log]].
-2. Locate the service entry with `"id": "#whois"` in the resulting [[ref:
-   DIDDoc]], or fall back to the implicit service if none is present.
-3. Construct and attempt to retrieve the resource from the `serviceEndpoint`
+   [[ref: DID Log]]. The resolver will use either an explicitly defined service
+   with `"id": "#whois"` or the implicit service defined above.
+2. Construct and attempt to retrieve the resource from the `serviceEndpoint`
    URL.
    - If the scheme of the `serviceEndpoint` is unsupported by the resolver
      (e.g., non-HTTP(S)), the resolver **MUST** return the `invalidDid` error.
@@ -1428,6 +1428,16 @@ To resolve the DID URL `<did:webvh DID>/whois`, a resolver MUST:
 The returned `whois.vp` **MUST** contain a [[ref: W3C VCDM]] [[ref: verifiable
 presentation]] signed by the DID and containing [[ref: verifiable credentials]]
 that **MUST** have the DID as the `credentialSubject`.
+
+If a [[ref: DID Controller]] publishes a parallel `did:web` DID and a `whois.vp`
+file, the `/whois` endpoint can be resolved using either DID, returning the same
+content either way. The [[ref: verifiable presentation]] proof can reference
+either DID or include two proofs, each referencing a verification method for one
+of the DIDs. If only one DID is referenced, since both DIDs will have an
+`alsoKnownAs` for one another and include the same verification methods, a
+resolver using the DID not referenced in the proof can choose to verify the
+proof with the already resolved DID, or resolve the referenced DID before
+verifying the proof.
 
 A [[ref: DID Controller]] **MAY** explicitly add to their [[ref: DIDDoc]] a
 `did:webvh` service with the `"id": "#whois"`. Such an entry **MUST** override
