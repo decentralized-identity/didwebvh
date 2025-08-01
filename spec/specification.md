@@ -632,7 +632,7 @@ All `did:webvh` [[ref: Log entries]] contain the JSON object `parameters`. This 
 
 **General Rules for Parameters:**
 
-- **Default Values**: When the `method` parameter (see below) sets the version of this specification to be used for a DID, any parameter introduced by that version but not explicitly set in the same [[ref: log entry]] **MUST** assume the default value defined in this section. The `method` parameter is required in the first [[ref: log entry]] and may appear in later entries to upgrade the DID to a newer version of the `did:webvh` specification.
+- **Default Values**: When the `method` parameter (see below) sets the [[spec: semver]] version of this specification to be used for a DID, any parameter introduced by that version but not explicitly set in the same [[ref: log entry]] **MUST** assume the default value defined in this section. The `method` parameter is required in the first [[ref: log entry]] and may appear in later entries to upgrade the DID to a newer [[spec semver]] version of the `did:webvh` specification.
 
 - **Allowed Values**: Each parameter is constrained by the data type, structure and allowed values specified in this section.  If a value does not conform, the parameter is invalid and resolvers **MUST** reject the [[ref: log entry]].
 
@@ -664,11 +664,11 @@ An example of the `parameters` property in the first [[ref: DID Log]] entry:
 
 The following lists the [[ref: parameters]], their data types, and enumerated values.
 
-- `method`: Specifies the `did:webvh` specification version to be used for processing the DID's log. Each acceptable value in turn defines what cryptographic algorithms are permitted for the current and subsequent [[ref: DID log entries]]. An update to the specification version in the middle of a [[ref: DID Log]] could introduce new [[ref: parameters]].
+- `method`: Specifies the `did:webvh` [[spec: semver]] specification version to be used for processing the DID's log. Each acceptable value in turn defines what cryptographic algorithms are permitted for the current and subsequent [[ref: DID log entries]]. An update to the specification version in the middle of a [[ref: DID Log]] could introduce new [[ref: parameters]].
   - **MUST** appear in the first [[ref: DID log entry]].
   - If not present in later [[ref: DID log entries]], the previous value continues to apply.
   - **MAY** appear in later entries to change the DID processing rules to that of a new version of the specification.
-  - **MUST** be set to a specification version equal to or higher than the currently active `method` setting.
+  - **MUST** be set to a specification [[spec: semver]] version string equal to or higher than the currently active `method` setting.
   - Acceptable values:
     - `did:webvh:1.0`
       - Permitted hash algorithms: `SHA-256` [[spec:rfc6234]]
