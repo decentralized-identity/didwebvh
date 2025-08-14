@@ -46,6 +46,8 @@ Residual risks include:
 
 All DID operations (create, update, deactivate) are integrity-protected by the cryptographic verification of DID Log entries. Update authentication is provided by verifying the [[ref: DID Controller]]'s proof(s) against the valid `updateKeys` in the DID [[ref: Parameters]].
 
+Because a `did:webvh` DID document and its associated log entries are self-certifying, they can be verified and trusted regardless of how they are retrieved — whether directly from the host, via a cache, through a CDN, from a [DID Watcher](#did-watchers), or via a trusted resolver service. The verification process ensures authenticity and integrity independent of the transport channel.
+
 ### Authentication Characteristics
 
 The authentication of DID updates is based on possession of the private keys associated with the update and pre-rotation keys. The security of the DID therefore depends on the strength of these keys, their secure storage, and the cryptographic algorithms used.
@@ -169,6 +171,7 @@ Privacy-respecting credential issuers, credential holders, and verifiers all hav
 - **Privacy-respecting Issuers (including DID Controllers hosting VC-related resources)**
   - **SHOULD NOT** design or deploy credential-related resources (such as revocation registries) in a way that enables the identification of individual holders at presentation time.
   - Use privacy-preserving designs — such as compact status lists, batching, and/or large revocation registries that provide “lost in a crowd” anonymity — to prevent correlation of access patterns to specific credential holders.
+  - Use HTTP caching headers (e.g., `Cache-Control`, `ETag`) to enable CDNs, browsers, and resolvers to cache DID resources efficiently, reducing repeated origin requests that could enable tracking and improving performance.
 
 - **Holders**
   - Use privacy-preserving techniques such as using [DID Watchers](#did-watchers), trusted intermediaries, or privacy-enhancing network tools (e.g., TOR, VPN) to retrieve revocation status data without revealing the holder's location or identity to the issuer.
@@ -177,5 +180,7 @@ Privacy-respecting credential issuers, credential holders, and verifiers all hav
 - **Verifiers**
   - Be flexible in the timeliness of credential status checks, and consider omitting them entirely when risk is low, reducing or eliminating the need for the retrieval of status data.
   - Separate the retrieval of status or issuer data from the verification process by caching issuer-provided information where possible, so holders are not required to contact the issuer in real time.
+  - Use privacy-enhancing network tools (e.g., TOR, VPN) or trusted intermediary resolvers to retrieve DID resources in a way that avoids revealing verifier identity or network location to the issuer or hosting provider.
+  - Where possible, support privacy-preserving resolution protocols or intermediaries offered by the hosting party.
 
 A related risk is that an issuer may deliberately or inadvertently create **holder-specific identifiers** for data elements that are expected to be common across all holders — for example, by issuing personalized revocation list URLs or unique resource paths. This enables tracking of specific holders even if the underlying credential is otherwise privacy-preserving. Preventing this requires shared responsibility: issuers **MUST NOT** generate such holder-specific identifiers; holders and verifiers **SHOULD** reject credentials or status mechanisms that contain them; and independent third parties, including [DID Watchers](#did-watchers), **SHOULD** monitor issuer implementations to detect and report violations of this principle.
