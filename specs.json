@@ -123,6 +123,17 @@
             ],
             "status": "Internet Draft"
           }
+        },
+        {
+          "semver": {
+            "href": "https://semver.org",
+            "title": "Semantic Versioning 2.0.0",
+            "rawDate": "2013-06-18",
+            "authors": [
+              "Tom Preston-Werner"
+            ],
+            "status": "Internet Draft"
+          }
         }
       ]
     },
