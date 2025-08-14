@@ -920,6 +920,10 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
 - The [[ref: DIDDoc]] **MUST** contain the prior DID string as an `alsoKnownAs` entry.
 - [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
 
+**Security Note — Misleading Prior Domain Association**
+
+When using portability, a `did:webvh` identifier may include a domain component that was never actually used to host its DID Log before being "moved" to a domain under the [[ref: DID Controller]]’s control. This creates a potential for misleading claims of association with the original domain. Resolvers and clients of resolvers **MUST** ignore any prior domain components when evaluating the history or trustworthiness of a `did:webvh` DID; only the current hosting location and its associated verifiable history are relevant. In addition, the [whois](#whois-linkedvp-service) DID URL capability can be used to obtain attestations about the DID and [[ref: DID Controller]] from relevant authorities.
+
 #### Pre-Rotation Key Hash Generation and Verification
 
 Pre-rotation requires a [[ref: DID Controller]] to commit to the authorization
