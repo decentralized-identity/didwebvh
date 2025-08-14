@@ -896,7 +896,7 @@ the general case is that each [[ref: log entry]] is signed by the keys from the
 published, that `updateKeys` becomes the active list, and previous
 `updateKeys` are ignored.
 
-##### Prerotation
+##### Pre-rotation
 
 For all subsequent [[ref: entries]], the **active** list
 is the `updateKeys` from the  **current** [[ref: log entry]] to be verified. Thus,
