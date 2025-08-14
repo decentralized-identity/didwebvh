@@ -37,6 +37,7 @@ Residual risks include:
   - While this can impact access to the DID Log and associated files, it does not compromise the integrity of the log entries themselves, nor the verifiability of the DID.
 - Compromise of controller private keys.
   - A `did:webvh` [[ref: DID Controller]] can mitigate this risk through the use of [pre-rotation keys](#pre-rotation-key-hash-generation-and-verification).
+  - In doing so, [[ref: DID Controller]]'s **SHOULD** avoid reusing revealed pre‑rotation keys. While not invalid per this specification, re‑use of a pre‑rotation key after disclosure reduces compromise containment. Mitigation: follow the one‑time‑use best practice and securely destroy revealed private keys (see [Pre‑rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)). Resolvers are **NOT REQUIRED** to enforce this, but **MAY** warn.
   - Additional good security practices **SHOULD** also be followed, such as using hardware security modules (HSMs) or secure enclaves for key storage, enforcing strong access controls, maintaining secure backups of critical keys, and performing regular key rotations.
 - Weaknesses in underlying cryptographic algorithms after deployment.
 - Misconfiguration of cache control or TTL values.

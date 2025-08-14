@@ -977,6 +977,11 @@ authorization key.
 A [[ref: DID Controller]] **MAY** add include extra entries (for keys or just random
 strings) in a `nextKeyHashes` array.
 
+After rotating from a pre‑rotation public key, the corresponding private key
+**SHOULD** be treated as **spent** and **securely destroyed**. Reusing a
+revealed pre‑rotation key is strongly discouraged because it weakens the
+intended containment and forward‑security properties of pre‑rotation.
+
 When processing other than the first [[ref: DID log entry]] where
 [[ref: pre-rotation]] feature is active, a `did:webvh` resolver **MUST**:
 
