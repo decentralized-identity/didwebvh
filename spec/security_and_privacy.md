@@ -25,6 +25,8 @@ Implementations of `did:webvh` **MUST** mitigate the following classes of attack
 
 - **Other attacks** — The required `did:webvh` verification process mitigates downgrade attacks on cryptographic algorithms and prevents poisoning of log or witness files, since unauthorized changes fail signature verification. Verification does not, however, address availability risks; implementers **SHOULD** consider operational measures (e.g., [watchers](#did-watchers) and well-known web techniques) to improve resilience.
 
+- **Misleading prior-domain association** — A DID may be ported from a domain it never actually used, creating a false impression of association with that domain. Mitigation: resolvers and clients **MUST** ignore prior domain components when evaluating the DID, as described in [Unique Assignment of DIDs](#unique-assignment-of-dids).
+
 The use of DNSSEC [[spec:RFC4033]], [[spec:RFC4034]], [[spec:RFC4035]] is essential to prevent spoofing and ensure authenticity of DNS records.
 
 ### Residual Risks
@@ -53,6 +55,8 @@ The authentication of DID updates is based on possession of the private keys ass
 In `did:webvh`, uniqueness of a DID is based on the [[ref: self-certifying identifier]] (SCID) generated at the inception of the DID. The SCID is cryptographically bound to the DID Controller’s keys and ensures that no two independently created DIDs can have the same identifier.
 
 The DNS portion of the DID is used solely for discovery of the DID Log and associated files; it is not used for verification of DID control. Further, the DNS name does not need to be owned or directly controlled by the DID Controller. For example, a DID can be published within a namespace provided by a hosting platform (e.g., a GitHub repository or pages site) that serves static files over HTTPS. In such cases, platform policies and HTTPS server authentication are relied upon for access and integrity at the transport layer, while DID verification is provided entirely by the SCID and verifiable history of the DID.
+
+A `did:webvh` identifier may include a domain component that was never actually used to host its DID Log, before being moved — via the [did:webvh portability](#did-portability) capability — to a different domain under the [[ref: DID Controller]]’s control. This creates a potential for misleading claims of association with the original domain. To prevent this, resolvers and clients of resolvers **MUST** ignore any prior domain components when evaluating the history or trustworthiness of a `did:webvh` DID; only the current hosting location and its associated verifiable history are relevant. In addition, the [whois](#whois-linkedvp-service) DID URL capability **SHOULD** be used to obtain attestations about the DID and [[ref: DID Controller]] from relevant authorities.
 
 ## Endpoint Authentication
 
