@@ -23,6 +23,8 @@ Implementations of `did:webvh` **MUST** mitigate the following classes of attack
 
 - **Man-in-the-middle (MitM)** — HTTPS and signature verification of DID Log entries and witness proofs protect against undetected modification of individual entries. Risks specific to withholding or truncation are addressed in **Truncation or withholding of log entries** above. Use of TLS further ensures server authenticity and reduces opportunities for active interference.
 
+- **Conflicting parallel updates / split view** — Multiple authorized updates from the same parent entry can produce divergent logs. Publication components **MUST** enforce monotonic extension of the current tip; witnesses **MUST NOT** sign more than one child of the same parent; consolidation of `witness.json` **MUST** fail on conflicting branches. Resolvers **SHOULD** cache the highest observed version/hash and **SHOULD** detect/warn on older branches; Watchers **SHOULD** detect and report divergence across sources.
+
 - **Other attacks** — The required `did:webvh` verification process mitigates downgrade attacks on cryptographic algorithms and prevents poisoning of log or witness files, since unauthorized changes fail signature verification. Verification does not, however, address availability risks; implementers **SHOULD** consider operational measures (e.g., [watchers](#did-watchers) and well-known web techniques) to improve resilience.
 
 - **Misleading prior-domain association** — A DID may be ported from a domain it never actually used, creating a false impression of association with that domain. Mitigation: resolvers and clients **MUST** ignore prior domain components when evaluating the DID, as described in [Unique Assignment of DIDs](#unique-assignment-of-dids).
