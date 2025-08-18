@@ -55,7 +55,7 @@ Because a `did:webvh` DID document and its associated log entries are self-certi
 
 The authentication of DID updates is based on possession of the private keys associated with the update and pre-rotation keys. The security of the DID therefore depends on the strength of these keys, their secure storage, and the cryptographic algorithms used.
 
-## Unique Assignment of DIDs
+### Unique Assignment of DIDs
 
 In `did:webvh`, uniqueness of a DID is based on the [[ref: self-certifying identifier]] (SCID) generated at the inception of the DID. The SCID is cryptographically bound to the DID Controller’s keys and ensures that no two independently created DIDs can have the same identifier.
 
@@ -63,7 +63,7 @@ The DNS portion of the DID is used solely for discovery of the DID Log and assoc
 
 A `did:webvh` identifier may include a domain component that was never actually used to host its DID Log, before being moved — via the [did:webvh portability](#did-portability) capability — to a different domain under the [[ref: DID Controller]]’s control. This creates a potential for misleading claims of association with the original domain. To prevent this, resolvers and clients of resolvers **MUST** ignore any prior domain components when evaluating the history or trustworthiness of a `did:webvh` DID; only the current hosting location and its associated verifiable history are relevant. In addition, the [whois](#whois-linkedvp-service) DID URL capability **SHOULD** be used to obtain attestations about the DID and [[ref: DID Controller]] from relevant authorities.
 
-## Endpoint Authentication
+### Endpoint Authentication
 
 DID resource retrieval endpoints **MUST** be authenticated using TLS server authentication. Self-signed certificates **SHOULD NOT** be used in production. This requirement is not unique to the `did:webvh` method; it applies to all web traffic. While the verifiability of `did:webvh` ensures that any tampering with the contents of individual log entries is detectable, TLS provides additional protection against active network attacks (including truncation or withholding) and ensures the authenticity of the server providing the DID resources.
 
@@ -105,13 +105,6 @@ To support scenarios where DID resolution is performed by client applications ru
 security impact from losing added security properties of `did:webvh`
 and refer to [did:web Security and Privacy Considerations](https://w3c-ccg.github.io/did-method-web/#dns-considerations) for additional guidance.
 
-### Right to Erasure ([GDPR Art. 17](https://gdpr-info.eu/art-17-gdpr/))
-
-While it's possible for [[ref: DID Controller]] to delete published data as described in [Deactivate (Revoke) operation](#deactivate-revoke),
-it's **RECOMMENDED** for monitoring [[ref: watchers]] to cache last known state indefinitely.
-This means that ability and specific process of complete data erasure depends on [[ref: watchers]] behavior
-and **SHOULD** be defined by governance of ecosystem.
-
 ### Post Quantum Attacks
 
 `did:webvh` [[ref: Key Pre-Rotation]] approach provides enough flexibility for "post-quantum safety".
@@ -121,7 +114,7 @@ For guidance on post-quantum attacks mitigation, implementors **SHOULD** refer t
 
 This section addresses the privacy considerations in alignment with [[spec:RFC6973]] Section 5 and the [[spec:DID-CORE]] requirements in [DID Core 7.4](https://www.w3.org/TR/did-core/#privacy-requirements).
 
-## Surveillance
+### Surveillance
 
 The `did:webvh` method publishes DID logs to publicly accessible HTTPS endpoints. While the contents of the DID Log are generally intended to be public, the timing, frequency, and correlation of updates can be observed and may reveal operational patterns or associations.
 
@@ -135,7 +128,7 @@ DID data is stored on web servers. A compromise of the hosting infrastructure co
 
 Publishing a DID Log does not inherently solicit inbound traffic beyond normal DID resolution. However, public exposure of service endpoints in the DID Document may increase unsolicited interactions. [[ref: DID Controllers]] SHOULD avoid publishing unnecessary endpoints.
 
-## Misattribution
+### Misattribution
 
 Because the DNS portion of the DID is used for discovery, a misattribution risk arises if that DNS name is reassigned without the associated DID resources being updated or removed. Controllers **SHOULD** ensure DID deactivation before relinquishing a DNS name or namespace.
 
@@ -148,6 +141,13 @@ The use of a static DID and public DID Log entries can enable correlation of act
 ### Identification
 
 DIDs are public identifiers and can be linked to real-world identities through their domain ownership. Entities that require anonymity SHOULD consider DID methods designed for pseudonymity.
+
+### Right to Erasure ([GDPR Art. 17](https://gdpr-info.eu/art-17-gdpr/))
+
+While it's possible for [[ref: DID Controller]] to delete published data as described in [Deactivate (Revoke) operation](#deactivate-revoke),
+it's **RECOMMENDED** for monitoring [[ref: watchers]] to cache last known state indefinitely.
+This means that ability and specific process of complete data erasure depends on [[ref: watchers]] behavior
+and **SHOULD** be defined by governance of ecosystem.
 
 ### Secondary Use
 
