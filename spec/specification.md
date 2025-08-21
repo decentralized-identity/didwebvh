@@ -601,24 +601,15 @@ section of this specification.
 
 #### Deactivate (Revoke)
 
-To deactivate the DID, the [[ref: DID Controller]] **MUST** add to the [[ref:
-DID log entry]] [[ref: parameters]] the property name and value `"deactivated":
-true`. A [[ref: DID Controller]] **SHOULD** update the [[ref: DIDDoc]] and
-`parameters` object to further indicate the deactivation of the DID, such as
-setting to `[]` (empty array) the `updateKeys` in the [[ref: parameters]], preventing
-further versions of the DID. If the DID is using [[ref: pre-rotation]], two
-[[ref: DID log entries]] are required to accomplish that state, the first to
-stop the use of pre-rotation, and the second for setting `updateKeys` to `[]`.
-For additional details about turning off [[ref: pre-rotation]] see the
-[pre-rotation](#pre-rotation-key-hash-generation-and-verification) section of
-this specification.
+Deactivating a DID allows a [[ref: DID Controller]] to signal that the DID is no longer being maintained or updated. There is an explicit approach to deactivation that aligns with the [[spec: DID-CORE]] specification, and other approaches that a `did:webvh` [[ref: DID Controller]] can use if the [[spec: DID-CORE]] approach does not achieve their desired outcome. This section covers the various methods for signaling that a DID is retired.
 
-A resolver encountering in the [[ref: DID log entry]] [[ref: parameters]] the
-property key:value pair `"deactivated": true` **MUST** return in the [[ref:
-DIDDoc]] Metadata the property key:value `"deactivated": true`, as per the
-[[spec:DID-RESOLUTION]] specification.
+To deactivate a `did:webvh` DID per the [[ref: DID-CORE]] specification, the [[ref: DID Controller]] **MUST** add to the [[ref: DID log entry]] [[ref: parameters]] the property name and value `"deactivated": true`. Once done, a resolver **MUST NOT** return the [[ref: DIDDoc]] and **MUST** include `"deactivated": true` in the DID Resolution Metadata. A [[ref: DID Controller]] deactivating a `did:webvh` DID **MAY** update the [[ref: DIDDoc]] (e.g., setting it to {}) and some [[ref: parameters]] attributes to further indicate the deactivation of the DID, such as setting the `updateKeys` array to `[]`, preventing further versions of the DID. If the DID is using [[ref: pre-rotation]], two [[ref: DID log entries]] are required to accomplish that state: the first to stop the use of pre-rotation, and the second to set `updateKeys` to []. For additional details about turning off [[ref: pre-rotation]] see the [pre-rotation](#pre-rotation) section of this specification.
 
-A [[ref: DID Controller]] can “deactivate” a DID by removing the published [[ref: DID Log]] and associated files and resources. Once removed, attempts to retrieve the [[ref: DID Log]] will result in an `HTTP 404 Not Found` (or an equivalent error status when resolving the DID). [[ref: Watchers]] monitoring a removed DID SHOULD continue to cache the last known valid state of the DID indefinitely so that their clients can still resolve and reference it, even after the [[ref: DID Log]] has been deleted.
+A concern with using the [[spec: DID-CORE]] approach to deactivation is the resolver requirement that the [[ref: DIDDoc]] not be returned for a deactivated DID. A [[ref: DID Controller]] might want the final [[ref: DIDDoc]] to continue to be resolved, while also signaling that the DID is no longer being updated. In the future, a DID Resolution query parameter (`returnDeactivatedDidDocument=true`) has been proposed to be added to the [[spec: DID-RESOLUTION]] specification to allow a client to request the [[ref: DIDDoc]] of a deactivated DID. However, even if that parameter is adopted, it places the burden on the resolver client to decide whether and how to use it. An alternative that a `did:webvh` [[ref: DID Controller]] could use is to signal that a DID is no longer being updated by setting the `updateKeys` array to empty (`[]`), as discussed above, and not setting the `deactivated` [[ref: parameter]] to `true`. The result is that the final [[ref: DIDDoc]] continues to be returned by default, and the DID Resolution Metadata indicates that the DID can no longer be updated.
+
+To resolve a prior version of a deactivated `did:webvh` DID, a client can use the appropriate DID Resolution query [[ref: parameters]] `versionId`, `versionTime`, or the did:webvh-specific `versionNumber` (as described in the Read (Resolve) section of this specification). When such a DID is resolved in this way, the DID Resolution Metadata **MUST** include the property name and value `"deactivated": true`.
+
+A [[ref: DID Controller]] can “deactivate” a DID by removing the published [[ref: DID Log]] and associated files and resources. Once removed, attempts to retrieve the [[ref: DID Log]] will result in an `Not Found` error status when resolving the DID. [[ref: Watchers]] monitoring a removed DID **SHOULD** continue to cache the last known valid state of the DID indefinitely so that their clients can still resolve and reference it, even after the [[ref: DID Log]] has been deleted.
 
 ### DID Method Processes
 
