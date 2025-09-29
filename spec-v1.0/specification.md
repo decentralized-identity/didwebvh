@@ -1241,8 +1241,9 @@ this is being done, the `did:webvh` DIDDoc **SHOULD** have the corresponding
 2. If the "implicit" `did:webvh` services (as defined in the [DID URL
    Resolution](#did-url-resolution) section) are not already present in the
    [[ref: DIDDoc]], they **MUST** be added. These services are the `relativeRef`
-   service with `id: "#files"` and the `whois` service with `id: "#whois"`, with
-   the `serviceEndpoint` for both derived from the [DID-to-HTTPS
+   service with `id: "#files"` or `id: "<did>#files"` and the `whois` service
+   with `id: "#whois"` or `id: "<did>#whois"`, with the `serviceEndpoint` for
+   both derived from the [DID-to-HTTPS
    transformation](#did-to-https-transformation).
 3. Execute a text replacement across the [[ref: DIDDoc]] of `did:webvh:<SCID>:` to
    `did:web:`, where `<scid>` is the actual `did:webvh` [[ref: SCID]].
@@ -1315,7 +1316,7 @@ Core](https://www.w3.org/TR/did-core/#did-url-syntax):
   `did:example:123456?service=files&relativeRef=/resume.pdf` (see Example 8).
 
 - The `service=files` reference resolves against a DID Document service with
-  `id: "#files"` and a `type` of `relativeRef`.
+  `"id": "#files"` or `"id": "<did>#files"` and a `type` of `relativeRef`.
 
 The `did:webvh` method implicitly defines this service, with a `serviceEndpoint`
 derived from the [DID-to-HTTPS
@@ -1336,8 +1337,10 @@ For example, the following is the implicit service definition for the DID
 ```
 
 A [[ref: DID Controller]] **MAY** explicitly define a service entry with `"id":
-"#files"` in the [[ref: DIDDoc]]. If present, this **MUST** override the implicit
-service described above.
+"#files"` in the [[ref: DIDDoc]]. If present, this **MUST** override the
+implicit service described above. `id` can be be an absolute reference that
+includes the DID with the `#files` fragment (`<did>#files`), or a relative
+reference as above.
 
 To resolve a DID URL of the form `<did:webvh DID>/path/to/file`, a did:webvh
 resolver MUST:
@@ -1345,8 +1348,9 @@ resolver MUST:
 1. Resolve the base did:webvh DID by retrieving, verifying, and processing its
    [[ref: DID Log]], as defined in this specification.
 
-2. Locate the service entry with id: "#files" in the resulting [[ref: DIDDoc]],
-   or fall back to the implicit service if none is defined.
+2. Locate the service entry with `id` `"#files"` or `"<did>#files"` in the
+   resulting [[ref: DIDDoc]], or fall back to the implicit service if none is
+   defined.
 
 3. Construct the URL by appending the DID URL path to the serviceEndpoint, and
    attempt to retrieve the resource from that location.
@@ -1392,8 +1396,9 @@ The default `#whois` service is:
 ```
 
 The file located at the `serviceEndpoint` **MUST** contain a [[ref: Verifiable
-Presentation]] conforming to the [[ref: W3C VCDM]]. It **MUST** be
-signed by the DID.
+Presentation]] conforming to the [[ref: W3C VCDM]]. It **MUST** be signed by the
+DID. `id` can be be an absolute reference that includes the DID with the
+`#whois` fragment (`<did>#whois`), or a relative reference as above.
 
 The presentation **MUST** include at least one [[ref: Verifiable Credential]]
 where the `credentialSubject.id` is the DID. Such [[ref: Verifiable
@@ -1417,7 +1422,7 @@ To resolve the DID URL `<did:webvh DID>/whois`, a resolver MUST:
 
 1. Resolve the base `did:webvh` DID by retrieving, verifying, and processing the
    [[ref: DID Log]]. The resolver will use either an explicitly defined service
-   with `"id": "#whois"` or the implicit service defined above.
+   with `"id": "#whois"` or `"id": "<did>#whois"`, or the implicit service defined above.
 2. Construct and attempt to retrieve the resource from the `serviceEndpoint`
    URL.
    - If the scheme of the `serviceEndpoint` is unsupported by the resolver
@@ -1440,9 +1445,10 @@ proof with the already resolved DID, or resolve the referenced DID before
 verifying the proof.
 
 A [[ref: DID Controller]] **MAY** explicitly add to their [[ref: DIDDoc]] a
-`did:webvh` service with the `"id": "#whois"`. Such an entry **MUST** override
-the implicit `service` above. If the [[ref: DID Controller]] wants to publish
-the `whois` [[ref: verifiable presentation]] in a different format than the
-[[ref: W3C VCDM]] format, they **MUST** explicitly add to their [[ref: DIDDoc]]
-a service with the `"id": "#whois"` to specify the name and implied format of
-the [[ref: verifiable presentation]].
+`did:webvh` service with the `"id": "#whois"` or `"id": "<did>#whois"`. Such an
+entry **MUST** override the implicit `service` above. If the [[ref: DID
+Controller]] wants to publish the `whois` [[ref: verifiable presentation]] in a
+different format than the [[ref: W3C VCDM]] format, they **MUST** explicitly add
+to their [[ref: DIDDoc]] a service with the `"id": "#whois"` or `"id":
+"<did>#whois"` to specify the name and implied format of the [[ref: verifiable
+presentation]].
