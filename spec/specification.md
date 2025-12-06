@@ -141,7 +141,7 @@ internationalized domain
 
 :::
 
-A client resolving a `did:webvh` DID **MAY** choose to use a [[ref: watcher]] as the source of data about a `did:webvh` DID, rather than resolving the DID's HTTPS location to retrieve the [[ref: DID Log]]. See the specification section [Witnesses and Watchers](#witnesses-and-watchers) for information about `did:webvh` and [[ref: watchers]].
+A client resolving a `did:webvh` DID **MAY** choose to use a [[ref: watcher]] as the source of data about a `did:webvh` DID, rather than resolving the DID's HTTPS location to retrieve the [[ref: DID Log]]. See the specification section on [Watchers](#did-watchers) for information about `did:webvh` and [[ref: watchers]].
 
 The location of the `did:webvh` `did.jsonl` [[ref:DID Log]] file is the same as
 where the comparable `did:web`'s `did.json` file is published. A [[ref: DID
