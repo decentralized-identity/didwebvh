@@ -104,7 +104,7 @@ Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/shar
 
 2. Announcements:
 
-    - Stephen will be presenting at the W3C Credentials Community Group (CCG) Meeting this coming Tuesday, Feb. 17 at 9:00 Pacific / 18:00 Central Europe -- [Meeting Link](https://meet.google.com/dzc-yjfq-tyf)
+    - Stephen will be presenting at the W3C Credentials Community Group (CCG) Meeting this coming Tuesday, Feb. 17 at 9:00 Pacific / 18:00 Central Europe -- [Meeting Link](https://meet.google.com/dzc-yjfq-tyf), [Recording](https://meet.w3c-ccg.org/archives/w3c-ccg-ccg-atlantic-weekly-2026-02-17.mp4), [Slides](https://docs.google.com/presentation/d/1BQmMrpopaZYlOD7qgmgiiZwM1YLB3BH6jYUZc3SuhgY/edit?usp=drive_link), [Transcript](https://meet.w3c-ccg.org/archives/w3c-ccg-ccg-atlantic-weekly-2026-02-17.md).
 
 3. Status updates on the implementations
     1. [TS] -- 
