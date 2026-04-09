@@ -19,7 +19,25 @@ Implementations of `did:webvh` **MUST** mitigate the following classes of attack
     - **Multi-source resolution:** Resolvers **MAY** attempt retrieval from multiple [`did:webvh` Watchers](#did-watchers) and detect divergence in latest entries.
     - **End-to-end TLS:** While signatures detect per-entry tampering, use of TLS **SHOULD** be enforced to reduce opportunities for active truncation in transit.
 
-- **Denial of Service (DoS) and amplification** — Implementations **MAY** limit resource consumption by rejecting excessively large DID logs and witness proof files, and throttling repeated resolution attempts. The subjective elements of these limits (e.g., what constitutes “excessively large” or “repeated”) are ecosystem-dependent and **SHOULD** be established through community or ecosystem governance.
+- **Denial of Service (DoS) and amplification** — A malicious or compromised DID
+  Log server could attempt to exhaust resolver resources by serving
+  pathologically large log files, or by holding a connection open and streaming
+  log entries indefinitely. This risk is most acute for resolvers that encounter
+  previously-unseen DIDs on behalf of their clients — for example, a service
+  that performs DID resolution in onboarding new users. In such cases an
+  attacker need only find a service that will pass their DID through to a
+  resolver on their behalf.
+
+  - The one second `versionTime` monotonicity requirement provides a natural constraint on log length — a log file with implausibly rapid `versionTime` progression is likely malformed and resolvers are advised to reject it. However this does not fully prevent the attack, as a patient attacker can pace log entry generation to match valid `versionTime` increments.
+
+  - Resolvers are advised to require a `Content-Length` header in HTTP responses before processing begins, allowing them to determine file size upfront and reject oversized logs before expending processing resources. The presence of HTTP range request support (`Accept-Ranges: bytes`) is a useful positive signal that a server is serving a static resource rather than dynamically generated content. Regardless of server behavior, since a declared `Content-Length` cannot itself be relied upon as a security guarantee, resolvers are advised to apply the following defensive practices:
+
+    - Apply a maximum byte limit on log file retrieval, terminating the connection if exceeded regardless of declared `Content-Length`; treat absence of `Content-Length` as grounds for a more conservative limit or outright rejection
+    - Apply a hard timeout on the entire fetch-and-process operation for a single resolution request
+    - Apply rate limiting on resolution requests, particularly for previously-unseen DIDs
+    - Apply concurrency limits to bound the number of simultaneous resolution operations
+
+  - The subjective elements of these limits (e.g., what constitutes "excessively large" or "repeated") are best established through community or ecosystem governance. These mitigations are standard HTTP service hardening practices and are not unique to `did:webvh`.
 
 - **Man-in-the-middle (MitM)** — HTTPS and signature verification of DID Log entries and witness proofs protect against undetected modification of individual entries. Risks specific to withholding or truncation are addressed in **Truncation or withholding of log entries** above. Use of TLS further ensures server authenticity and reduces opportunities for active interference.
 
@@ -44,6 +62,7 @@ Residual risks include:
 - Weaknesses in underlying cryptographic algorithms after deployment.
 - Misconfiguration of cache control or TTL values.
 - Implementation errors in DID resolvers or controllers.
+- Resolvers operating in contexts where they may encounter large numbers of previously-unseen DIDs — such as open verification services — face elevated resource exhaustion risk and are advised to implement rate limiting and monitoring for abusive resolution patterns, with the ability to block offending sources.
 
 ### Integrity Protection and Update Authentication
 
