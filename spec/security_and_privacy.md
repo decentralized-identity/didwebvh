@@ -86,6 +86,21 @@ A `did:webvh` identifier may include a domain component that was never actually 
 
 DID resource retrieval endpoints **MUST** be authenticated using TLS server authentication. Self-signed certificates **SHOULD NOT** be used in production. This requirement is not unique to the `did:webvh` method; it applies to all web traffic. While the verifiability of `did:webvh` ensures that any tampering with the contents of individual log entries is detectable, TLS provides additional protection against active network attacks (including truncation or withholding) and ensures the authenticity of the server providing the DID resources.
 
+### Resolver Transport Hardening (SSRF and Network Boundary)
+
+A `did:webvh` resolver acts as an HTTP client on behalf of an untrusted DID string — a Server-Side Request Forgery vector without explicit safeguards. Resolvers **MUST**:
+
+1. **No automatic redirects.** Do not auto-follow HTTP 3xx responses when fetching `did.jsonl` or `did-witness.json`. If redirect-following is an opt-in, re-apply every check below at each target.
+2. **IP-literal rejection.** Reject IPv4/IPv6 literal hosts both (a) after percent-decoding the DID's domain segment, and (b) after DNS resolution. Default deny: loopback (`127.0.0.0/8`, `::1`), private (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `fc00::/7`), link-local (`169.254.0.0/16`, `fe80::/10`). Dev opt-ins permitted but off by default.
+3. **Case-insensitive percent-decoding.** Per [[spec:rfc3986]] §2.1, normalise hex case **before** any allow/deny decision. Rejecting `%3A` but accepting `%3a` is non-compliant.
+4. **Re-validate after decoding.** All host/path checks apply to decoded values. Percent-encoded IP literals and traversal sequences (`%2E%2E`, `%2e%2e`) **MUST** be rejected after decoding.
+5. **Response size cap.** Enforce a max body size for both files; check `Content-Length` first; treat absence as grounds for a stricter cap or rejection. Suggested default: 5 MiB.
+6. **Operation timeout.** Enforce a wall-clock timeout on the complete resolution. Suggested default: 30 s.
+7. **HTTPS only.** Reject any non-`https` scheme, including after a redirect.
+8. **No localhost in production.** Do not issue requests to `localhost`, `127.0.0.0/8`, `::1`, or names resolving to them. Test opt-ins off by default.
+
+These are standard SSRF defences; stated normatively here because all four reviewed implementations were vulnerable to at least one of (1)–(4).
+
 ### Network Topology
 
 Unlike DLT-based DID methods, `did:webvh` relies on web infrastructure and does not require peer-to-peer networking. However, implementations relying on CDN caching or load balancers **MUST** ensure these intermediaries do not serve stale or tampered DID data.
@@ -129,6 +144,22 @@ and refer to [did:web Security and Privacy Considerations](https://w3c-ccg.githu
 `did:webvh` [[ref: Key Pre-Rotation]] approach provides enough flexibility for "post-quantum safety".
 For guidance on post-quantum attacks mitigation, implementors **SHOULD** refer to [corresponding Implementation Guide section](https://didwebvh.info/latest/implementers-guide/prerotation-keys/#post-quantum-attacks).
 
+### Resolver Validation Checklist (informative)
+
+Coverage map for conformance test suites.
+
+**Transport:** HTTPS only; no auto 3xx; reject IP literals before & after percent-decoding; reject private/loopback/link-local DNS resolutions in production; normalize percent-encoding case; validate path segments after decoding (`.`, `..`, `/`, `\`, NUL, leading/trailing whitespace); enforce max response size with `Content-Length` first; enforce a wall-clock timeout.
+
+**Log structure:** unbroken `1, 2, 3, ...` version sequence; strictly increasing UTC ISO8601 `versionTime`; every `versionTime` ≤ now (bounded skew); `entryHash` chain verified for every entry (no fast-path skipping); `method` is an explicitly supported value (never silently downgraded).
+
+**SCID & identity:** first entry's `parameters.scid` is the genesis self-hash; every entry's `state.id` parses as a `did:webvh` DID; every entry's `state.id` SCID equals first entry's `parameters.scid`; requested DID's SCID matches at least one entry's `state.id`; `portable: true` only in first entry; SCID never changes; placeholder substitution anchored to structural locations.
+
+**Keys & proofs:** every proof has `type: DataIntegrityProof`, `cryptosuite: eddsa-jcs-2022`, `proofPurpose: assertionMethod`; `verificationMethod` key in active `updateKeys`; under pre-rotation, `updateKeys` explicit in every entry and every key hashes to a value in previous `nextKeyHashes`.
+
+**Witnesses:** `threshold` is positive integer ≤ count of distinct `witnesses[].id`; all `id` distinct (NFC-normalised); threshold met by distinct identities, not raw proofs; `did-witness.json` from DID-derived URL only; each accepted proof's `versionId` corresponds to an entry in *this* `did.jsonl`; proofs verified with key from `did:key` body (not VM lookup); body and fragment multibases byte-equal.
+
+**Failure modes:** unknown parameter values, malformed `witness`, hash algorithm mismatch, and cryptosuite mismatch all **MUST** fail resolution — never silently coerced.
+
 ## Privacy Considerations
 
 This section addresses the privacy considerations in alignment with [[spec:RFC6973]] Section 5 and the [[spec:DID-CORE]] requirements in [DID Core 7.4](https://www.w3.org/TR/did-core/#privacy-requirements).
@@ -142,6 +173,16 @@ Resolution of a `did:webvh` identifier also exposes the resolver’s network act
 ### Stored Data Compromise
 
 DID data is stored on web servers. A compromise of the hosting infrastructure could allow tampering with DID resources. HTTPS and cryptographic signatures protect integrity, but confidentiality is not provided.
+
+### Implementation Hygiene (informative)
+
+Not unique to `did:webvh`, but observed repeatedly during cross-implementation security review.
+
+- **Dependency currency.** Keep cryptographic and HTTP dependencies on supported, patched versions. Run a vulnerability scanner (`cargo audit`, `pip-audit`, `npm audit`, OWASP Dependency-Check) on every build.
+- **Filesystem permissions.** Private keys and secret-bearing configuration files **SHOULD** be created with owner-only permissions (e.g., `0600` on POSIX). **SHOULD NOT** read secret material from the current working directory or other untrusted locations by default.
+- **CLI tools.** **MUST NOT** print private keys, mnemonics, or other long-lived secrets to stdout/stderr or shell history. Where display is necessary, prompt before printing and offer a file-output alternative with restrictive permissions.
+- **HTTPS certificate validation.** **MUST NOT** disable certificate validation by default. Certificate pinning is not required (and incompatible with platform hosting), but ecosystems with appropriate trust models **MAY** opt in.
+- **Error messages.** Resolvers **SHOULD NOT** include internal stack traces, file paths, or library versions in `problemDetails` returned to clients.
 
 ### Unsolicited Traffic
 
