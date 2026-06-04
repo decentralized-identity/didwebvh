@@ -1,0 +1,1036 @@
+# did:webvh DID Method Work Item Rolling Agenda<!-- omit in toc -->
+
+**Zoom Link**: [https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1](https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1)
+
+**Agenda**: [did:webvh Info Site](https://didwebvh.info/latest/agenda/), [HackMD](https://hackmd.io/k4cIK9vQSlaeg2pdHE51IQ), [did:webvh Repository](https://github.com/decentralized-identity/didwebvh/blob/main/agenda.md) (synchronized after each meeting).
+
+[**WG projects**](https://github.com/decentralized-identity?q=wg-cc&type=&language=) | [DIF page](https://identity.foundation/working-groups/claims-credentials.html) | [Mailing list and Wiki](https://lists.identity.foundation/g/cc-wg) | [Meeting recordings](https://docs.google.com/spreadsheets/d/1wgccmMvIImx30qVE9GhRKWWv3vmL2ZyUauuKx3IfRmA/edit?gid=111226877#gid=111226877)
+
+## Table of Contents<!-- omit in toc -->
+
+- [Meeting Information](#meeting-information)
+- [Future Topics](#future-topics)
+- [Meeting - 04 Jun 2026](#meeting---04-jun-2026)
+- [Meeting - 21 May 2026](#meeting---21-may-2026)
+- [Meeting - 07 May 2026](#meeting---07-may-2026)
+- [Meeting - 23 Apr 2026](#meeting---23-apr-2026)
+- [Meeting - 09 Apr 2026](#meeting---09-apr-2026)
+- [Meeting - 26 Mar 2026](#meeting---26-mar-2026)
+- [Meeting - 12 Mar 2026](#meeting---12-mar-2026)
+- [Meeting - 26 Feb 2026](#meeting---26-feb-2026)
+- [Meeting - 12 Feb 2026](#meeting---12-feb-2026)
+- [Meeting - 29 Jan 2026](#meeting---29-jan-2026)
+- [Meeting - 15 Jan 2026](#meeting---15-jan-2026)
+- [Prior Meetings](#prior-meetings)
+
+## Meeting Information
+
+- Before you contribute - **[join DIF]** and [sign the WG charter] (both are required!)
+- Meeting Time: Every second Thursday at 9:00 Pacific (~=18:00 Central Europe)
+- [Calendar entry]
+- [ID WG participation tracking]
+- [Zoom room]
+- Links and Repositories:
+    - [Specification], [Spec Repo], [Information Site]
+    - Implementations: [TS], [Python], [Go], [Rust], [Server-Py]
+    - Test Suite: [Test Suite]
+
+_Participants are encouraged to turn your video on. This is a good way to build rapport across the contributor community._
+
+_This document is live-edited DURING each call, and stable/authoritative copies live on our github repo under `/agenda.md`, link: [Agenda]._
+
+[join DIF]: https://identity.foundation/join
+[sign the WG charter]: https://bit.ly/DIF-WG-select1
+[Calendar entry]: https://calendar.google.com/event?action=TEMPLATE&tmeid=NG5jYWowbmZsdWNzM21tYjBsbDIzdG50ZzFfMjAyNDA5MTJUMTYwMDAwWiBkZWNlbnRyYWxpemVkLmlkZW50aXR5QG0&tmsrc=decentralized.identity%40gmail.com&scp=ALL
+[Zoom Room]: https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1
+[DIF Code of Conduct]: https://github.com/decentralized-identity/org/blob/master/code-of-conduct.md
+[ID WG participation tracking]: https://docs.google.com/spreadsheets/d/12hFa574v5PRrKfzIKMgDTjxuU6lvtBhrmLspfKkN4oE/edit#gid=0
+[operations@identity.foundation]: mailto:operations@identity.foundation
+[did:webvh Specification license]: https://github.com/decentralized-identity/didwebvh/blob/main/LICENSE.md
+[Agenda]: https://github.com/decentralized-identity/trustdidweb/blob/main/agenda.md
+[Specification]: https://identity.foundation/didwevbvh
+[Spec Repo]: https://github.com/decentralized-identity/didwebvh
+[did:webvh AnonCreds Method]: https://identity.foundation/didwebvh/anoncreds-method/
+[Information Site]: https://didwebvh.info
+[Python]: https://github.com/decentralized-identity/didwebvh-py
+[TS]: https://github.com/decentralized-identity/didwebvh-ts
+[Go]: https://pkg.go.dev/github.com/nuts-foundation/trustdidweb-go
+[Server-Py]: https://github.com/decentralized-identity/didwebvh-server-py
+[Watcher-Py]: https://github.com/decentralized-identity/didwebvh-watcher-py
+[Rust]: https://github.com/decentralized-identity/didwebvh-rs
+[Affinidi Rust]: https://github.com/affinidi/affinidi-tdk-rs/tree/main/crates/affinidi-did-resolver/affinidi-did-resolver-methods/did-webvh
+[Test Suite]: https://github.com/decentralized-identity/didwebvh-test-suite
+[Implementations]: https://github.com/decentralized-identity/didwebvh-implementations
+[did:webvh ACA-Py Plugin]: https://github.com/openwallet-foundation/acapy-plugins/tree/main/webvh
+[Credo-TS]: https://github.com/openwallet-foundation/credo-ts
+[did:webvh Static]: https://github.com/OpSecId/webvh-static
+[did:webvh Tutorial]: https://didwebvh.info/latest/demos/understanding_didwebvh/
+[DID Attested Resources]: https://identity.foundation/did-attested-resources
+[DID Attested Resources Repository]: https://github.com/decentralized-identity/did-attested-resources
+
+## Future Topics
+
+- Using the `did:webvh` log format with other DID Methods
+- Merging `did:webvh` features into `did:web`?
+
+--------------------------------
+## Meeting - 04 Jun 2026
+
+Time: 9:00 Pacific / 18:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/_6Lf9aEcyRgS2N82ZyFow3uHoGEpxau4Qc7D0fqXmn1nbMNi0otATrcpi0BwPGpr.scxxWlcq-13kFYd3)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Stephen: Work with Glenn to finalize the PR for the specification updates, removing extraneous or incorrect items (notably the selective SCID replacement and repeated/incorrect witness rules), and ensure all clarifications are in line with 1.0 spec intent.
+2. Stephen: Add clarifications to the specification regarding the use of IP addresses with HTTPS for DID methods, ensuring the spec supports this as discussed.
+3. Stephen: Update the Universal Resolver to the latest version.
+4. Patrick: Ensure Credo is released and updated to at least version 22.7.5.
+5. Stephen: Continue work on running the test suite via GitHub Actions in the relevant repositories.
+6. Stephen: Create issues in the TS repository for all current test failures, for Brian to address.
+7. Brian: Fix the identified test failures in the TS implementation, based on issues created by Stephen.
+8. All implementers (Stephen, Brian, and others involved in implementations): Update implementations to ensure that when witnesses are dropped, the previous witnesses must sign the update, per the spec.
+9. Stephen: Apply the finalized PR to both the 1.0 and next version of the spec to keep them in sync.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - Progress on the Test Suite -- negative tests, Docker-driven
+    - Looking at did:webvh in the UNTP work. UNTP Publisher -- a regulatory body publishing UNTP credentials. Updated to v0.7 of UNTP. Being used by the Mining authority in British Columbia. Uses Data Integrity and VC-JOSE. Start with did:web for interop but parallel did:webvh identifier and showcase the features -- including /whois and Data Integrity.  Also a UNTP platform built on Veranamo. Building a Veranamo shim to use did:webvh...meeting with them today.
+
+3. Status updates on the implementations
+    1. [TS] -- Universal resolver not updated
+    2. [Credo-TS] -- Need a new release to use 2.7.5 of TS. New PRs from Digital Catapult (Robert Learney) using Credo-TS and Data Integrity. Separating out things like Attested Resources. Good stuff -- new eyes, different perspective on the implementation.
+    3. [Python] -- TS interop PR merged.
+    4. [Rust] -- New release, Issue added about witness DID
+    5. [Server-Py] -- 
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- 
+    9. [Test Suite] -- Docker added, negative tests, updated to latest.
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. DONE Stephen: Update the test suite to reference the new EECC Java implementation updates and update the status of those tests.
+    2. Stephen: Update the DIF Universal Resolver to use the latest TS version.
+    3. OBE Stephen: Raise and file issues in the relevant repositories regarding the incorrect handling of witnesses in the "Witness Update" test and other identified spec compliance issues.
+    4. Stephen: Extend the "Witness Update" test script to include a third entry that does not change the witnesses, to better test witness handling and pruning.
+    5. Stephen: Check with other implementations to see if they allow passing an initial DID document as input, and consider updating the test suite to use an initial identical DID document for all implementations, with JSON patch updates for changes.
+    6. Patrick: Update the credo-ts release to reference version 2.7.5.
+    7. DONE Stephen: Continue to raise issues in the specs and work towards clarifications on version 1, and start drafting the next version of the spec.
+    11. DONE Patrick: Review and, if appropriate, merge the PR for the restructured test suite.
+    12. IN PROGRESS Stephen: Continue to look for ways to automate the test suite process in the future.
+
+5. [Test Suite PR](https://github.com/decentralized-identity/didwebvh-test-suite)
+    - Added Negative Tests after Mythos testing
+    - Updated results after implementation releases (Rust, TS, Java, Java EECC)
+    - Next Up:
+        - Reviews of implementation status.
+        - Controlling the input DIDDocs and DIDDoc updates (JSON Patch).
+
+6. Main Topic -- [PR to clarify spec](https://github.com/decentralized-identity/didwebvh/pull/282) after Mythos assessment. Summary of changes to discuss.
+    1. Security -- [Resolver Transport Hardening](https://github.com/decentralized-identity/didwebvh/pull/282/changes#diff-cacee5d8aa2745080c92d73c31d0e634fc9818cbce5ba7c0cc10149ff6d1111cR89)
+    2. Security -- Resolver security checklist
+    3. Privacy -- General guidance
+    4. [Percent encoding rules](https://github.com/decentralized-identity/didwebvh/pull/282/changes#diff-201be5aaa4db892f64a3e963f003b11e294f89f6e4fb06435dbec6307cdf7e07R87) -- basically -- validate the DID **after** percent encoding.
+    5. List of types of non-compliant entries that are implied in the spec, but that might be missed.
+    6. FIX: Selectively replace "{SCID}" in the DIDDoc vs. all instances. Back and forth on that.
+    7. [Process the log](https://github.com/decentralized-identity/didwebvh/pull/282/changes#diff-201be5aaa4db892f64a3e963f003b11e294f89f6e4fb06435dbec6307cdf7e07R376) as defined in the spec -- no short cuts!!  No really, we mean it.
+    8. Stronger language around the calculation of `versionId`/`versionTime`.
+    9. DIDDoc verifications -- `id` is DID, `id` must have SCID, `id` must match DID in at least one version (to account for moved DIDs).
+    10. [Stronger wording around pre-rotation handling](https://github.com/decentralized-identity/didwebvh/pull/282/changes#diff-201be5aaa4db892f64a3e963f003b11e294f89f6e4fb06435dbec6307cdf7e07R421).
+    11. [SCID must match](https://github.com/decentralized-identity/didwebvh/pull/282/changes#diff-201be5aaa4db892f64a3e963f003b11e294f89f6e4fb06435dbec6307cdf7e07R509) at least one entry -- wrong! Must match all entries!!!
+    12. [`method` MUST match](https://github.com/decentralized-identity/didwebvh/pull/282/changes#diff-201be5aaa4db892f64a3e963f003b11e294f89f6e4fb06435dbec6307cdf7e07R671) one of a published specification and non-listed values rejected.
+    13. Must use the algorithms implied by the `method` value (e.g. SHA-256 and eddsa-jcs-2022).
+    14. Expand on the need for both updateKeys and nextKeyHashes in every entry with pre-rotation active.
+    15. Resolvers reject `portable` setting in entries later than 1st.
+    16. Repeat of replacement of "{SCID}" with `<scid>` in the Entry.
+    17. Additional details on the Data Integrity Proof (repeats `method` information).
+    18. More words to say that `portable` must be present and `true` in the first entry, and the SCID must not change after a DID renaming/move.
+    19. Reiterating that the did:key DID URL must follow did:key rules (DID identifier and fragment must be the same).
+    20. Expanded specification of threshold and meeting the threshold.
+    21. Limit the did:key to be an Ed25519 key.  Is this new? No -- the key must be used in an eddsa-jcs-2022 proof.
+    22. Don't count multiple proofs from one witness as more than one towards the threshold.
+    23. [Where the did-witness.json file must come from](https://github.com/decentralized-identity/didwebvh/pull/282/changes#diff-201be5aaa4db892f64a3e963f003b11e294f89f6e4fb06435dbec6307cdf7e07R1109).  I don't think it matters where it comes from as long as the proofs are valid and the thresholds are met.
+    24. Proof and did:key handling -- no external reference to a key.
+    25. Re-enforce that witness verification is full verification.  Aside -- not sure that is needed if the witness is oblivious...
+    26. Restatement of the witnessing rules with a warning about the "possibility" of pulling a witness proof from another DID witness file.  That's impossible.
+    27. Another restatement of the witness processing rules -- especially ignoring proofs that are from the same did:key.
+
+7. Test Suite Fails:
+
+```bash=
+implementations/python/status.md:| negative-versiontime-non-monotonic | invalidDid | ❌ FAIL | resolver accepted invalid log |
+implementations/python/status.md:| negative-zero-witness-threshold | invalidParameters | ❌ FAIL | resolver accepted invalid log |
+implementations/rust/status.md:| negative-pct-encoded-ip-host | invalidDid | ❌ FAIL | URL parser accepted invalid DID: did:webvh:Qm0000000000000000000000000000000000000000000000:127%2E0%2E0%2E1 |
+implementations/rust/status.md:| witness-update | java | ❌ FAIL | resolve_log: WitnessProofError("Witness proof threshold (2) was not met. Only (1) proofs were validated") |
+implementations/rust/status.md:| witness-update | java-eecc | ❌ FAIL | resolve_log: WitnessProofError("Witness proof threshold (2) was not met. Only (1) proofs were validated") |
+implementations/rust/status.md:| witness-update | python | ❌ FAIL | resolve_log: WitnessProofError("Witness proof threshold (2) was not met. Only (1) proofs were validated") |
+implementations/rust/status.md:| witness-update | ts | ❌ FAIL | resolve_log: WitnessProofError("Witness proof threshold (2) was not met. Only (1) proofs were validated") |
+implementations/ts/status.md:| negative-cross-did-witness-replay | invalidDid | ❌ FAIL | expected error "invalidDid" but resolution succeeded |
+implementations/ts/status.md:| negative-fragment-leaks-into-domain | invalidDid | ❌ FAIL | resolver fetched URL: https://127.0.0.1/.well-known/did.jsonl |
+implementations/ts/status.md:| negative-lowercase-pct-port-ip | invalidDid | ❌ FAIL | resolver fetched URL: https://127.0.0.1:8080/.well-known/did.jsonl |
+implementations/ts/status.md:| negative-path-traversal-did | invalidDid | ❌ FAIL | resolver fetched URL: https://example.com/../../admin/did.jsonl |
+implementations/ts/status.md:| negative-pct-encoded-ip-host | invalidDid | ❌ FAIL | resolver fetched URL: https://127.0.0.1/.well-known/did.jsonl |
+implementations/ts/status.md:| negative-pct-encoded-traversal | invalidDid | ❌ FAIL | resolver fetched URL: https://example.com/../admin/did.jsonl |
+implementations/ts/status.md:| negative-portable-scid-swap | invalidDid | ❌ FAIL | expected error "invalidDid" but resolution succeeded |
+implementations/ts/status.md:| negative-versiontime-non-monotonic | invalidDid | ❌ FAIL | expected error "invalidDid" but resolution succeeded |
+implementations/ts/status.md:| witness-threshold | rust | ❌ FAIL | Witness DIDs must be did:key format |
+implementations/ts/status.md:| witness-update | rust | ❌ FAIL | Witness DIDs must be did:key format |
+
+```
+  - 4 Issues:
+      - Python failed negative tests -- fix.
+      - Interpretation of [witness update](https://github.com/decentralized-identity/didwebvh-test-suite/blob/main/vectors/witness-update/rust/did-witness.json) -- I think Rust is right, the rest are wrong.
+      - TS failed negative tests -- fix.
+      - Rust is not putting did:keys into the `witnesses` array [Issue](https://github.com/decentralized-identity/didwebvh-rs/issues/42)
+
+9. Next Version -- items:
+    - Pre-rotation required.
+    - PQC -- ML-DSA 44
+        - Point to the currently being ratified for Data Integrity.
+        - Cannot move back once changed to PQC.
+    - Ensure non-normative items are clearly that.
+    - Witnesses -- keys are hashes only.
+        - Saves space when using PQC
+        - When using did:key in a witness, do not need to have the full key in the fragment -- just use "vm" per the did:key spec.
+    - versionNumber as a parameter -- add to spec
+    - in-line witnesses
+    - no domain DIDs
+
+7. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+8. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+9. Open Discussion -- what else do you want to discuss?
+
+## Meeting - 21 May 2026
+
+Time: 9:00 Pacific / 18:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/F5mD0SoHQp1S1M08EvXCboKbYllC48-F0lXQyp2_26EObd00zN4HFAe_Lo704_Q.7-nkkMioEtPbN9rJ)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Stephen: Update the test suite to reference the new EECC Java implementation updates and update the status of those tests.
+2. Stephen: Update the DIF Universal Resolver to use the latest TS version.
+3. Stephen: Raise and file issues in the relevant repositories regarding the incorrect handling of witnesses in the "Witness Update" test and other identified spec compliance issues.
+4. Stephen: Extend the "Witness Update" test script to include a third entry that does not change the witnesses, to better test witness handling and pruning.
+5. Stephen: Check with other implementations to see if they allow passing an initial DID document as input, and consider updating the test suite to use an initial identical DID document for all implementations, with JSON patch updates for changes.
+6. Patrick: Update the credo-ts release to reference version 2.7.5.
+7. Stephen: Continue to raise issues in the specs and work towards clarifications on version 1, and start drafting the next version of the spec.
+11. Patrick: Review and, if appropriate, merge the PR for the restructured test suite.
+12. Stephen: Continue to look for ways to automate the test suite process in the future.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - Progress on the Test Suite -- cleanup underway
+
+3. Status updates on the implementations
+    1. [TS] -- New automated release process, new release 2.7.5.
+    2. [Credo-TS] -- Need a new release.
+    3. [Python] -- 
+    4. [Rust] -- 
+    5. [Server-Py] -- 
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- 
+    9. [Test Suite] -- Added EECC Java implementation, revised structure.
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. Patrick: Do a new release of Credo TS as soon as possible
+    2. Patrick: DONE Do a new release of WebVH TS
+    3. Stephen: DONE Update the test suite to include the new DIF Java implementation and the EECC Java implementation
+    4. Stephen: IN PROGRESS Put in issues in the respective libraries detailing necessary changes for alignment (e.g., at context, implicit services order, required did metadata fields, slash in TS, etc.)
+    5. Stephen: DONE Follow up with Yannik regarding his Java implementation, run it through the test suite, and add it to the list
+    6. Stephen: Propose and draft spec changes to require pre-rotation, include ML-DSA 44 as an optional crypto suite, and clarify non-normative items in the next version of the specification
+    7. Stephen: Define and propose required did metadata fields for alignment across implementations
+    8. Stephen: Propose and clarify in the spec the handling of witness keys as hashes and the use of short fragments for PQ keys in verification methods
+    9. Stephen: Propose and clarify in the spec the rules around migration between crypto suites (e.g., EDDSA to ML-DSA) and versioning -- no going back.
+
+5. [Test Suite PR](https://github.com/decentralized-identity/didwebvh-test-suite/pull/4)
+    - Added EECC Java implementation
+    - Restructured:
+        - All implementations generate output (logs, resolution results)
+        - All implementations resolve all logs of other implementations
+        - status.md and diff.txt output per implementation
+            - PASS/FAIL/SKIP/XFAIL status for all generate and resolve tests
+            - diff between the native and implementation resolution result
+    - Additional changes:
+        - Add initial DIDDoc and updates to reduce diffs
+        - Review the "XFAIL" handling.
+        - Look for ways to automate the process
+        - More issues raised in implementations
+
+6. Issues from Test Suite:
+    - Rust: not using did:key in the `witnesses` array
+    - All but Rust: Not enough witnesses in the witness update test
+        - Entry 1: two witnesses
+        - Entry 2: one witness -- but should be witnessed by 2 from Entry 1
+        - Probably should update the test to have a third Entry -- witnessed by 1, and to see the pruning done
+    - Python/Rust: not handling the TS `"nextKeyUpdates: []"` usage -- which is valid
+    - Java -- Null pointer exception, not inserting implicit services
+    - Diffs
+        - Inconsistent metadata
+
+7. Next Version -- items.
+    - Pre-rotation required.
+    - PQC -- ML-DSA 44
+        - Point to the currently being ratified for Data Integrity.
+        - Cannot move back once changed to PQC.
+    - Ensure non-normative items are clearly that.
+    - Witnesses -- keys are hashes only.
+        - Saves space when using PQC
+        - When using did:key in a witness, do not need to have the full key in the fragment -- just use "vm" per the did:key spec.
+    - versionNumber as a parameter -- add to spec
+    - in-line witnesses
+    - no domain DIDs
+
+7. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+8. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+9. Open Discussion -- what else do you want to discuss?
+
+## Meeting - 07 May 2026
+
+Time: 9:00 Pacific / 18:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/XWjrE6uH1chJuNU27AXvQ_0Re4R4XQot2XyCiLZ8A2N8oKy6D3Qfvv65Aq-qUEuT.A9CvZ8KoTmo0h6r8)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+
+1. Patrick: Do a new release of Credo TS as soon as possible
+2. Patrick: Do a new release of WebVH TS
+3. Stephen: Update the test suite to include the new DIF Java implementation and the EECC Java implementation
+4. Stephen: Put in issues in the respective libraries detailing necessary changes for alignment (e.g., at context, implicit services order, required did metadata fields, slash in TS, etc.)
+5. Stephen: Follow up with Yannik regarding his Java implementation, run it through the test suite, and add it to the list
+6. Stephen: Propose and draft spec changes to require pre-rotation, include ML-DSA 44 as an optional crypto suite, and clarify non-normative items in the next version of the specification
+7. Stephen: Define and propose required did metadata fields for alignment across implementations
+8. Stephen: Propose and clarify in the spec the handling of witness keys as hashes and the use of short fragments for PQ keys in verification methods
+9. Stephen: Propose and clarify in the spec the rules around migration between crypto suites (e.g., EDDSA to ML-DSA) and versioning -- no going back.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - New Java implementation: Two!
+        - [DIF / Affinidi](https://github.com/decentralized-identity/didwebvh-java)
+        - [EECC](https://github.com/european-epc-competence-center/didwebvh)
+
+3. Status updates on the implementations
+    1. [TS] -- [PRs](https://github.com/decentralized-identity/didwebvh-ts/pulls) related to generating initial DIDDoc,  need a new release.
+    2. [Credo-TS] -- PR merged today, need a new release.
+    3. [Python] -- 
+    4. [Rust] -- 
+    5. [Server-Py] -- 
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- 
+    9. [Test Suite] -- Added DIF Java implementation.
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. Patrick: Look into making a new release of the TS implementation and updating Credo, ACA-Py, and related tools with the latest version (as discussed with Stephen).
+    2. DONE Stephen: Engage Brian in a conversation about the bug and its implications for DID creation and resolution.
+    3. Stephen: Follow up on the two outstanding didwebvh-ts issues (regarding adding services at creation time and key rotation with next key hash), including reviewing and understanding the reported issues.
+    4. Patrick: Review the outstanding PR related to setting the controller and provide feedback.
+    5. DONE - But didn't help Stephen: Update the test suite to perform JCS normalization before comparing files to ensure order-independent comparison.
+    6. Patrick: Update the resolver comparison tool to pass results through JCS and a pretty printer to highlight differences between implementations.
+    7. Stephen: Continue work on the test suite, including adding corruption (negative) test cases and ensuring at least one library can generate these cases for others to resolve.
+    8. Patrick: Look into adding support for MLDSA (post-quantum cryptography) in the Python implementation.
+    9. Stephen and Patrick: Begin discussions and planning for version 2.0 of the specification, including consideration of mandatory pre-rotation, removal of updateKeys/nextKeyHash in favor of pre-rotation keys, support for post-quantum cryptography across implementations, and discussions on witness file, pruning, and proof location options.
+
+5. [didwebvh-ts/issues](https://github.com/decentralized-identity/didwebvh-ts/issues) and [PRs](https://github.com/decentralized-identity/didwebvh-ts/pulls).
+
+6. [Test Suite PR](https://github.com/decentralized-identity/didwebvh-test-suite/pull/4)
+    - How much should we MUST to get same?
+    - Differences: [Intial Test Suite PR](https://github.com/decentralized-identity/didwebvh-test-suite/pull/4)
+
+7. Next Version -- items.
+    - Pre-rotation required.
+    - PQC -- ML-DSA 44
+        - Point to the currently being ratified for Data Integrity.
+        - Cannot move back once changed to PQC.
+    - Ensure non-normative items are clearly that.
+    - Witnesses -- keys are hashes only.
+        - Saves space when using PQC
+        - When using did:key in a witness, do not need to have the full key in the fragment -- just use "vm" per the did:key spec.
+    - versionNumber as a parameter -- add to spec
+        - 
+    - in-line witnesses
+    - no domain DIDs
+        - 
+
+8. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+9. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+10. Open Discussion -- what else do you want to discuss?
+
+
+## Meeting - 23 Apr 2026
+
+Time: 9:00 Pacific / 18:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/MpnkR5fC_FdvYdt9esIton3fxvSMpfq5jaYTVgtUPdBfuMoT4LhBlyZbrkF4Vtxx.9cjwGQTXuBfI6-AO)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Patrick: Look into making a new release of the TS implementation and updating Credo, ACA-Py, and related tools with the latest version (as discussed with Stephen).
+2. Stephen: Engage Brian in a conversation about the bug and its implications for DID creation and resolution.
+3. Stephen: Follow up on the two outstanding didwebvh-ts issues (regarding adding services at creation time and key rotation with next key hash), including reviewing and understanding the reported issues.
+4. Patrick: Review the outstanding PR related to setting the controller and provide feedback.
+5. Stephen: Update the test suite to perform JCS normalization before comparing files to ensure order-independent comparison.
+6. Patrick: Update the resolver comparison tool to pass results through JCS and a pretty printer to highlight differences between implementations.
+7. Stephen: Continue work on the test suite, including adding corruption (negative) test cases and ensuring at least one library can generate these cases for others to resolve.
+8. Patrick: Look into adding support for MLDSA (post-quantum cryptography) in the Python implementation.
+9. Stephen and Patrick: Begin discussions and planning for version 2.0 of the specification, including consideration of mandatory pre-rotation, removal of updateKeys/nextKeyHash in favor of pre-rotation keys, support for post-quantum cryptography across implementations, and discussions on witness file, pruning, and proof location options.
+
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - None -- beyond the testing and PQC work discussed in the agenda.
+
+3. Status updates on the implementations
+    1. [TS] -- bug fixes -- one particularly bad. Need a release.
+    2. [Credo-TS] -- needs to get updated with latest TS
+    3. [Python] -- a couple of fixes needed from the compliance test suite runs
+    4. [Rust] --  a couple of fixes needed from the compliance test suite runs
+    5. [Server-Py] -- 
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- 
+    9. [Test Suite] -- Compliance testing change -- discussed later
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. DONE Stephen: Merge the "denial of service security considerations" PR into the specification.
+    2. NOPE Stephen: Reach out regarding high assurance DIDs with DNS and updating the relevant spec.
+    3. NOPE Stephen: Review and potentially update the threat modeling document before sharing it more widely.
+    4. NOPE Stephen (and/or Patrick): Draft a simplified log format spec (VH Log) that can be used for managing resources other than DID documents (e.g., /whois-vh), and consider how operations like create, update, deactivate, and versioning should be handled.
+
+5. [didwebvh-ts/issues](https://github.com/decentralized-identity/didwebvh-ts/issues) and [PRs](https://github.com/decentralized-identity/didwebvh-ts/pulls).
+
+6. [Test Suite PR](https://github.com/decentralized-identity/didwebvh-test-suite/pull/4)
+    - Features:
+        - DSL for generating DIDs
+        - Known good results
+        - 13 tests -- happy path
+            - TBD: Corrupt test steps for creating bad DID Logs.
+        - Drivers for TS (source of good results), Python, Rust
+        - Issues between TS and Python and between TS and Rust.
+            - Need to try other combinations -- what does TS do with Python/Rust DIDs?
+    - Plan:
+        - Decide on discrepancies between implementations. Issues:
+            - updateKeyHashes value "[]"
+        - Move per implementation drivers into the implementation repos to use with GHActions.
+    - Patrick's new compliance app.
+
+7. Removing options to make things required.
+    - Generating:
+        - Pre-rotation -- leaning is to require
+            - NOTE: If we go to this, updateKeys could go away. Considering having `updateKeys` being just a hash (for PQC key size reasons), but if pre-rotation is required, it is not needed at all -- just verify that the key in the proof is in the `nextKeyHashes`. Better yet, use the name `preRotationKeys` for the list of hashes.
+        - Witnesses -- leave as is
+            - NOTE: Change the keys to be key hashes for PQC size improvement.
+        - Watchers -- leave as is
+        - TTL -- leave as is
+        - Portability -- leave as is
+        - Explicit whois/files services in DIDDoc -- leave as is
+        - updateKeys to [] on deactivate -- leave as is
+        - decoy entries in updateKeys/nextKeyHashes -- non-normative
+        - Parallel did:web -- non-normative
+        - SCID in HTTP path -- non-normative
+        - updateKeys in DIDDoc -- non-normative
+    - Resolving:
+        - versionNumber has parameter -- add to spec
+        - DID URL Resolution
+        - Caching policies
+        - Alternative sources on NotFound -- non-normative
+        - Pruning witnesses
+        - Providing problem details
+
+8. PQC Testing
+    - Pretty easy implementation (via Claude)
+    - Used ML-DSA 44 -- NIST equivalent to EDDSA.
+    - Interesting result:
+    ![image](https://hackmd.io/_uploads/rkXT1avpWx.png)
+
+
+8. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+9. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+10. Open Discussion -- what else do you want to discuss?
+
+
+## Meeting - 09 Apr 2026
+
+Time: 9:00 Pacific / 18:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/Mhxg5ch0wJvEEvNW0ZDAGAqnIS-sCYMnrTLH3sNZCjwKzakS6pv4i9nnuySHtwOG.s8YocDfrKpxgJ6pJ)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. DONE Stephen: Merge the "denial of service security considerations" PR into the specification.
+2. Stephen: Reach out regarding high assurance DIDs with DNS and updating the relevant spec.
+3. Stephen: Review and potentially update the threat modeling document before sharing it more widely.
+4. Stephen (and/or Patrick): Draft a simplified log format spec (VH Log) that can be used for managing resources other than DID documents (e.g., /whois-vh), and consider how operations like create, update, deactivate, and versioning should be handled.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - Announcement about did:webvh progress.
+
+3. Status updates on the implementations
+    1. [TS] -- 
+    2. [Credo-TS] -- 
+    3. [Python] -- 
+    4. [Rust] -- 
+    5. [Server-Py] -- 
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- Comprehensive end-to-end script for migrating from Indy to did:webvh using ACA-Py and CANdy. The concepts apply to other current methods.
+    9. [Test Suite] -- 
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. NOT DONE Stephen: Add the threat modeling document to the did WebVH info site (via upcoming PR).
+    2. DONE Stephen: Review and update the Denial of Service security considerations PR to incorporate Dave Longley's comment before considering merge.
+    3. Patrick: Send Stephen the new issue link regarding the UNTP/Whois feature discussion.
+    4. Stephen: Reach out to Jesse Carter and team to propose adding did;webvh (and did:web) to the high-assurance DIDs with DNS spec, and consider recommending the DNS binding practice in the did:webvh spec.
+    5. DONE Stephen: Reach out to the Linked VP spec maintainers (e.g., JC) to discuss the implications and requirements for supporting versioned/historical Whois queries and possible updates to the Linked VP spec.
+
+5. [DOS Security considerations PR](https://github.com/decentralized-identity/didwebvh/pull/276). Merge? Done
+
+6. Retaining and accessing historical `<did>/whois` VPs.
+   - [Proposal to use the did:webvh log format](https://docs.google.com/document/d/1JO5NUOp7lwmMfzZl0JEATYZ9F0tKziRSt86ouDrvKFk/edit?usp=drive_link) -- independent of did:webvh, but same format.
+   - Discussion with JC about DID Linked VP -- perhaps the same, but probably better handled at a different level.
+   - Manifest /whois
+   - Use the same technique we are using with did:webvh and did:web -- have /whois that is derived from /whois-vh.
+   - Another effort -- extract the Log Format as its own spec and then use it for both did:webvh and /whois-vh
+       - SCID generation? Should be the same.
+       - Method handling -- at the Log Spec level or at the specs that use the Log level.
+       - Task: How would the did:webvh spec change?
+   - What about the `webfinger` approach? Need to see what it does and how it could work with /whois.
+
+7. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+8. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+9. Open Discussion -- what else do you want to discuss?
+
+## Meeting - 26 Mar 2026
+
+Time: 9:00 Pacific / 16:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/1OL8l_MhNTnBm3nTxllBfTyolI_LVBTT-VkuxdbXd8rwrwOHI3onNGxwiTC3lqKV.yWJ2NJWx2bvxUPOK)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Stephen: Add the threat modeling document to the did WebVH info site (via upcoming PR).
+2. Stephen: Review and update the Denial of Service security considerations PR to incorporate Dave Longley's comment before considering merge.
+3. Patrick: Send Stephen the new issue link regarding the UNTP/Whois feature discussion.
+4. Stephen: Reach out to Jesse Carter and team to propose adding did WebBH (and did Web) to the high-assurance DIDs with DNS spec, and consider recommending the DNS binding practice in the did WebBH spec.
+5. Patrick: Reach out to the Linked VP spec maintainers (e.g., JC) to discuss the implications and requirements for supporting versioned/historical Whois queries and possible updates to the Linked VP spec.
+
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - Update to the did:webvh [Rust] implementation (v0.3.0). Major changes:
+        1. Now supports external signers so that the code never sees secret key material
+        2. Developer convenience functions to help with witnesses
+        3. Improved error messages to be more instructive on failures
+        4. Refactored code to allow removing regex requirements, reqwest (HTTP client) is now gated behind a feature flag
+        5. More tests, integration tests with mock server to better emulate network tests and failures.
+
+        - A lot of the changes are based on security reviews and audits, along
+        with production deployment insights/reviews/requests. Hence the ability
+        to now easily integrate with Key management Services (KMS) or Hardware
+        Security Modules (HSM's) to meet security policies and regulated
+        environments. 
+
+3. Status updates on the implementations
+    1. [TS] -- 
+    2. [Credo-TS] -- 
+    3. [Python] -- 
+    4. [Rust] -- See notes above -- a big deal!
+    5. [Server-Py] -- did:webvh server Helm Chart are now in the DIF [Helm Charts](https://github.com/decentralized-identity/helm-charts) repo. Would like to do more on /whois. Discussion in UNTP about if a DIA should be just a VC vs. a /whois like VP with the embedded VC.
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- Migration scripts to support those upgrading issuers to did:webvh.
+    9. [Test Suite] -- 
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. Stephen: Follow up on adding an issue for inlining witness proofs and other pending to-dos.
+    2. DONE Stephen: Add Issue about getting did:webvh into the DID Resolution Test Suite in the relevant repository.
+    3. DONE Stephen: Investigate JSON Text Sequences RFC and content negotiation options for log formats, as suggested by Benjamin.
+
+5. [DOS Security considerations PR](https://github.com/decentralized-identity/didwebvh/pull/276).
+    1. Sub-issue -- the 1 second interval between versions.
+
+6. did:webvh Threat Modelling Document
+
+7. Adding a DNS record to bind the domain to a DIDDoc when using a .well-known DID.
+    1. From the [High Assurance DIDs with DNS Spec](https://datatracker.ietf.org/doc/draft-carter-high-assurance-dids-with-dns/)
+        - Recommend adding a `dnsValidationDomain` to the DIDDoc -- `{"dnsValidationDomain": "example.ca"}` per section 3.2.1.  Or is that unnecessary, given the domain is in the DID?
+            - What about the `controller` DIDDoc attribute for authorization of DID updates -- e.g. putting the domain into that?
+            - How do you model a group of entities (e.g. people) that control a DID?
+        - Recommend adding a DNS record for to link to the did:webvh DID -- e.g. `_did.example-issuer.ca IN URI 1 0 “did:webvh:<scid>.example-issuer.ca` per section 3.3
+        - Consider adding what to do for domain-less or domain+path did:webvh DIDs.
+        - I don't think we should mention adding verificationMethods via TLSA records. IMHO - bad idea.
+
+8. Retaining and accessing historical `<did>/whois` VPs.
+    - Query parameters for access -- e.g. `?whoisTime=<time>` and/or perhaps `?versionTime=<time>`
+    - Data format?
+        - whois.jsonl perhaps
+            - Juan -- time travel dereferencing should align getting back the DIDDoc and the whois.vp at the time requested.
+            - Complication -- what if the whois service entry changes across updates.  That gives us three different times:
+                - Where the whois history today?  Current DIDDoc
+                    - Can we require that the whois history be found relative to the DID Log? Argument against is that we want /whois to work with all DIDs -- including domainless did:webvh DIDs.
+                - What was the whois at the time requested.
+                - What was the DIDDoc at the time requested to be able to verify the whois.vp.
+        - Have the array of VCs include the historical ones
+            - Tricky if there is no expiry in the "previous one"
+    - Is this part of the /whois spec or the Linked-VP spec? Don't need to specify how it is implemented, just what needs to be returned.
+    - Can the verifier get the full history, or just a single Linked-VP?
+    - How does this relate to a Watcher? It could have the historical /whois and could still serve tha
+
+9. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+10. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+11. Open Discussion -- what else do you want to discuss?
+
+## Meeting - 12 Mar 2026
+
+Time: 9:00 Pacific / 17:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/zHdSLQUZ7RyeFyjBZArNSwliOEjWvVMKOgkmCRSRpiR53oFWEIusQe5HzTKXXerr.fZ9m68FontKcRSrK)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Stephen: Follow up on adding an issue for inlining witness proofs and other pending to-dos.
+2. Stephen: Add Issue about getting did:webvh into the DID Resolution Test Suite in the relevant repository.
+3. Stephen: Investigate JSON Text Sequences RFC and content negotiation options for log formats, as suggested by Benjamin.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - Update to the did:webvh TS implementation -- a set of fixes, deployed to Universal resolver, Credo-TS, and soon to Bifold.  Thanks to Brian Richter for the updated.
+
+3. Status updates on the implementations
+    1. [TS] -- 
+    2. [Credo-TS] -- 
+    3. [Python] -- 
+    4. [Rust] -- 
+    5. [Server-Py] -- New use happening in the UNTP context -- storing credentials as did:webvh resources. Push to update from did:web.
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- 
+    9. [Test Suite] -- 
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. Stephen: Review the new DID Working Group test suite and assess the possibility of using did:webvh for test suite execution, potentially involving others as needed.
+    2. Stephen: Add an issue to the repository regarding the proposal for inlining witness proofs in the DID log and the associated parameterization (e.g., "inline" parameter), and continue discussion on this topic.
+    3. Stephen: Add an issue to the repository regarding handling of version time (including milliseconds) and whether two entries with the same timestamp are acceptable.
+    4. Stephen: Add a note or issue regarding the implications of proofs in the DID doc and the insertion of implicit services, and request Patrick to add a comment.
+    5. Stephen: Compile and document a high-level list of candidate features/improvements for the next version (2.0) of the specification, and add this to the docs for group discussion.
+    6. All (or interested parties): Consider and provide feedback on the proposal to add a "witness file location" parameter in the witness object, including possible implementation as an array and handling for domainless use cases.
+    7. All: Noodle on (continue to think about and discuss) the proposal for inlining witness proofs and the implications for storage, retrieval, and future-proofing for post-quantum support.
+    8. Stephen: Add an issue regarding the question of whether two DID log entries can have the same version ID (in the context of witness proofs).
+    9. Stephen: Add an issue or PR encouraging someone (potentially Glenn) to experiment with PQ algorithms that have multi-key and DID doc crypto suite representations in did:webvh.
+
+5. Inline Witness discussion.  Should we have a URL in the `witness` object. Parameters better than a service entry.
+
+6. Convergence with did:cel?
+    - Helpful?
+    - Can the logs be the same?
+    - The value of JSONL vs. JSON/CBOR.  JSONL vs. RFC7464.
+    - Could the did:webvh log format be used for other than DIDs? Answer: Probably.
+
+7. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+6. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+7. Open Discussion -- what else do you want to discuss?
+
+## Meeting - 26 Feb 2026
+
+Time: 9:00 Pacific / 17:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/ff072Ewh76rnzSF9cVcuyj5Le96Crd9ffjFyfX1o0qUuEUpAhC156VzyY8Hfhq4D.oaWRwthyw-W3ZVdm)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Stephen: Review the new DID Working Group test suite and assess the possibility of using did:webvh for test suite execution, potentially involving others as needed.
+2. Stephen: Add an issue to the repository regarding the proposal for inlining witness proofs in the DID log and the associated parameterization (e.g., "inline" parameter), and continue discussion on this topic.
+3. Stephen: Add an issue to the repository regarding handling of version time (including milliseconds) and whether two entries with the same timestamp are acceptable.
+4. Stephen: Add a note or issue regarding the implications of proofs in the DID doc and the insertion of implicit services, and request Patrick to add a comment.
+5. Stephen: Compile and document a high-level list of candidate features/improvements for the next version (2.0) of the specification, and add this to the docs for group discussion.
+6. All (or interested parties): Consider and provide feedback on the proposal to add a "witness file location" parameter in the witness object, including possible implementation as an array and handling for domainless use cases.
+7. All: Noodle on (continue to think about and discuss) the proposal for inlining witness proofs and the implications for storage, retrieval, and future-proofing for post-quantum support.
+8. Stephen: Add an issue regarding the question of whether two DID log entries can have the same version ID (in the context of witness proofs).
+9. Stephen: Add an issue or PR encouraging someone (potentially Glenn) to experiment with PQ algorithms that have multi-key and DID doc crypto suite representations in did:webvh.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - Stephen presented at the W3C Credentials Community Group (CCG) Meeting on Tuesday, Feb. 17 -- [Recording](https://meet.w3c-ccg.org/archives/w3c-ccg-ccg-atlantic-weekly-2026-02-17.mp4), [Slides](https://docs.google.com/presentation/d/1BQmMrpopaZYlOD7qgmgiiZwM1YLB3BH6jYUZc3SuhgY/edit?usp=drive_link), [Transcript](https://meet.w3c-ccg.org/archives/w3c-ccg-ccg-atlantic-weekly-2026-02-17.md).
+    - DID Test Suite [being created](https://github.com/w3c-ccg/did-resolution-mocha-test-suite/pull/6). It would be good to take a look to see if we can easily do a did:webvh implementation.
+    - Linux Kernel presention covered did:webvh
+
+3. Status updates on the implementations
+    1. [TS] -- 
+    2. [Credo-TS] -- 
+    3. [Python] -- 
+    4. [Rust] -- 
+    5. [Server-Py] --
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- Continued progress, docs
+    9. [Test Suite] -- 
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. DONE Stephen: Talk to Drummond about inlining witness proofs.
+    2. DONE Patrick: Share the link to the domain transfer scenario Markdown document in the chat.
+    3. NOT DONE Stephen: Go through Patrick's scenario document and add more notes.
+    4. NOT DONE Stephen: Write out various options and scenarios for key revocation and accumulation of valid keys, and share with the group for discussion.
+    5. DONE? Group (implied Stephen/Patrick/Dmitri): In next version discussions, evaluate and document pros and cons of different approaches for handling key revocation and accumulation of valid keys in DIDWebVH, including responsibilities between resolver and client.
+    6. Group: Review DIDCore's handling of revoked keys and consider its applicability to DIDWebVH.
+
+5. Discussion -- PQ support in did:webvh
+    - Connection with merging witness proofs into DID Log. Moderate savings to have separate log today, but massive savings when done with PQ keys, where public keys, signatures will dominate the log.
+        - Idea from Glenn Gore/[Affinidi]
+          - Add a new entry type -- Witness Entry
+          - Format (?) `{ "versionId": "<id>", "proof" : [] }`
+          - When processing -- if witnesses are not in log, retrieve external source
+      - Less important, but perhaps of interest. For `updateKeys` and `witness id` public keys/dids -- use hash in the parameters. The key/did has to be in the proof, so a hash is enough of a commitment to determine that the right key is being used for the proof. See [example log](https://didwebvh.info/latest/example/#data-integrity-proof-generation-and-first-log-entry).
+  - Don't just rely on the "method" parameter, but also have a parameter that says "pq" to indicate the change to PQ.
+  - PQ makes irrelevant that we are using JSON. No benefit to use CBOR or other compression techniques.
+
+6. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+7. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+8. Open Discussion -- what else do you want to discuss?
+
+## Meeting - 12 Feb 2026
+
+Time: 9:00 Pacific / 17:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/U_6i6XBFCqohr1YYYq60-o2per4DDNV3VB6PY91TNq5z-v4dvlSKtt0TMtOev8QS._8PpWeuIb7R-RUoO)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Stephen: Talk to Drummond about inlining witness proofs.
+2. Patrick: Share the link to the domain transfer scenario Markdown document in the chat.
+3. Stephen: Go through Patrick's scenario document and add more notes.
+4. Stephen: Write out various options and scenarios for key revocation and accumulation of valid keys, and share with the group for discussion.
+5. Group (implied Stephen/Patrick/Dmitri): In next version discussions, evaluate and document pros and cons of different approaches for handling key revocation and accumulation of valid keys in DIDWebVH, including responsibilities between resolver and client.
+6. Group: Review DIDCore's handling of revoked keys and consider its applicability to DIDWebVH.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - Stephen will be presenting at the W3C Credentials Community Group (CCG) Meeting this coming Tuesday, Feb. 17 at 9:00 Pacific / 18:00 Central Europe -- [Meeting Link](https://meet.google.com/dzc-yjfq-tyf), [Recording](https://meet.w3c-ccg.org/archives/w3c-ccg-ccg-atlantic-weekly-2026-02-17.mp4), [Slides](https://docs.google.com/presentation/d/1BQmMrpopaZYlOD7qgmgiiZwM1YLB3BH6jYUZc3SuhgY/edit?usp=drive_link), [Transcript](https://meet.w3c-ccg.org/archives/w3c-ccg-ccg-atlantic-weekly-2026-02-17.md).
+
+3. Status updates on the implementations
+    1. [TS] -- 
+    2. [Credo-TS] -- 
+    3. [Python] -- 
+    4. [Rust] -- 
+    5. [Server-Py] -- Seeing if DIF can be home
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- 
+    9. [Test Suite] -- 
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. Stephen: Create a ticket/issue for the proposal to add heartbeat functionality and make the state attribute optional in the DIDWebVH spec.
+    2. Stephen: Begin the process of letting the "next" version of the spec diverge from version 1, and lock version 1, by tracking new issues and changes in the "next" branch.
+    3. DONE Patrick: Write up and share the use case explaining how the same domain could validly have two different skids, and both DIDs would be valid, for further discussion.
+    4. DONE Stephen: Find the results of the performance test comparing inline witness proofs versus separate witness file to assess file size and caching impact.
+    6. DONE Alexander: Update the example `did:scid:vh` DID in the notes with a resolvable DID, or send the correct example to Stephen if unable to update directly.
+
+5. Discussion -- Optimizing Space Required For Inactive Keys
+
+- Keys are added in DID Versions -- added to `state` -- for signing, encryption
+- Keys are rotated -- current key becomes `inactive`
+    - Need to convoy not used for signing (and when stopped), but OK for verification
+- Keys are found to be compromised and are revoked
+    - Need to convey that a key has been compromised and should NOT be used for verification
+- Current approach -- DID Standard
+    - Inactive keys remain in current DIDDocument
+    - Revoked keys are removed from the current DIDDocument
+- But...we have the full history -- why keep repeating the same key over and over
+- Idea that keys are only put into the DID Log once
+    - Revoked keys are revoked via a parameter -- probably needed regardless so metadata can be generated.
+    - DIDDoc is compromised of current `state` PLUS an entry for each inactive key at the time of the version.
+- Thoughts?
+    - How is the `#<fragment>` for each key defined?
+    - How are aliases for each key defined?
+    - Too complicated?
+    - Worth the savings?
+
+6. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+7. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+8. Open Discussion -- what else do you want to discuss?
+
+## Meeting - 29 Jan 2026
+
+Time: 9:00 Pacific / 17:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/wuvBinWj9dB-WzwnOFPFJtWyLFnJSG32kuqwmsQQBz3SRUuWHU--nliPQ5PjjfBp.yWaGJLNgywxDg2xF)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Stephen: Create a ticket/issue for the proposal to add heartbeat functionality and make the state attribute optional in the DIDWebVH spec.
+2. Stephen: Begin the process of letting the "next" version of the spec diverge from version 1, and lock version 1, by tracking new issues and changes in the "next" branch.
+3. Patrick: Write up and share the use case explaining how the same domain could validly have two different skids, and both DIDs would be valid, for further discussion.
+4. Stephen: Find the results of the performance test comparing inline witness proofs versus separate witness file to assess file size and caching impact.
+6. Alexander: Update the example `did:scid:vh` DID in the notes with a resolvable DID, or send the correct example to Stephen if unable to update directly.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - Traction Sandbox BCVH instance now live. [Initial workshop](https://aca-py.org/latest/demo/WebVH-Workshop/)
+
+3. Status updates on the implementations
+    1. [TS] -- 
+    2. [Credo-TS] -- 
+    3. [Python] -- 
+    4. [Rust] -- 
+    5. [Server-Py] -- New location for charts
+    6. [Watcher-Py] -- Consolidate into server? "watcher" mode, one codebase, leverage same UI/Explorer
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- Added controller request store
+    9. [Test Suite] -- 
+    10. [did:webvh Tutorial] -- Acapy/Traction workshop
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+    1. Setup a demo time with Thijme.
+
+5. Thijme -- Demo of work.
+
+6. Continuing the did:webvh and did:cel Discussion
+
+- For v2, we need to at least change the implict services defined by did:webvh. What else?
+- Heartbeats -- easy -- parameter. Should we also make the `state` optional to optimize space efficiency when using mostly heartbeats. If missing, the previous `state` value still applies. Other than that -- each heartbeat is just a version.
+- Witnesses -- issues -- separate, culled file vs. inline. Let's revisit that...
+    - Recall the performance test that Glenn Gore did -- [details are here](https://didwebvh.info/latest/faq/WitnessFile/)
+        - Total (Log + Witness) size is doubled, retrieval takes longer, processing takes longer.
+- Making the domain part of the DID optional.
+    - Patrick has ideas to share!
+    - Detach the DID from the Domain -- same rules as portability.
+        - Also allows attaching the DID to a new domain.
+    - Moves did:webvh to align with did:scid
+        - Demostration: use did:scid -- no location and published on Hedera
+        - Example DID that use the did:webvh Log and storage is on Hedera: `did:scid:vh:1:QmfGEUAcMpzo25kF2Rhn8L5FAXysfGnkzjwdKoNPi615XQ?src=hedera:testnet:0.0.1001`
+- The log format -- any changes?
+    - Consolidating witness proofs and log, would help with `location-less` dids.
+- What are the optional things the did:cel crowd might not like?
+    - List of things that are optional in `did:webvh`:
+        - Domain component (if we decide to make it optional).
+        - DID Portability (changing domain component, keeping SCID and history).
+            - Challenging when DIDs can move and then a new one created with the same domain.
+            - Two SCIDs and one ported, the other remaining.
+            - To confirm: a ported DID has the alsoKnownAs with the old DID.
+        - DID Spec Version (allows changing cryptographic algorithms mid-log).
+        - Prerotation
+            - Was this part of the list?
+        - Witnesses
+            - Oblivious witnessing
+        - Watchers
+            - Where they are (comparable to the did:cel data element)
+            - The Watchers API -- webhooks, reads, removals
+        - Mechanical translation from did:webvh to did:web
+        - TTL
+
+7. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+8. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+9. Open Discussion -- what else do you want to discuss?
+
+## Meeting - 15 Jan 2026
+
+Time: 9:00 Pacific / 17:00 Central Europe
+
+Recording: [Zoom Recording and Chat Transcript](https://us02web.zoom.us/rec/share/OSbFr-fIVAhQjRlmd8Svq1JkWLsTQNXCqzoed3exwNY8TytsE4c5_Ukd4w_6gbhM.LhuIwAuVLFe4lMoP)
+
+### To Do's from this Meeting (as generated by Zoom):<!-- omit in toc -->
+
+1. Setup a demo time with Thijme.
+
+### Agenda and Notes<!-- omit in toc -->
+
+1. Welcome and Adminstrivia
+    1. Recording on?
+    2. Please make sure you: [join DIF], [sign the WG Charter], and follow the [DIF Code of Conduct]. Questions? Please contact [operations@identity.foundation].
+    3. [did:webvh Specification license] -- W3C Mode
+    4. Introductions and requests for additional Agenda Topics
+
+2. Announcements:
+
+    - [Danube Tech]() has added did:webvh support to their [GoDiddy](https://godiddy.com/) service, with some interesting key management approaches, allowing private keys to be stored in a hosted wallet service (at Godiddy), or stored on the client side, or stored in an external KMS system such as Hashicorp Vault.
+    - Thijme -- student in Business Admin and Tech -- doing a project on did:webvh -- using a did:webvh to twin with product. Demo to show at a future meeting.
+
+3. Status updates on the implementations
+    1. [TS] -- 
+    2. [Credo-TS] -- 
+    3. [Python] -- 
+    4. [Rust] -- 
+    5. [Server-Py] -- 
+    6. [Watcher-Py] -- 
+    7. [did:webvh AnonCreds Method] -- 
+    8. [did:webvh ACA-Py Plugin] -- 
+    9. [Test Suite] -- 
+    10. [did:webvh Tutorial] -- 
+    11. [Implementations] -- 
+
+4. To Do's from Last Meeting:
+
+- Nothing relevant to cover here.
+
+5. did:webvh and did:cel Discussion
+
+- Manu Sporny: A briefing on [did:cel](https://digitalbazaar.github.io/did-cel-spec/) -- key features, design goals. [Slides](https://docs.google.com/presentation/d/1MlldyytklkYoPwPP47SuFZNsfNMeEFTM2fnmaEIYiD4/edit?slide=id.p#slide=id.p)
+- did:cel features in did:webvh
+    - heartbeat -- 2 parts: commitment to timely updates, optimizing log size
+        - Add an element to the `parameters` object: `"heartbeat": "P30D"` -- uses the [ISO 8601 Duration Format](https://docs.digi.com/resources/documentation/digidocs/90001488-13/reference/r_iso_8601_duration_format.htm), any DID that has versions with versionTime longer than the "heartbeat" commitment, or where the last `versionTime` is more `heartbeat` from `now()` fails verification.
+        - Consider optimizing the log size where there is a high expectation that there will be many more heartbeat entries than updates. In that case, the only optimization I would suggest is make `state` optional, and when left out, the previous value remains in effect. The rest of the log entries are necessary, so keeping them is necessary.
+    - oblivious witnesses -- no change to functionality, just a change to first three steps of the process of [Witnessing a DID Version Update](https://identity.foundation/didwebvh/v1.0/#witnessing-a-did-version-update) to remove the requirement that a witness verify a DID before witnessing it. A witness need only receive the `versionId` of the new version, "approve" it (ecosystem dependent governance) and return a proof.
+    - A SCID-only did:webvh DID -- our ongoing discussion.
+        - As previously noted, a relatively small change to the specification -- changing the wording from "here is where you get the log" to "you must get the log via one of these ways" and including the URL component of the DID, the query parameter, a watcher or "you just know".
+        - Use cases?
+- The Desirability (or not) of Optional Features in did:webvh
+    - List:
+        - Domain component (if we decide to make it optional).
+        - DID Portability (changing domain component, keeping SCID and history).
+        - DID Spec Version (allows changing cryptographic algorithms mid-log).
+        - Prerotation
+        - Witnesses
+        - Watchers
+            - Where they are (comparable to the did:cel data element)
+            - The Watchers API -- webhooks, reads, removals
+        - Mechanical translation from did:webvh to did:web
+        - TTL
+    - Differences:
+        - The log format
+        - Separate keys -- log vs. DID
+        - 
+
+5. [PRs](https://github.com/decentralized-identity/didwebvh/pulls) to review
+
+6. [Issues](https://github.com/decentralized-identity/didwebvh/issues) to review
+
+7. Open Discussion -- what else do you want to discuss?
+
+## Prior Meetings
+
+- 2025 meetings can be found in the [Agenda 2025] file.
+- 2024 meetings can be found in the [Agenda 2024] file.
+
+[Agenda 2025]: https://github.com/decentralized-identity/didwebvh/tree/main/agenda-2025.md
+[Agenda 2024]: https://github.com/decentralized-identity/didwebvh/tree/main/agenda-2024.md
