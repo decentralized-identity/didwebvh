@@ -70,6 +70,20 @@ challenges related to trust, security and verifiability. `did:web` provides a st
 which complements `did:web` with specific features to address its challenges
 while still providing ease of deployment.
 
+[[def: did:key]]
+
+~ `did:key` as described in the [W3C
+specification](https://w3c-ccg.github.io/did-key-spec/) is a DID method that
+derives a DID document directly from a single, encoded cryptographic public key,
+requiring no registry, ledger, or network interaction to resolve. It is valued
+for its simplicity and self-contained nature, making it well-suited for
+ephemeral, offline, or peer-to-peer use cases. However, `did:key` DIDs are
+inherently static — they cannot be updated or rotated — which limits their use
+in long-lived or high-assurance contexts. `did:key` is commonly used in
+`did:webvh` implementations for [[ref: key]]s such as the [[ref: Pre-Rotation
+Key]] and [[ref: Update Key]], where its simplicity and cryptographic
+self-sufficiency are advantageous.
+
 [[def: Entry Hash, entryHash, entry hashes]]
 
 ~ A `did:webvh` entry hash is a hash generated using a formally defined process

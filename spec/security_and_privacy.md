@@ -146,17 +146,24 @@ For guidance on post-quantum attacks mitigation, implementors **SHOULD** refer t
 
 ### Resolver Validation Checklist (informative)
 
-Coverage map for conformance test suites.
+The following checklist maps normative resolver requirements to concrete
+validation points, and is intended to assist conformance test suite authors and
+implementers auditing their own resolver implementations. An entry appearing
+here does not restate or replace the normative requirements defined in the
+verification algorithm in this specification.
 
 **Transport:** HTTPS only; no auto 3xx; reject IP literals before & after percent-decoding; reject private/loopback/link-local DNS resolutions in production; normalize percent-encoding case; validate path segments after decoding (`.`, `..`, `/`, `\`, NUL, leading/trailing whitespace); enforce max response size with `Content-Length` first; enforce a wall-clock timeout.
 
-**Log structure:** unbroken `1, 2, 3, ...` version sequence; strictly increasing UTC ISO8601 `versionTime`; every `versionTime` ≤ now (bounded skew); `entryHash` chain verified for every entry (no fast-path skipping); `method` is an explicitly supported value (never silently downgraded).
+**Log structure:** unbroken `1, 2, 3, ...` version sequence; strictly increasing UTC ISO8601 `versionTime`; every `versionTime` ≤ now (bounded skew); `entryHash` chain verified for every entry; `method` is an explicitly supported value (never silently downgraded).
 
-**SCID & identity:** first entry's `parameters.scid` is the genesis self-hash; every entry's `state.id` parses as a `did:webvh` DID; every entry's `state.id` SCID equals first entry's `parameters.scid`; requested DID's SCID matches at least one entry's `state.id`; `portable: true` only in first entry; SCID never changes; placeholder substitution anchored to structural locations.
+**SCID & identity:** first entry's `parameters.scid` is the genesis self-hash; every entry's `state.id` parses as a `did:webvh` DID; every entry's `state.id` [[ref: SCID]] equals first entry's `parameters.scid` and [[ref: SCID]] in the DID; requested DID matches at least one entry's `state.id`; `portable: true` only in first entry; [[ref: SCID]] never changes.
 
-**Keys & proofs:** every proof has `type: DataIntegrityProof`, `cryptosuite: eddsa-jcs-2022`, `proofPurpose: assertionMethod`; `verificationMethod` key in active `updateKeys`; under pre-rotation, `updateKeys` explicit in every entry and every key hashes to a value in previous `nextKeyHashes`.
+**Keys & proofs:** every proof has `type: DataIntegrityProof`, the `cryptosuite`
+and `proofPurpose` required by the active `method`; `verificationMethod` key in
+active `updateKeys`; under pre-rotation, `updateKeys` explicit in every entry
+and every key hashes to a value in previous `nextKeyHashes`.
 
-**Witnesses:** `threshold` is positive integer ≤ count of distinct `witnesses[].id`; all `id` distinct (NFC-normalised); threshold met by distinct identities, not raw proofs; `did-witness.json` from DID-derived URL only; each accepted proof's `versionId` corresponds to an entry in *this* `did.jsonl`; proofs verified with key from `did:key` body (not VM lookup); body and fragment multibases byte-equal.
+**Witnesses:** `threshold` is positive integer ≤ count of distinct `witnesses[].id`; all `witnesses[].id` distinct; threshold met by counting verified proofs from distinct witness identifiers, not total proof count; each accepted proof's `versionId` corresponds to an entry in the `did.jsonl` being verified; proofs verified with key from the `did:key` body; `did:key` DID URL in proofs reference the same key material in  body and fragment (multibase values byte-equal).
 
 **Failure modes:** unknown parameter values, malformed `witness`, hash algorithm mismatch, and cryptosuite mismatch all **MUST** fail resolution — never silently coerced.
 
@@ -176,7 +183,9 @@ DID data is stored on web servers. A compromise of the hosting infrastructure co
 
 ### Implementation Hygiene (informative)
 
-Not unique to `did:webvh`, but observed repeatedly during cross-implementation security review.
+The following practices are not unique to `did:webvh` but represent recurring
+failure points observed across `did:webvh` DID Method implementations.
+Implementers should treat these as baseline hygiene.
 
 - **Dependency currency.** Keep cryptographic and HTTP dependencies on supported, patched versions. Run a vulnerability scanner (`cargo audit`, `pip-audit`, `npm audit`, OWASP Dependency-Check) on every build.
 - **Filesystem permissions.** Private keys and secret-bearing configuration files **SHOULD** be created with owner-only permissions (e.g., `0600` on POSIX). **SHOULD NOT** read secret material from the current working directory or other untrusted locations by default.
