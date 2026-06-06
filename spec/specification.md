@@ -206,21 +206,23 @@ Examples of [[ref: DID Logs]] and [[ref: DID log entries]] can be found in the
 
 ::: example
 
-**Non-compliant log entries that resolvers MUST reject.** Illustrative — not exhaustive.
+**Examples of log entries that fail verification.** Illustrative and
+non-exhaustive; the normative rejection criteria are defined in the DID
+verification algorithm in this specification.
 
-1. **Duplicate witness IDs inflating threshold.** `{"threshold": 2, "witnesses": [{"id": "did:key:X"}, {"id": "did:key:X"}]}` — only one distinct witness, so threshold 2 is unreachable; configuration is malformed.
+1. **Duplicate witness IDs.** `{"threshold": 1, "witnesses": [{"id":
+   "did:key:X"}, {"id": "did:key:X"}]}` — the same `did:key` appears more than
+   once in the witnesses list; each witness has to be unique.
 
-2. **Pre-rotation active but `updateKeys` omitted.** If entry N-1 commits `nextKeyHashes: ["H1","H2"]`, then entry N **MUST** contain an explicit `updateKeys` whose every member hashes to a value in `["H1","H2"]`. An entry N omitting `updateKeys` (intending to inherit) **MUST** be rejected.
+2. **Pre-rotation active but `updateKeys` omitted.** If entry N-1 commits `nextKeyHashes: ["H1","H2"]`, then entry N has to contain an explicit `updateKeys` whose every member hashes to a value in `["H1","H2"]`. An entry N omitting `updateKeys` (intending to inherit) is invalid.
 
-3. **Wrong cryptosuite on log-entry proof.** `{"type":"DataIntegrityProof","cryptosuite":"ecdsa-jcs-2019","proofPurpose":"assertionMethod"}` — rejected even if the signature is structurally valid, because `did:webvh:1.0` mandates `eddsa-jcs-2022`.
+3. **Wrong cryptosuite on log-entry proof.** `{"type":"DataIntegrityProof","cryptosuite":"ecdsa-jcs-2019","proofPurpose":"assertionMethod"}` — rejected even if the signature is structurally valid, because `parameters.method` with value `did:webvh:1.0` requires `eddsa-jcs-2022`.
 
-4. **`state.id` SCID does not match `parameters.scid`.** First entry has `parameters.scid: "Qm111..."` but `state.id: "did:webvh:Qm222...:example.com"` — rejected.
+4. **`state.id` SCID in an entry does not match [[ref: SCID]] in DID and in `parameters.scid`.** DID `did:webvh:Qm111...` [[ref: DID Log]] first entry has `parameters.scid: "Qm111..."` but in any entry has `state.id: "did:webvh:Qm222...:example.com"` — the [[ref: SCID]] values are inconsistent.
 
-5. **SCID changes under portability.** Entry N has `state.id: "did:webvh:Qm222...:new.example.com"` while entry N-1 carried `Qm111...` — rejected; SCID is immutable.
+5. **SCID changes under portability.** Entry N has `state.id: "did:webvh:Qm222...:new.example.com"` while entry N-1 carried `Qm111...` — the [[ref: SCID]] is immutable across all entries.
 
-6. **Unknown `method` value.** First entry has `parameters.method: "did:webvh:99.0"`, `"did:webvh:1.0-rc1"`, or `"didwebvh:1.0"` — **MUST** be rejected; never silently downgraded.
-
-7. **Witness proof for a different DID.** `did-witness.json` contains a proof for `versionId` `1-Qm...` produced for some other DID's log entry with the same `versionId` — rejected by step 3 of [Verifying Witness Proofs](#verifying-witness-proofs-during-resolution).
+6. **Unknown `method` value.** First entry has `parameters.method: "did:webvh:99.0"`, `"did:webvh:1.0-rc1"`, or `"didwebvh:1.0"` — unrecognised values are rejected and never silently downgraded.
 
 :::
 
@@ -302,9 +304,14 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
    The preliminary JSON object **MUST** be used to calculate the [[ref: SCID]] for the DID as defined in
    the [SCID Generation and Verification](#scid-generation-and-verification) section of this
    specification.
-   2. **Replace the placeholder `{SCID}`** Replace the placeholder "`{SCID}`" with the calculated [[ref: SCID]] from the previous step **only** at the following structurally-anchored locations within the preliminary JSON object: `parameters.scid`; `state.id`; `state.controller` (string or each array entry); `id` and `controller` of every entry in `state.verificationMethod`; every string entry of `state.authentication`, `state.assertionMethod`, `state.keyAgreement`, `state.capabilityInvocation`, `state.capabilityDelegation` (and `id`/`controller` for any object entries); `id` of every entry in `state.service`.
-
-   The replacement **MUST NOT** be performed by unanchored string substitution over the serialized JSON. Unanchored substitution corrupts unrelated fields that may legitimately contain the placeholder as a substring (e.g., `alsoKnownAs`, `serviceEndpoint`).
+   2. **Replace the placeholder `{SCID}`** Treating the preliminary JSON object
+   entry as a string, perform a literal text replacement of every occurrence of
+   the placeholder `{SCID}` with the calculated [[ref: SCID]] from the previous
+   step.
+      - NOTE: As a consequence, the literal string `{SCID}` cannot appear as a
+        value anywhere in the first published [[ref: DID Log]] entry — it will
+        always be replaced. If that string is required in the [[ref: DIDDoc]], it
+        can be introduced via an update in a subsequent [[ref: log entry]].
    3. **Calculate the [[ref: Entry Hash]]**
    The preliminary JSON object updated in the previous step **MUST** be used to calculate the [[ref: Entry Hash]]
    (`entryHash`) for the [[ref: log entry]], as defined in the
@@ -373,7 +380,17 @@ The following steps MUST be executed to resolve the [[ref: DIDDoc]] for a `did:w
    being resolved.
 4. The [[ref: DID Log]] file **MUST** be processed as described below.
 
-To process the retrieved [[ref: DID Log]] file, the resolver **MUST** carry out the following steps on each of the [[ref: log entries]] in the order they appear in the file, applying the [[ref: parameters]] from the current and previous entries. Every step **MUST** be performed for **every** entry; in particular, [[ref: Data Integrity]] proof verification (step 2) and `entryHash` verification (step 3) **MUST NOT** be skipped for intermediate entries on the grounds that the resolver only needs the latest [[ref: DIDDoc]]. A "fast-resolve" implementation that verifies only a proper subset of entries is **non-compliant**: the proof chain is what binds the latest entry's authority to the genesis SCID, and breaking it at any point invalidates all later entries.
+To process the retrieved [[ref: DID Log]] file, the resolver **MUST** carry out the following steps on each of the [[ref: log entries]] in the order they appear in the file, applying the [[ref: parameters]] from the current and previous entries. Every step **MUST** be performed for **every** entry; in particular, [[ref: Data Integrity]] proof verification (step 2) and `entryHash` verification (step 3) **MUST NOT** be skipped for intermediate entries on the grounds that the resolver only needs the latest [[ref: DIDDoc]].
+
+::: note Basic Note
+
+   NOTE: A resolver implementation that caches previously verified state could
+   retrieve only subsequent entries and resume processing after the last verified
+   entry rather than reprocessing the full log, provided the cached state was
+   itself produced by full verification and the cache has not been modified
+   since.
+
+:::
 
 As noted in the [DID Log File](#the-did-log-file) section, [[ref: log entries]] are each a JSON object with the following properties:
 
@@ -382,6 +399,8 @@ As noted in the [DID Log File](#the-did-log-file) section, [[ref: log entries]] 
    3. `parameters`
    4. `state` -- the version's [[ref: DIDDoc]].
    5. `proof` -- a [[ref: Data Integrity]] proof for the [[ref: log entry]].
+
+Initialize a counter `didIdMatchCount` to `0` before processing any entries.
 
 For each entry:
 
@@ -393,7 +412,7 @@ For each entry:
    - While all [[ref: parameters]] in the first [[ref: Log Entry]] take effect
      immediately, some kinds of [[ref: parameters]] defined in later [[ref:
      entries]] only take effect *after* that entry has been published. For
-     example, updating the `nextKeys` and `witnesses` arrays take effect only
+     example, updates to the `witnesses` array takes effect only
      *after* the entry in which they are defined has been published.
 2. The [[ref: Data Integrity]] proof in the entry **MUST** be valid and signed by
    an authorized key as defined in the [Authorized Keys](#authorized-keys)
@@ -405,10 +424,14 @@ For each entry:
 3. Verify the `versionId` for the entry.
    1. The version number **MUST** be `1` for the first entry and **MUST** equal the previous entry's version number + 1 for each subsequent entry. Gaps (e.g., entry 3 after entry 1) **MUST** terminate resolution.
    2. Exactly one dash `-` **MUST** follow the version number; missing or multiple dashes **MUST** cause rejection.
-   3. The `entryHash` **MUST** follow the dash, **MUST** be a valid [[ref: multihash]] in the algorithm permitted by the active `method`, and **MUST** be verified per [Entry Hash Generation and Verification](#entry-hash-generation-and-verification). Verification **MUST** be performed for every entry; it **MUST NOT** be skipped.
+   3. The `entryHash` **MUST** follow the dash, **MUST** be a valid [[ref: multihash]] in the algorithm permitted by the active `method`, and **MUST** be verified per [Entry Hash Generation and Verification](#entry-hash-generation-and-verification). Verification **MUST** be performed for every entry.
 4. The `versionTime` **MUST** be a valid UTC [[ref: ISO8601]] string with explicit `Z` (or `+00:00`); values without a zone designator, or expressing a non-UTC zone, **MUST** be rejected.
    - The `versionTime` of **every** entry **MUST** be strictly greater than the immediately preceding entry's. Equal timestamps **MUST** be rejected.
-   - The `versionTime` of **every** entry (not only the last) **MUST** be earlier than or equal to the resolver's current wall-clock time, with at most a small implementation-defined clock-skew tolerance (suggested: 5 minutes). Future-dated entries **MUST** cause resolution to terminate.
+   - The `versionTime` of every entry **MUST NOT** be more than a small,
+     implementation-defined tolerance in the future relative to the resolver's
+     current time. Resolvers **SHOULD** use a tolerance of no more than 5
+     minutes. Entries that exceed this tolerance **MUST** cause resolution to
+     fail.
 5. When processing the first [[ref: DID log]] entry, verify the [[ref: SCID]]
    (defined in the [[ref: parameters]]) according to the
    [SCID Generation and Verification](#scid-generation-and-verification) section
@@ -416,8 +439,8 @@ For each entry:
 6. Get the value of the [[ref: log entry]] property `state`, which is the [[ref:
    DIDDoc]] for the version.
       1. Parse the top-level `id` of `state` as a `did:webvh` DID per the [Method-Specific Identifier](#method-specific-identifier) ABNF; if parsing fails, resolution **MUST** terminate.
-      2. The SCID segment of `state.id` **MUST** be byte-for-byte identical to the `scid` value in the first entry's `parameters`. This check **MUST** apply to **every** entry's `state.id`, not just the first. A mismatch **MUST** terminate resolution.
-      3. The DID being resolved **MUST** match the top-level `id` in at least one version of the [[ref: DIDDoc]], including the SCID segment. A request for `did:webvh:SCID_A:...` **MUST NOT** be satisfied by a log whose `state.id` carries `SCID_B`, even if host/path matches.
+      2. The SCID segment of `state.id` **MUST** be byte-for-byte identical to the `scid` value in the DID and the first entry's `parameters.scid`. This check **MUST** apply to **every** entry's `state.id`, not just the first. A mismatch **MUST** terminate resolution.
+      3. If the DID being resolved matches exactly the value of `state.id` in the current [[ref: DIDDoc]] entry, increment `didIdMatchCount` by `1`.
 7. If [[ref: Key Pre-Rotation]] is active (the previously active `nextKeyHashes` is non-empty), the entry being processed **MUST** include an explicit `parameters.updateKeys` and **MUST NOT** rely on inheritance. The hash of **every** [[ref: multikey]] in `parameters.updateKeys` (computed per [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)) **MUST** appear in the previous entry's `nextKeyHashes`. The check applies to the **full** `updateKeys` set, not only keys that are new relative to the previous entry. A key not in the previous entry's `nextKeyHashes` **MUST** cause resolution to terminate, even if it appeared in an earlier entry's `updateKeys`.
 8. As each [[ref: log entry]] is processed and verified, collect the following information
    about each version:
@@ -432,15 +455,19 @@ For each entry:
          `nextKeyHashes` list in the [[ref: parameters]].
       6. All other `did:webvh` processing configuration settings as defined by in the
          `parameters` object.
-      7. Add the value of top level `id` 
+      7. Add the value of top level `id`.
+      8. The value of `DIDIdMatchCount`.
 9. If the `parameters` for any of the versions define that some or all of
   the [[ref: DID Log entries]] must be witnessed, further verification of
   the [[ref: witness]] proofs must be carried out, as defined in the [DID
   Witnesses](#did-witnesses) section of this specification.
 
-10.  Flag failed verifications appropriately, either invalidating the entire DID or marking all entries from the first invalid entry to the end of the log as invalid.
+At the end of verifying all [[ref: DID Log]] entries, the value of `didIdMatchCount` **MUST** be greater than `0`; if it is `0`, the
+log **MUST** be rejected, as no entry's `state.id` matches the DID being resolved.
 
-11.  Respond to the resolution request based on verification results:
+10.   Flag failed verifications appropriately, either invalidating the entire DID or marking all entries from the first invalid entry to the end of the log as invalid.
+
+11.   Respond to the resolution request based on verification results:
       1. If all verifications pass, resolve the DID, applying any query parameters as requested.
       2. If the request includes query parameters (e.g., `?versionId=` or `?versionTime=`) that reference valid [[ref: DID log entries]], return the corresponding [[ref: DIDDoc]] version with a successful status code—even if later entries in the log are invalid.
       3. If the DID or DID version being resolved is invalid, return an appropriate error code.
@@ -506,7 +533,7 @@ Resolvers **SHOULD** populate the `problemDetails` field to aid in diagnosing an
 
 ##### Reading did:webvh DID URLs
 
-A `did:webvh` DID identifies a log by its SCID; host/path locate where the log is hosted. When a resolver receives a request, the SCID segment of the requested DID **MUST** equal the SCID segment of `state.id` in at least one entry of the retrieved log **and** equal `parameters.scid` from the first entry. A log whose `state.id` SCID does not match the requested DID — even if host/path matches — **MUST NOT** be returned; resolution **MUST** terminate. This rule applies independently of whether portability is enabled.
+A `did:webvh` DID identifies a log by its [[ref: SCID]]; host/path locate where the log is hosted. When a resolver receives a request, the [[ref: SCID]] segment of the requested DID **MUST** equal the [[ref: SCID]] segment of `state.id` in all entries of the retrieved log **and** equal `parameters.scid` from the first entry. A log whose `state.id` [[ref: SCID]] does not match the requested DID — even if host/path matches — **MUST NOT** be returned; resolution **MUST** terminate. This rule applies independently of whether portability is enabled.
 
 A `did:webvh` resolver **MUST** resolve the [[spec:DID-Core]] `versionId` and
 `versionTime` DID URL query parameters. The `versionId` query argument value
@@ -670,12 +697,13 @@ The following lists the [[ref: parameters]], their data types, and enumerated va
 - `method`: Specifies the `did:webvh` [[spec: semver]] specification version to be used for processing the DID's log. Each acceptable value in turn defines what cryptographic algorithms are permitted for the current and subsequent [[ref: DID log entries]]. An update to the specification version in the middle of a [[ref: DID Log]] could introduce new [[ref: parameters]].
   - **MUST** appear in the first [[ref: log entry]] and **MUST** be one of the enumerated acceptable values below.
   - Resolvers **MUST** reject any `method` value that is not **exactly** one of the acceptable values for the version(s) of this specification the resolver supports. Unknown values **MUST NOT** be silently downgraded, defaulted, or ignored — resolution **MUST** terminate.
-  - If not present in later entries, the previous value continues to apply.
+  - If not present in later entries, the previous value continues to be active.
   - **MAY** appear in later entries to upgrade the spec version. A change to a *lower* version than currently active **MUST** be rejected.
   - Acceptable values:
     - `did:webvh:1.0`
       - Permitted hash algorithms: `SHA-256` [[spec:rfc6234]] (multihash code `0x12`) **only**. Any other algorithm **MUST** cause resolution to terminate.
       - Permitted [[ref: Data Integrity]] cryptosuites for **both** log-entry proofs **and** witness proofs: exactly `eddsa-jcs-2022` [[spec:di-eddsa-v1.0]]. Resolvers **MUST** verify the proof's `cryptosuite` property; an absent, mismatched, or non-conformant `cryptosuite` **MUST** cause the entry to be rejected. Verifying only `proofPurpose` is **insufficient**.
+        - [[ref: witness]] [[ref: did:key]] identifiers **MUST** use a key compliant with the `eddsa-jcs-2022` cryptosuite defined in [[spec:di-eddsa-v1.0]].
 - `scid`: The [[ref: SCID]] value for the DID.
   - **MUST** appear in the first [[ref: log entry]].
   - **MUST NOT** appear in later [[ref: log entries]].
@@ -788,13 +816,12 @@ To verify the [[ref: SCID]] of a `did:webvh` DID being resolved, the resolver
 3. Determine the hash algorithm used by the [[ref: DID Controller]] from the [[ref: multihash]] `scid` value.
    - The hash algorithm **MUST** be one listed in the
    [parameters](#didwebvh-did-method-parameters) defined by the version of the
-   `did:webvh` specification being used by the [[ref: DID Controller]] based on the
+   `did:webvh` specification being used by the [[ref: DID Controller]] based on the active
    `method` [[ref: parameters]] property.
 4. Remove the [[ref: data integrity]] proof property from the [[ref: DID log entry]].
 5. Replace the `versionId` property value with the literal `"{SCID}"`.
-6. Replace the `scid` value from Step 2 with the literal `{SCID}` **only** at the following structurally-anchored locations within the JSON object: `parameters.scid`; `state.id`; `state.controller` (string or each array entry); `id` and `controller` of every entry in `state.verificationMethod`; every string entry of `state.authentication`, `state.assertionMethod`, `state.keyAgreement`, `state.capabilityInvocation`, `state.capabilityDelegation` (and `id`/`controller` for any object entries); `id` of every entry in `state.service`.
-
-   The replacement **MUST NOT** be performed by unanchored string substitution over the serialized JSON. Unanchored substitution corrupts unrelated fields that may legitimately contain the SCID as a substring (e.g., `alsoKnownAs`, `serviceEndpoint`).
+6. Treat the resulting [[ref: log entry]] as a string and do a text replacement of the `scid`
+   value from Step 2 with the literal string `{SCID}`.
 7. Use the result and the hash algorithm (from Step 3) as input to the function
    defined in the [Generate SCID](#generate-scid) section (above).
 8. The output string **MUST** match the `scid` extracted
@@ -877,11 +904,14 @@ Resolver **MUST** execute the following process:
 Each entry in the [[ref: DID Log]] **MUST** include a [[ref: Data Integrity]] `proof` where, at minimum:
 
 1. `type` is `DataIntegrityProof`,
-2. `cryptosuite` is exactly the cryptosuite mandated by the active `method` (for `did:webvh:1.0`, `eddsa-jcs-2022`),
+2. `cryptosuite` **MUST** be one listed in the
+   [parameters](#didwebvh-did-method-parameters) defined by the version of the
+   `did:webvh` specification being used by the [[ref: DID Controller]] based on the active
+   `method` [[ref: parameters]] property.
 3. `proofPurpose` is `assertionMethod`,
 4. `verificationMethod` resolves to a [[ref: multikey]] that appears verbatim in the **active** `updateKeys`.
 
-Resolvers **MUST** reject an entry whose proof fails *any* check. A structurally-valid signature over a *different* cryptosuite (e.g., `ecdsa-jcs-2019`) **MUST NOT** be accepted.
+Resolvers **MUST** reject an entry whose proof fails *any* check. A structurally-valid signature over a *different* cryptosuite then allowed by the active `method` parameter **MUST NOT** be accepted.
 
 The authorized verification keys for `did:webvh` are the [[ref: multikey]]-formatted
 public keys in the **active** `updateKeys` list from the `parameters` property of
@@ -927,7 +957,7 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
 - The [[ref: log entry]] in which the DID is renamed **MUST** be a valid DID entry
   building on the prior [[ref: DID log entries]], per this specification.
 - The [[ref: parameter]] `portable` **MUST** be set to `true` in the **first** [[ref: log entry]]. An entry that introduces `portable: true` after the first entry **MUST** be rejected.
-- The [[ref: SCID]] **MUST** be the same in the original and renamed DID. Specifically, the SCID segment of `state.id` in **every** [[ref: log entry]] (including the renamed entry and all subsequent entries) **MUST** equal `parameters.scid` from the first entry. Only the host/path portion of `state.id` may change under portability; the SCID segment is immutable for the life of the DID. A "portable rename" entry whose `state.id` carries a different SCID **MUST** be rejected.
+- The [[ref: SCID]] **MUST** be the same in the original and renamed DID. Specifically, the SCID segment of `state.id` in **every** [[ref: log entry]] (including the renamed entry and all subsequent entries) **MUST** equal the `parameters.scid` from the first entry. Only the host/path portion of `state.id` may change under portability; the SCID segment is immutable for the life of the DID. A "portable rename" entry whose `state.id` carries a different SCID **MUST** be rejected.
 - The [[ref: DIDDoc]] **MUST** contain the prior DID string as an `alsoKnownAs` entry.
 - [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
 
@@ -1056,7 +1086,7 @@ to identify who the witnesses are, a mechanism should be defined by the
 governance of the ecosystem, such as the entry of the DID in a trust registry.
 Such mechanisms are outside the scope of this specification.
 
-When a `did:key` DID is used in any `did:webvh` context — as a witness `id`, as a `verificationMethod` controller, or as an `assertionMethod` reference in a [[ref: Data Integrity]] proof — the multibase value in the method-specific identifier (the **body** of the DID) **MUST** equal the multibase value in any fragment identifier that references a verification method within that DID. For `did:key:z6MkABC...#z6MkABC...`, body and fragment **MUST** be byte-for-byte equal. Verifiers **MUST** reject any reference where they differ, because the body authoritatively defines the public key while the fragment is the VM id; permitting divergence would let an attacker claim a proof was made by `did:key:A` while actually signing with `did:key:B`.
+When a [[ref: did:key]] DID is used in any `did:webvh` context — as a witness `id`, as a `verificationMethod` controller, or as an `assertionMethod` reference in a [[ref: Data Integrity]] proof the [[ref: did:key]] specification **MUST** be followed. Notably, the multibase value in the method-specific identifier (the **body** of the DID) **MUST** equal the multibase value in any fragment identifier (if present) that references the lone verification method within the DID. For `did:key:z6MkABC...#z6MkABC...`, body and fragment **MUST** be byte-for-byte equal. Verifiers **MUST** reject any reference where they differ, because the body authoritatively defines the public key while the fragment is the Verification Method id; permitting divergence would let an attacker claim a proof was made by `did:key:A` while actually signing with `did:key:B`.
 
 ##### The `witness` Parameter
 
@@ -1081,7 +1111,10 @@ where:
 - `threshold`: a positive integer (JSON number, no fractional part, value ≥ 1) that **MUST** be attained or surpassed by the count of **distinct** verified [[ref: witness]] approvals for a [[ref: DID log entry]] to be considered approved. The `threshold` **MUST** be between 1 and the number of **distinct** `witnesses[].id` values, inclusive. A `witness` parameter where `threshold` is missing, non-integer, < 1, or > count(distinct ids) **MUST** be rejected; resolvers **MUST NOT** silently coerce a malformed `witness` to "no witnesses" — they **MUST** terminate resolution with an error.
 - `witnesses`: the array of [[ref: witnesses]] that **MUST** be non-empty, with each entry including the field:
   - `id`: (required) the DID of the witness. The DID **MUST** be a `did:key` DID and **MUST** be unique within the array (compared byte-for-byte after Unicode NFC normalisation). Each `id` contributes at most one approval to threshold counting, regardless of how many proofs are attributed to it.
-  - The `did:key` used as a witness `id` **MUST** decode to a public key compatible with the cryptosuite mandated by the active `method`. For `did:webvh:1.0`, the body **MUST** decode to an Ed25519 public key (multicodec `0xed01`). A witness `id` whose body decodes to a key of any other type (secp256k1, P-256, etc.) **MUST** be rejected at parameter-validation time — not at signature-verification time — so an invalid witness configuration cannot ever take effect.
+  - The `did:key` used as a witness `id` **MUST** decode to a public key compatible with one of the cryptosuites listed in the
+   [parameters](#didwebvh-did-method-parameters) defined by the version of the
+   `did:webvh` specification being used by the [[ref: DID Controller]] based on the active
+   `method` [[ref: parameters]] property. A witness `id` whose body decodes to a key of any other type **MUST** be rejected at parameter-validation time — not at signature-verification time — so an invalid witness configuration cannot ever take effect.
 
 ##### Witness Threshold Algorithm
 
@@ -1095,7 +1128,9 @@ met, participants **MUST**:
 3. Form the set of **distinct** attributed `id` values. The threshold check applies to the size of this set, not to the raw proof count.
 4. If `|set| ≥ threshold`, the update is "[[ref: witnessed]]"; otherwise resolution **MUST** terminate with an error.
 
-A single witness submitting multiple proofs (e.g., signed by additional keys) **MUST NOT** satisfy threshold > 1.
+The client of a DID Resolver can evaluate the witnesses according to
+the governance of the ecosystem. Such an evaluation is outside the scope of this
+specification.
 
 ##### The Witness Proofs File
 
@@ -1105,8 +1140,6 @@ Transformation](#the-did-to-https-transformation) used for the [[ref: DID Log]]
 is used to locate the `did-witness.json` resource, with only the last element
 changed (`did.jsonl` to `did-witness.json`). The media type of the file
 **SHOULD** be `application/json`.
-
-Resolvers **MUST** retrieve `did-witness.json` from the location derived from **the DID being resolved**, not from a location supplied by another DID's log or out of band. The host, port, and path **MUST** match the `did.jsonl` URL (only the final element differs). A `did-witness.json` from a different host/path **MUST NOT** be combined with a `did.jsonl` for this DID; doing so permits cross-DID transplantation, even if every individual proof verifies as a `did:key` signature, because the payload `{"versionId":"..."}` does not bind to a DID.
 
 The data model for the `did-witness.json` file is:
 
@@ -1128,13 +1161,15 @@ Where:
 - `versionId` is the `versionId` of the [[ref: DID log entry]] to which the
   [[ref: witness]] proofs apply.
 - `proof` is an array of [[ref: Data Integrity]] proofs that use the `versionId`
-  as input data.  The permitted [[ref: Data Integrity]] cryptosuites used by the
-  [[ref: witnesses]] **MUST** be `eddsa-jcs-2022` as referenced in [spec:di-eddsa-v1.0] and the `proofPurpose` set to `assertionMethod`.
+  as input data.  The permitted [[ref: Data Integrity]] cryptosuite **MUST** be one listed in the
+   [parameters](#didwebvh-did-method-parameters) defined by the version of the
+   `did:webvh` specification being used by the [[ref: DID Controller]] based on the active
+   `method` [[ref: parameters]] property, and the `proofPurpose` set to `assertionMethod`.
 
 Because a witness `id` is a `did:key` DID, the verification key is fully determined by decoding the `did:key` body — no DID resolution is required and no `verificationMethod` lookup is permitted. Resolvers verifying a witness proof **MUST**:
 
-1. Parse the proof's `verificationMethod` as `did:key:<multibase>#<multibase>` and recover the public key by decoding the body multibase per the `did:key` specification.
-2. Verify the signature using **only** that key. Resolvers **MUST NOT** dereference the witness DID for a key, **MUST NOT** consult any other key store, and **MUST NOT** accept a proof whose body multibase decodes to a key structurally invalid for `eddsa-jcs-2022` (i.e., not an Ed25519 public key).
+1. Parse the proof's `verificationMethod` as `did:key:<multibase>#<multibase>` and recover the public key by decoding the body multibase per the [[ref: did:key]] specification.
+2. Verify the signature using **only** that key. Resolvers **MUST NOT** dereference the witness DID for a key, **MUST NOT** consult any other key store, and **MUST NOT** accept a proof whose body multibase decodes to a key structurally invalid for the cryptosuites mandated by the active `method`.
 
 A valid proof from a [[ref: witness]] carries the implication that **ALL** prior
 [[ref: DID Log entries]] are also approved by that witness. To maintain a
@@ -1167,8 +1202,8 @@ The following process is used to witness a DID version update:
 - The [[ref: DID Controller]] prepares the full [[ref: DID Log Entry]] (including the
   `proof` element) for the new version of the DID, and shares it with the active [[ref: witnesses]].
   - The specification leaves to implementers *how* the [[ref: log entry]] data is provided to the [[ref: witnesses]].
-- Each [[ref: witness]] **MUST** hold its own copy of the published [[ref: DID Log]] (`did.jsonl`) prior to witnessing, and **MUST** verify that the controller-supplied candidate entry chains correctly (via `entryHash` and `versionId`) to the witness's most recent verified entry.
-- Each [[ref: witness]] **MUST** independently verify the candidate entry using every step in [Read (Resolve)](#read-resolve), including transport, signature, hash-chain, SCID, key-rotation, and parameter-validation checks. Any failure **MUST** cause the witness to refuse approval. A witness signing without these checks weakens the security property witnesses exist to provide.
+- Each [[ref: witness]] **MUST** hold its own copy of the published [[ref: DID Log]] (`did.jsonl`) prior to witnessing, and **MUST** confirm that the controller-supplied candidate entry verifies as the next entry to that [[ref: DID Log]].
+- Each [[ref: witness]] **MUST** independently verify the candidate entry using every step in [Read (Resolve)](#read-resolve). Any failure **MUST** cause the witness to refuse approval.
 - Each [[ref: witness]] determines (based on the governance of the ecosystem)
   if they approve of the DID version update.
   - The meaning of "approve" for any given implementation is outside the scope of this specification.
@@ -1191,19 +1226,17 @@ The following process is used to witness a DID version update:
 A `did:webvh` resolver **MUST** verify that all [[ref: DID Log entries]] that have active [[ref: witnesses]] have a [[ref: threshold]] of approving witnesses. Resolvers **MUST**:
 
 1. Complete all non-witness verifications of the [[ref: DID Log]] **before** processing any witness proof. Witness verification **MUST NOT** substitute for entry-hash or signature verification.
-2. Retrieve `did-witness.json` from the location derived from **this** DID via the [DID-to-HTTPS Transformation](#the-did-to-https-transformation). A file from a different location, or supplied out of band, **MUST NOT** be accepted unless provenance is independently established.
-3. For each entry in `did-witness.json`, confirm its `versionId` matches a `versionId` present in **this** `did.jsonl`. Non-matching entries **MUST** be discarded; resolvers **MUST NOT** treat them as evidence of witnessing for any other entry.
-4. Because the signed payload (`{"versionId": "<n-hash>"}`) does **not** itself encode the DID, the location-and-`versionId`-match check in step 3 is the **sole** mechanism binding a proof to this DID; implementations **MUST NOT** skip it. A witness signature lifted from another DID's `did-witness.json` with the same `versionId` **MUST NOT** be accepted.
-5. Verify enough proofs to meet the [[ref: threshold]] for all entries requiring witnessing; ignore proofs for unpublished entries.
-6. For each entry requiring witnessing, confirm a threshold of verified, distinct-witness proofs whose `versionId` matches the current or any later published entry. Otherwise, terminate with an error.
+2. Retrieve the `did-witness.json`.
+3. For each entry in `did-witness.json`, confirm its `versionId` matches a `versionId` present in **this** `did.jsonl` log. Non-matching entries, including those for future entries, **MUST** be discarded and **MUST NOT** be treated as evidence of witnessing for any other entry.
+4. Verify enough proofs to meet the [[ref: threshold]] for all entries requiring witnessing.
+5. For each entry requiring witnessing, confirm a threshold of verified, distinct-witness proofs whose `versionId` matches the current or any later published entry. Otherwise, terminate with an error.
 
 For each witness proof, the resolver **MUST** extract `verificationMethod` and confirm that:
 
-1. It is a `did:key` DID URL of the form `did:key:<multibase>#<multibase>` where body and fragment multibases are byte-equal (see [`did:key` body/fragment check](#witness-dids-and-reputation)).
-2. The DID portion (`did:key:<multibase>`) appears as the `id` of exactly one entry in the **active** `witnesses` array.
-3. No previously verified proof for the same `versionId` has matched the same `id` (one count per witness per entry).
+1. It is a valid, [[ref: did:key]] specification-compliant DID URL of the form `did:key:<multibase>#<multibase>` where body and fragment multibases are byte-equal (see [`did:key` body/fragment check](#witness-dids-and-reputation)).
+2. No previously verified proof was found in the witnesses array for the same `versionId` and `id` (one count per witness per entry).
 
-A proof failing any of (1)–(3) **MUST** be discarded from threshold counting.
+A proof failing either requirement **MUST** be discarded from threshold counting.
 
 A [[ref: DID Controller]] is expected to prune the `did-witness.json` file to include only the last proof for each witness for a published [[ref: DID log entry]]. However, if a [[ref: DID Controller]] does not prune the file, a resolver **MAY** do the pruning as part of the resolution process, verifying only the minimum number of proofs needed to meet the [[ref: threshold]] for each [[ref: DID log entry]]. While it is expected that a [[ref: DID Controller]] will exclude any proofs that fail verification, a resolver **MAY** ignore any proofs that fail verification and still resolve the DID if there are enough valid proofs to meet the [[ref: threshold]] requirements.
 
