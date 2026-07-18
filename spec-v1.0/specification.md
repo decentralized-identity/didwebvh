@@ -93,6 +93,8 @@ did:webvh:<SCID>:example.com%3A3000:dids:issuer
 
 These are syntax templates: `<SCID>` stands for an actual conforming SCID and is not the literal characters `<SCID>`.
 
+As specified in the [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section of this specification, `did:webvh` and `did:web` DIDs that have the same fully qualified domain and path transform to the same HTTPS URL, with the exception of the final file: `did.json` for `did:web` and `did.jsonl` for `did:webvh`. For `did:webvh` DIDs using [[ref: witnesses]], a `did-witness.json` file **MUST** also be available logically beside the `did.jsonl` file. See the [witnesses](#did-witnesses) section of this specification for details.
+
 ### The DID to HTTPS Transformation
 
 The `did:webvh` [method-specific identifier](#method-specific-identifier) is
