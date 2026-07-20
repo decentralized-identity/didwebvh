@@ -60,7 +60,7 @@ The `webvh-domain` identifies the web origin from which the DID Log can be retri
 - every DNS label **MUST** be non-empty, no more than 63 octets after IDNA processing, and the complete domain name **MUST** satisfy the DNS length limit; and
 - percent-encoding **MUST** be valid and **MUST** be decoded exactly once before domain and port validation.
 
-If `percent-encoded-port` is present, `port-number` **MUST** represent a decimal integer in the range 1 through 65535 inclusive. The domain component **MUST NOT** contain more than one percent-encoded port separator.
+A percent-encoded colon (`%3A` or `%3a`) **MUST NOT** appear within `encoded-domain-name`. A `%3A` immediately followed by one to five decimal digits at the end of `webvh-domain` **MUST** be parsed as `percent-encoded-port`; if `percent-encoded-port` is present, `port-number` **MUST** represent a decimal integer in the range 1 through 65535 inclusive. The domain component **MUST NOT** contain more than one percent-encoded port separator.
 
 Each `webvh-path-segment` represents one segment of the path used to retrieve the DID Log. A path segment **MUST** be non-empty. After percent-decoding exactly once, it:
 
