@@ -171,7 +171,7 @@ path w/ port
 
 internationalized domain
 
- `did:webvh:{SCID}:jp%E7%B4%8D%E8%B1%86.%E4%BE%8B.jp:%E7%94%A8%E6%88%B7` -->
+ `did:webvh:{SCID}:jp納豆.例.jp:用户` -->
 
  `https://xn--jp-cd2fp15c.xn--fsq.jp/%E7%94%A8%E6%88%B7/did.jsonl`
 
