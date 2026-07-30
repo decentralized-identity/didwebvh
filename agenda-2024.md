@@ -1,4 +1,4 @@
-# did:webvh DID Method Work Item Rolling Agenda<!-- omit in toc -->
+# did:webvh DID Method Work Item Rolling Agenda -- 2024<!-- omit in toc -->
 
 **Zoom Link**: [https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1](https://us02web.zoom.us/j/83119969275?pwd=IZTuXgGLtdLPjPLuB6q8zHXazxHSsU.1)
 
