@@ -40,19 +40,26 @@ The current [Editor's Draft](../next) of the specification will be maintained in
 ~ [File a bug](https://github.com/decentralized-identity/didwebvh/issues)
 ~ [Commit history](https://github.com/decentralized-identity/didwebvh/commits/main)
 
+**Interoperability Test Suite:**
+~ [Test Suite](https://github.com/decentralized-identity/didwebvh-test-suite)
+
 **Implementations:**
 ~ [TypeScript]
 ~ [Python]
-~ [Go] - supports v03
-~ [Rust] - work in progress
+~ [Rust]
+~ [Java]
+~ [Java EECC]
+~ [Dart]
 ~ [did:webvh Server]
 ~ [did:webvh ACA-Py Plugin]
 
 [TypeScript]: https://github.com/decentralized-identity/trustdidweb-ts
 [Python]: https://github.com/decentralized-identity/trustdidweb-py
-[Go]: https://github.com/nuts-foundation/trustdidweb-go
 [Rust]: https://github.com/decentralized-identity/didwebvh-rs
-[did:webvh Server]: https://github.com/decentralized-identity/trustdidweb-server-py
-[did:webvh ACA-Py Plugin]: https://plugins.aca-py.org/latest/webvh/
+[Java]: https://github.com/decentralized-identity/didwebvh-java
+[Java EECC]: https://github.com/european-epc-competence-center/didwebvh
+[Dart]: https://github.com/decentralized-identity/didwebvh-dart
+[did:webvh Server]: https://github.com/decentralized-identity/didwebvh-server-py
+[did:webvh ACA-Py Plugin]: https://github.com/openwallet-foundation/acapy-plugins/tree/main/webvh
 
 ------------------------------------
