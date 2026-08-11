@@ -16,54 +16,84 @@ specified below.
 
 ### Method-Specific Identifier
 
-The `did:webvh` method-specific identifier contains both the [[ref:
-self-certifying identifier]] (SCID) for the DID, and a fully qualified domain
-name (with an optional path) that is secured by a TLS/SSL certificate. Given the
-DID, a [transformation to an HTTPS URL](#the-did-to-https-transformation) is
-performed such that the [[ref: DID Log]] for the `did:webvh` DID can be retrieved (via
-an `HTTP GET`) and processed to produce the [[ref: DIDDoc]] for the DID. As per
-the Augmented Backus-Naur Form (ABNF) notation below, the [[ref: SCID]] **MUST**
-be the first element of the method-specific identifier.
-  
-Formal rules describing valid domain name syntax are described in
-[[spec:RFC1035]], [[spec:RFC1123]], and [[spec:RFC2181]]. Each `did:webvh` DID's
-globally unique [[ref: SCID]] **MUST** be
-[generated](#scid-generation-and-verification) during the creation of the DID
-based on its initial content and placed into the DID identifier for publication
-and use.
+Every `did:webvh` DID **MUST** first conform to the DID Syntax ABNF Rules in [[spec:DID-CORE]] Section 3.1. The rules in this section are additional restrictions on, and do not replace, those rules. A `did:webvh` DID is valid only if it satisfies both the DID Core rules and the rules and validation requirements below.
 
-The domain name element of the method-specific identifier MUST match the name
-found in the SSL/TLS certificate per [[spec:RFC6125]] and the its replacement
-[[spec:RFC9525]], and it MUST NOT include IP addresses. A port MAY be included
-and the colon MUST be percent encoded to prevent a conflict with paths.
-Directories and subdirectories MAY optionally be included, delimited by colons
-rather than slashes.
-
-As specified in the following Augmented Backus-Naur Form (ABNF) notation
-[[spec:rfc2234]] the [[ref: SCID]] **MUST** be present in the DID string. See
-examples below. The `domain-segment` and `path-segment` elements refer to
-[[spec:rfc3986]]'s ABNF for a Generic URL (page 49). Attempting to replicate
-here the full ABNF of those elements from that RFC would inevitably be wrong.
+When the DID Core `method-name` is `webvh`, the DID Core `method-specific-id` **MUST** additionally conform to the `webvh-method-specific-id` rule below. The rules `idchar` and `pct-encoded` are imported unchanged from DID Core. `ALPHA`, `DIGIT`, and `HEXDIG` are defined by [[spec:RFC5234]].
 
 ```abnf
-webvh-did = "did:webvh:" scid ":" domain-segment 1+( "." domain-segment ) [ percent-encoded-port ] *( ":" path-segment )
-scid = 46(base58-alphabet) ; The characters in the base58-btc-alphabet are as defined in the referenced W3C "Controller Documents" specification 
-domain-segment = ; A part of a domain name as defined in RFC3986, such as "example" and "com" in "example.com"
-percent-encoded-port = "%3A" ( "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ) 1*4( DIGIT )
-path-segment= ; A part of a URL path as defined in RFC3986, such as "path", "to", "folder" in "path/to/folder"
+webvh-method-specific-id = scid ":" webvh-domain
+                             *( ":" webvh-path-segment )
+
+scid                      = 46(base58btc-char)
+
+base58btc-char            = %x31-39       ; 1-9
+                          / %x41-48       ; A-H
+                          / %x4A-4E       ; J-N
+                          / %x50-5A       ; P-Z
+                          / %x61-6B       ; a-k
+                          / %x6D-7A       ; m-z
+
+webvh-domain              = encoded-domain-name
+                             [ percent-encoded-port ]
+
+encoded-domain-name       = encoded-domain-label
+                             1*( "." encoded-domain-label )
+
+encoded-domain-label      = 1*( ALPHA / DIGIT / "-" / pct-encoded )
+
+percent-encoded-port      = "%3A" port-number
+
+port-number               = 1*5DIGIT
+
+webvh-path-segment        = 1*idchar
 ```
 
-The ABNF for a `did:webvh` is almost identical to that of `did:web`, with changes
-only to the DID Method (`webvh` instead of `web`), and the addition of the
-`<scid>:` (defined in the [SCID](#scid-generation-and-verification)) section of
-this specification) element in `did:webvh` that is not in `did:web`. As specified
-in the [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section
-of this specification, `did:webvh` and `did:web` DIDs that have the same fully
-qualified domain and path transform to the same HTTPS URL, with the exception of
-the final file -- `did.json` for `did:web` and `did.jsonl` for `did:webvh`. For
-`did:webvh` DIDs using [[ref: witnesses]], another file `did-witness.json` is also
-found (logically) beside the `did.jsonl` web server file. See the
-[witnesses](#did-witnesses) section of this specification for details.
+ABNF character strings are case-insensitive by default, so `"%3A"` accepts either `%3A` or `%3a`. Producers **MUST** use the uppercase form `%3A` in the canonical representation.
+
+The `scid` production describes the base58btc-encoded SHA-256 multihash generated and verified as specified in [SCID Generation and Verification](#scid-generation-and-verification). The `{SCID}` value used temporarily during DID creation is a placeholder and is not a conforming `scid`; it **MUST** be replaced before the DID is published or resolved.
+
+The `webvh-domain` identifies the web origin from which the DID Log can be retrieved. After percent-decoding and applying the IDNA processing defined in [The DID to HTTPS Transformation](#the-did-to-https-transformation):
+
+- the result **MUST** be a fully qualified domain name conforming to [[spec:RFC1035]], [[spec:RFC1123]], and [[spec:RFC2181]];
+- the domain name **MUST** match the applicable TLS server identity requirements in [[spec:RFC9525]];
+- the domain **MUST NOT** be an IPv4 or IPv6 address, including a non-canonical textual representation that a URL parser would normalize to an IP address;
+- every DNS label **MUST** be non-empty, no more than 63 octets after IDNA processing, and the complete domain name **MUST** satisfy the DNS length limit; and
+- percent-encoding **MUST** be valid and **MUST** be decoded exactly once before domain and port validation.
+
+A percent-encoded colon (`%3A` or `%3a`) **MUST NOT** appear within `encoded-domain-name`. A `%3A` immediately followed by one to five decimal digits at the end of `webvh-domain` **MUST** be parsed as `percent-encoded-port`; if `percent-encoded-port` is present, `port-number` **MUST** represent a decimal integer in the range 1 through 65535 inclusive. The domain component **MUST NOT** contain more than one percent-encoded port separator.
+
+Each `webvh-path-segment` represents one segment of the path used to retrieve the DID Log. A path segment **MUST** be non-empty. After percent-decoding exactly once, it:
+
+- **MUST NOT** be `.` or `..`;
+- **MUST NOT** contain `/`, `\\`, or U+0000; and
+- **MUST NOT** begin or end with whitespace.
+
+Invalid percent-encoding or failure of any decoded-value requirement **MUST** cause parsing, transformation, and resolution to fail with `invalidDid`.
+
+The colons in `webvh-method-specific-id` delimit method-specific components. They are not DID URL path separators. For example, in:
+
+```text
+did:webvh:<SCID>:example.com:issuers:business
+```
+
+`issuers` and `business` are method-specific deployment path segments used to locate the DID Log.
+
+By contrast, `/`, `?`, and `#` introduce DID URL path, query, and fragment components under DID Core Section 3.2. They are not part of `webvh-method-specific-id`. A `did:webvh` DID URL **MUST** first conform to the DID URL Syntax ABNF Rules in DID Core Section 3.2, and its contained DID **MUST** satisfy the additional rules in this section. This specification does not otherwise replace DID Core's `path-abempty`, `query`, or `fragment` productions.
+
+The `id` of a resolved `did:webvh` DID Document identifies the DID subject and therefore **MUST** be a bare `did:webvh` DID. It **MUST NOT** contain a DID URL path, query, or fragment component.
+
+Conforming identifiers have the following forms:
+
+```text
+did:webvh:<SCID>:example.com
+did:webvh:<SCID>:example.com%3A3000
+did:webvh:<SCID>:example.com:dids:issuer
+did:webvh:<SCID>:example.com%3A3000:dids:issuer
+```
+
+These are syntax templates: `<SCID>` stands for an actual conforming SCID and is not the literal characters `<SCID>`.
+
+As specified in the [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section of this specification, `did:webvh` and `did:web` DIDs that have the same fully qualified domain and path transform to the same HTTPS URL, with the exception of the final file: `did.json` for `did:web` and `did.jsonl` for `did:webvh`. For `did:webvh` DIDs using [[ref: witnesses]], a `did-witness.json` file **MUST** also be available logically beside the `did.jsonl` file. See the [witnesses](#did-witnesses) section of this specification for details.
 
 ### The DID to HTTPS Transformation
 
@@ -79,19 +109,24 @@ retrieve the [[ref: DID Log]]. The process described here includes the appropria
 
  1. **Remove the 'did:webvh:' prefix** from the input identifier.
  2. **Remove the SCID segment**, which is the first segment after the prefix.
- 3. **Transform the domain segment**, the first segment (up to the first `:` character) of the remaining string.
-    - If the domain segment contains a port, decode percent-encoding and preserve the port.
-    - Apply Unicode normalisation as defined in [[spec:rfc3491]] (see this explainer on [Unicode normalization](https://dencode.com/en/string/unicode-normalization)).
-    - Apply IDNA (Punycode) encoding as per IDNA2008 [[spec:rfc9233]]. See the [FAQ on IDNA](https://corp.unicode.org/~asmus/proposed_faq/idn.html) for more details. For domains that do not contain international domain name elements, this should result in no change.
- 4. **Transform the path**, the 0 or more segments after the first `:` character, delimited by `:` characters.
-    - For each segment, validate that **after percent-decoding** it: is non-empty; is not `.` or `..`; does not contain `/`, `\`, or NUL; does not begin or end with whitespace. A segment that fails any check **MUST** cause the transformation (and resolution) to fail. The checks **MUST** be applied to the decoded form because percent-encoded variants (`%2E%2E`, `%2f`, `%5c`, `%00`) are otherwise opaque.
-    - Percent-encode each (now-validated) segment per [[spec:rfc3986]] using uppercase hex digits.
-    - Replace each `:` separator with `/` to create the encoded path.
+ 3. **Transform the domain component**, which is the first component, up to the first `:` delimiter, of the remaining method-specific identifier.
+    - Validate all percent-encoding and percent-decode the component exactly once.
+    - If the decoded component contains a port separator, separate and validate the port as a decimal integer in the range 1 through 65535 inclusive.
+    - Apply Unicode normalization and IDNA2008 processing to the decoded domain name.
+    - Validate the resulting domain name and reject any IPv4 or IPv6 address, including an input that the URL parser normalizes to an IP address.
+    - Re-encode the port separator as the canonical uppercase string `%3A` when producing a DID representation. Preserve the ordinary `:` separator when producing the HTTPS URL.
+ 4. **Transform the method-specific deployment path**, consisting of the zero or more components after the domain component and delimited by `:` characters.
+    - For each component, validate its percent-encoding and percent-decode it exactly once.
+    - Reject a component if its decoded value is empty, is `.` or `..`, contains `/`, `\\`, or U+0000, or begins or ends with whitespace.
+    - Percent-encode the validated decoded value according to [[spec:RFC3986]], using uppercase hexadecimal digits.
+    - Join the resulting encoded path segments using `/`.
  5. **Reconstruct the HTTPS URL**:
     - Format as `https://{domain}:{port}/{encoded_path}/did.jsonl` if a port is present.
     - Format as `https://{domain}/{encoded_path}/did.jsonl` if there are path segments and no port.
     - If no path segments exist, format as `https://{domain}:{port}/.well-known/did.jsonl` or `https://{domain}/.well-known/did.jsonl` as applicable.
  6. The content type for the `did.jsonl` file **SHOULD** be `text/jsonl`.
+
+The DID URL path, query, and fragment, if present, **MUST** be separated from the DID before this transformation is applied. They **MUST NOT** be interpreted as part of the SCID, domain, port, or method-specific deployment path.
 
  If the DID is using [[ref: witnesses]], an extra JSON file containing the witness proofs for the [[ref: DID Log Entries]] must be published and retrieved during resolution. The URL for the extra file is defined by replacing the `/did.jsonl` at the end of the [[ref: DID Log]] URL with `/did-witness.json`.
 
