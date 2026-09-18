@@ -80,8 +80,7 @@ for its simplicity and self-contained nature, making it well-suited for
 ephemeral, offline, or peer-to-peer use cases. However, `did:key` DIDs are
 inherently static — they cannot be updated or rotated — which limits their use
 in long-lived or high-assurance contexts. `did:key` is commonly used in
-`did:webvh` implementations for [[ref: key]]s such as the [[ref: Pre-Rotation
-Key]] and [[ref: Update Key]], where its simplicity and cryptographic
+`did:webvh` implementations for keys such as the [[ref: Pre-Rotation Key]] and Update Key, where its simplicity and cryptographic
 self-sufficiency are advantageous.
 
 [[def: Entry Hash, entryHash, entry hashes]]
@@ -111,7 +110,7 @@ structure such that is suitable for verifiable hashing or signing.
 whitespace removed and separated by a newline that is convenient for handling
 streaming JSON data or log files.
 
-[[def: Pre-Rotation, Key Pre-Rotation]]
+[[def: Pre-Rotation, Key Pre-Rotation, Pre-Rotation Key]]
 
 ~ A technique for a controller of a cryptographic key to commit to the public
 key it will rotate to next, without exposing that actual public key. It protects
@@ -184,8 +183,7 @@ signs the [[ref: verifiable presentation]].
 [[def: witness, witnesses, witnessed]]
 
 ~ Witnesses are participants in the process of creating and verifying a version
-of a `did:webvh` [[ref: DIDDoc]]. Notably, a witness receives from the [[ref: DID Controller]] a [[ref: DID
-Log]] entry ready for publication, verifies it according to this specification,
+of a `did:webvh` [[ref: DIDDoc]]. Notably, a witness receives from the [[ref: DID Controller]] a [[ref: DID Log]] entry ready for publication, verifies it according to this specification,
 and approves it according to its ecosystem governance (whatever that might be). If the verification and
 approval process results are positive, witnesses returns to the DID Controller a [[ref: Data Integrity]] proof
 attesting to that positive result.
