@@ -129,7 +129,7 @@ The DID URL path, query, and fragment, if present, **MUST** be separated from th
 
  If the DID is using [[ref: witnesses]], an extra JSON file containing the witness proofs for the [[ref: DID Log Entries]] must be published and retrieved during resolution. The URL for the extra file is defined by replacing the `/did.jsonl` at the end of the [[ref: DID Log]] URL with `/did-witness.json`.
 
- When this algorithm is used for resolving a DID path (such as `<did>/whois` or `<did>/path/to/file` as defined in the section [DID URL Handling](#did-url-resolution)) using the implicit `services`, update step **5.** to not include the `.well_known/` path segment, and to append the DID URL path instead of `did.jsonl`.
+ When this algorithm is used for dereferencing a DID URL path (such as `<did>/whois` or `<did>/path/to/file` as defined in the section [DID URL Path Handling](#did-url-path-handling)) using the implicit `services`, update step **5.** to not include the `.well_known/` path segment, and to append the DID URL path instead of `did.jsonl`.
 
 The following are some examples of various DID-to-HTTPS transformations based
 on the processing steps specified above.
@@ -187,7 +187,7 @@ DID](#publishing-a-parallel-didweb-did) section of this specification.
 
 While the transformation from a did:webvh identifier to an HTTPS resource relies on DNS resolution, clients should not assume  that a `did:webvh` identifier is inherently bound to or controlled by the entity associated with the corresponding DNS domain. In fact, a `did:webvh` [[ref: DID Log]] may be obtained from sources other than its corresponding HTTPS location (perhaps indexed by its [[ref: SCID]]), and in such cases, the same verification steps may be applied to determine its validity.
 
-Verification of a did:webvh identifier using this specification ensures cryptographic validity, but that does not imbue "trust" in the identifier itself. Trust in a did:webvh DID should be derived from external sources, such as verifiable credentials issued by trusted parties (possibly discovered by resolving the DID's [/whois](#did-url-whois-linkedvp-service) URL) or via Trust Registries that maintain authoritative records of trusted DIDs in a given context. Implementers should exercise caution and avoid conflating technical verification with trustworthiness, ensuring that reliance on a `did:webvh` identifier is informed by independent verification mechanisms.
+Verification of a did:webvh identifier using this specification ensures cryptographic validity, but that does not imbue "trust" in the identifier itself. Trust in a did:webvh DID should be derived from external sources, such as verifiable credentials issued by trusted parties (possibly discovered by dereferencing the DID's [/whois](#the-whois-service) URL) or via Trust Registries that maintain authoritative records of trusted DIDs in a given context. Implementers should exercise caution and avoid conflating technical verification with trustworthiness, ensuring that reliance on a `did:webvh` identifier is informed by independent verification mechanisms.
 
 :::
 
@@ -406,6 +406,10 @@ The following steps MUST be executed to resolve the [[ref: DIDDoc]] for a `did:w
    SHOULD utilize [[spec:rfc8484]] in order to prevent tracking of the identity
    being resolved.
 4. The [[ref: DID Log]] file **MUST** be processed as described below.
+5. If the resulting [[ref: DIDDoc]] does not already include the two
+   `did:webvh` implicit services formally defined in [DID URL Path Handler
+   Services](#did-url-path-handler-services), the resolver **MUST** add them
+   to the resolved [[ref: DIDDoc]], using the defaults described there.
 
 To process the retrieved [[ref: DID Log]] file, the resolver **MUST** carry out the following steps on each of the [[ref: log entries]] in the order they appear in the file, applying the [[ref: parameters]] from the current and previous entries. Every step **MUST** be performed for **every** entry; in particular, [[ref: Data Integrity]] proof verification (step 2) and `entryHash` verification (step 3) **MUST NOT** be skipped for intermediate entries on the grounds that the resolver only needs the latest [[ref: DIDDoc]].
 
@@ -577,16 +581,15 @@ setting the `versionId` in the [creating the DID](#create-register) section of
 this specification. The `versionNumber` query parameter is not in the
 [[spec:DID-Core]] specification.
 
-A `did:webvh` resolver **MAY** implement the resolution of the `/whois` and a DID
-URL Path using the [whois LinkedVP Service](#did-url-whois-linkedvp-service) and
-[DID URL Path Resolution Service](#did-url-path-resolution) as defined in
-this specification by processing the [[ref: DID Log]] and then dereferencing the
-DID URL based on the contents of the [[ref: DIDDoc]]. The client of a resolver that does
-not implement those capabilities must use the resolver to resolve the
-appropriate [[ref: DIDDoc]], and then process the resulting DID URLs themselves. Since
-the default DID-to-HTTPS URL transformation is trivial, `did:webvh`
-[[ref: DID Controllers]] are strongly encouraged to use the default behavior
-for DID URL Path resolution.
+A DID URL dereferencer supporting `did:webvh` **SHOULD** implement the
+dereferencing of the `/whois` and a DID URL Path using [The `#whois`
+Service](#the-whois-service) and [The `#files`
+Service](#the-files-service) as defined in this specification by
+resolving the [[ref: DIDDoc]] and then dereferencing the DID URL path based on its
+contents. Because it keeps all `did:webvh` DID resources co-located with the [[ref: DID Log]]
+on the same domain and web server, `did:webvh` [[ref: DID Controllers]] are
+strongly encouraged to rely on the default implicit-service behavior for DID URL
+Path dereferencing, rather than defining explicit override services.
 
 #### Update (Rotate)
 
@@ -982,11 +985,11 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
 - The [[ref: parameter]] `portable` **MUST** be set to `true` in the **first** [[ref: log entry]]. An entry that introduces `portable: true` after the first entry **MUST** be rejected.
 - The [[ref: SCID]] **MUST** be the same in the original and renamed DID. Specifically, the SCID segment of `state.id` in **every** [[ref: log entry]] (including the renamed entry and all subsequent entries) **MUST** equal the `parameters.scid` from the first entry. Only the host/path portion of `state.id` may change under portability; the SCID segment is immutable for the life of the DID. A "portable rename" entry whose `state.id` carries a different SCID **MUST** be rejected.
 - The [[ref: DIDDoc]] **MUST** contain the prior DID string as an `alsoKnownAs` entry.
-- [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
+- [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:rfc1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
 
 **Security Note — Misleading Prior Domain Association**
 
-When using portability, a `did:webvh` identifier may include a domain component that was never actually used to host its DID Log before being "moved" to a domain under the [[ref: DID Controller]]’s control. This creates a potential for misleading claims of association with the original domain. Resolvers and clients of resolvers **MUST** ignore any prior domain components when evaluating the history or trustworthiness of a `did:webvh` DID; only the current hosting location and its associated verifiable history are relevant. In addition, the [whois](#did-url-whois-linkedvp-service) DID URL capability can be used to obtain attestations about the DID and [[ref: DID Controller]] from relevant authorities.
+When using portability, a `did:webvh` identifier may include a domain component that was never actually used to host its DID Log before being "moved" to a domain under the [[ref: DID Controller]]’s control. This creates a potential for misleading claims of association with the original domain. Resolvers and clients of resolvers **MUST** ignore any prior domain components when evaluating the history or trustworthiness of a `did:webvh` DID; only the current hosting location and its associated verifiable history are relevant. In addition, the [whois](#the-whois-service) DID URL capability can be used to obtain attestations about the DID and [[ref: DID Controller]] from relevant authorities.
 
 #### Pre-Rotation Key Hash Generation and Verification
 
@@ -1320,10 +1323,10 @@ this is being done, the `did:webvh` DIDDoc **SHOULD** have the corresponding
 [[ref: DID Controller]] **MUST**:
 
 1. Start with the resolved version of the [[ref: DIDDoc]] from `did:webvh`.
-2. If the "implicit" `did:webvh` services (as defined in the [DID URL
-   Resolution](#did-url-resolution) section) are not already present in the
-   [[ref: DIDDoc]], they **MUST** be added. These services are the `relativeRef`
-   service with `id: "#files"` or `id: "<did>#files"` and the `whois` service
+2. If the "implicit" `did:webvh` services (as formally defined in [DID URL
+   Path Handler Services](#did-url-path-handler-services)) are not already present in the
+   [[ref: DIDDoc]], they **MUST** be added. These services are the `#files`
+   `PathService` with `id: "#files"` or `id: "<did>#files"` and the `whois` service
    with `id: "#whois"` or `id: "<did>#whois"`, with the `serviceEndpoint` for
    both derived from the [DID-to-HTTPS
    transformation](#the-did-to-https-transformation).
@@ -1346,77 +1349,106 @@ verifiable history of the DID.
 The risk of publishing the `did:web` in parallel with the `did:webvh` is that the
 added security and convenience of using `did:webvh` are lost.
 
-### DID URL Resolution
+### DID URL Path Handling
 
 The `did:webvh` DID method embraces the expressive power of DID URLs while
-preserving the semantic simplicity of a web-based resolution model. In
+preserving the semantic simplicity of a web-based dereferencing model. In
 particular, `did:webvh` implementations **MUST** support path-based DID URL
-resolution in a manner consistent with the [DID Core
+dereferencing in a manner consistent with the [DID Core
 specification](https://www.w3.org/TR/did-core/#did-url-path).
 
-Specifically, a `did:webvh` resolver **MUST**:
+Dereferencing a `did:webvh` DID URL first requires resolving the DID to obtain
+its current [[ref: DIDDoc]]. As required by step 5 of [Read
+(Resolve)](#read-resolve), the resolved [[ref: DIDDoc]] always includes the
+two `did:webvh` implicit services formally defined in [DID URL Path Handler
+Services](#did-url-path-handler-services) below, whether defined explicitly
+by the [[ref: DID Controller]] or added by the resolver. A DID URL
+dereferencer does not need to know which case applies -- it simply locates
+and processes whatever service objects are present in the resolved
+[[ref: DIDDoc]], according to their `type`.
 
-- Resolve any `did:webvh` DID URL with a path component using an implicit
-  `relativeRef` service as defined in [[spec:DID-CORE]]. The path is appended
-  directly to the HTTPS URL obtained from the [DID-to-HTTPS
-  transformation](#the-did-to-https-transformation), excluding any `.well-known`
-  prefix.  
-  - For example, resolving
-    `did:webvh:{SCID}:example.com/governance/issuers.json` retrieves the file
-    located at `https://example.com/governance/issuers.json`.  
-  - This behavior can be overridden by defining an explicit service in the DID
-    Document.
+`did:webvh` defines exactly two such implicit services:
 
-- Resolve the special path `/whois` using an implicit [[spec:LINKED-VP]]
-  service. This applies regardless of whether a `whois` service is explicitly
-  defined in the [[ref: DIDDoc]]. The resolver **MUST** retrieve the Verifiable
-  Presentation, if published by the [[ref: DID Controller]], from the web
-  location corresponding to the DID-to-HTTPS transformation (excluding
-  `.well-known`), using the path `/whois.vp` and media type `application/vp` as
-  registered in the [IANA Media Types
-  Registry](https://www.iana.org/assignments/media-types/application/vp).  
-  - For example, resolving `did:webvh:{SCID}:example.com/whois` returns the
-    content of `https://example.com/whois.vp` if available.
+- `#files`, providing access to arbitrary files or resources at a `did:webvh`
+  DID URL path, described in [The `#files` Service](#the-files-service).
+- `#whois`, providing a [[ref: Linked-VP]] at the special path `/whois`,
+  described in [The `#whois` Service](#the-whois-service).
 
-In both cases, a [[ref: DID Controller]] **MAY** override the implicit
-resolution behavior by defining explicit services in the DID Document, which
-take precedence over the defaults.
+#### DID URL Path Handler Services
 
-The sections below formalize the structure and resolution rules for each default
-service and describe how they may be overridden by the [[ref: DID Controller]].
+A service object is eligible for DID URL path handling if its `type` includes
+`PathHandler`. `did:webvh` uses this `PathHandler`/`PathService`
+service-selection mechanism, which is expected to be defined in a future
+revision of the DID Resolution specification [[spec:DID-RESOLUTION]]. This
+specification will reference that mechanism normatively once it stabilizes
+there; until then, it is described here in full:
 
-#### DID URL Path Resolution
+- Of the services whose `type` includes `PathHandler`, the object whose `path`
+  attribute is the longest complete match from the beginning of the DID URL
+  path is selected.
+- This is the behavior of the `PathService` `type`: the matched `path` value is
+  removed from the beginning of the DID URL path. Whatever remains of the DID
+  URL path (if anything) is appended to the selected service's
+  `serviceEndpoint` to produce a resulting URL.
+- That resulting URL is the location of the resource, which is itself then
+  dereferenced to produce the content returned for the original DID URL.
 
-The automatic resolution of `did:webvh` DID URL paths follows the
-[[spec:DID-CORE]] `relativeRef` mechanism, enabling path-based access to web
-resources directly tied to the DID’s domain. The approach is derived from
-Examples 2 and 8 in [Section 3.2 of DID
-Core](https://www.w3.org/TR/did-core/#did-url-syntax):
+`did:webvh` implicitly defines exactly two services using this mechanism. Each
+**MAY** be overridden by a [[ref: DID Controller]] defining an explicit
+service with the same `id` in the [[ref: DIDDoc]], which takes precedence over
+the default.
 
-- A DID URL such as `did:example:123456/resume.pdf` (see Example 2)  
-  is semantically equivalent to:  
-  `did:example:123456?service=files&relativeRef=/resume.pdf` (see Example 8).
-
-- The `service=files` reference resolves against a DID Document service with
-  `"id": "#files"` or `"id": "<did>#files"` and a `type` of `relativeRef`.
-
-The `did:webvh` method implicitly defines this service, with a `serviceEndpoint`
-derived from the [DID-to-HTTPS
-transformation](#the-did-to-https-transformation). The final path segment
-(`did.jsonl`) is replaced by the DID URL path. If the resulting HTTPS URL
-contains `.well-known/`, that segment **MUST** be removed before dereferencing
-the resource.
-
-For example, the following is the implicit service definition for the DID
-`did:<scid>:webvh:example.com`:
+The implicit `#files` service is:
 
 ```json
 {
   "id": "#files",
-  "type": "relativeRef",
+  "type": ["PathHandler", "PathService"],
+  "path": "/",
   "serviceEndpoint": "https://example.com/"
 }
 ```
+
+with `path` set to `/` so that it matches any DID URL path not otherwise
+claimed by a more specific `PathHandler`, such as `#whois`. See [The `#files`
+Service](#the-files-service) for its `serviceEndpoint` derivation and use.
+
+The implicit `#whois` service is:
+
+```json
+{
+  "@context": "https://identity.foundation/linked-vp/contexts/v1",
+  "id": "#whois",
+  "type": ["PathHandler", "PathService", "whois"],
+  "path": "/whois",
+  "serviceEndpoint": "<did-to-https-translation>/whois.vp"
+}
+```
+
+See [The `#whois` Service](#the-whois-service) for its `serviceEndpoint`
+derivation and the content requirements of the resource it locates.
+
+#### The `#files` Service
+
+The `#files` service provides access to arbitrary files or resources at a
+`did:webvh` DID URL path, selected using the [DID URL Path Handler
+Services](#did-url-path-handler-services) mechanism. This specification
+describes that mechanism here in full only because it is not yet stable enough
+in the DID Resolution specification [[spec:DID-RESOLUTION]] to cite
+normatively; this section is expected to be replaced by such a citation once
+it stabilizes there.
+
+Its `serviceEndpoint` is derived from the [DID-to-HTTPS
+transformation](#the-did-to-https-transformation): the final path segment
+(`did.jsonl`) is removed, and if the resulting HTTPS URL contains
+`.well-known/`, that segment **MUST** also be removed.
+
+For example, dereferencing `did:webvh:{SCID}:example.com/governance/issuers.json`
+selects the `#files` service (its `path` of `/` is the only match). Removing
+that matched `/` from the DID URL path `/governance/issuers.json` leaves
+`governance/issuers.json`, which is appended to the `serviceEndpoint` to
+produce `https://example.com/governance/issuers.json` -- the location of the
+retrieved resource.
 
 A [[ref: DID Controller]] **MAY** explicitly define a service entry with `"id":
 "#files"` in the [[ref: DIDDoc]]. If present, this **MUST** override the
@@ -1424,93 +1456,101 @@ implicit service described above. `id` can be an absolute reference that
 includes the DID with the `#files` fragment (`<did>#files`), or a relative
 reference as above.
 
-To resolve a DID URL of the form `<did:webvh DID>/path/to/file`, a did:webvh
-resolver MUST:
+To dereference a DID URL of the form `<did:webvh DID>/path/to/file`, a did:webvh
+DID URL dereferencer MUST:
 
 1. Resolve the base did:webvh DID by retrieving, verifying, and processing its
    [[ref: DID Log]], as defined in this specification.
 
-2. Locate the service entry with `id` `"#files"` or `"<did>#files"` in the
-   resulting [[ref: DIDDoc]], or fall back to the implicit service if none is
-   defined.
+2. Select the service using the mechanism described in [DID URL Path Handler
+   Services](#did-url-path-handler-services) -- present in the resulting
+   [[ref: DIDDoc]] either because the [[ref: DID Controller]] defined it
+   explicitly, or because the resolver injected the implicit default. For a
+   DID URL path not matched by a more specific service such as `#whois`, this
+   selects the implicit `#files` service.
 
-3. Construct the URL by appending the DID URL path to the serviceEndpoint, and
-   attempt to retrieve the resource from that location.
-   - If the scheme of the serviceEndpoint is not supported by the resolver
-     (e.g., non-HTTP(S) protocol), the resolver **MUST** return an `invalidDid`
+3. Remove the matched `path` value from the beginning of the DID URL path, append
+   whatever remains to the selected service's `serviceEndpoint`, and attempt to
+   retrieve the resource from the resulting URL.
+   - If the scheme of the serviceEndpoint is not supported by the DID URL dereferencer
+     (e.g., non-HTTP(S) protocol), the DID URL dereferencer **MUST** return an `invalidDid`
      error.
-   - If the resolution of the constructed URL fails with a “not found” condition
-     (e.g., HTTP 404), the resolver **MUST** return the `notFound` error.
+   - If retrieving the constructed URL fails with a “not found” condition
+     (e.g., HTTP 404), the DID URL dereferencer **MUST** return the `notFound` error.
 
-#### DID URL whois LinkedVP Service
+#### The `#whois` Service
 
 The `#whois` service enables recipients of a `did:webvh` DID to retrieve a
 [[ref: Verifiable Presentation]]—optionally published by the [[ref: DID Controller]]—containing one or more embedded [[ref: Verifiable Credentials]].
 These credentials may help resolvers or relying parties make informed trust
 decisions about the controller of the DID.
 
-The intention is that resolving `<did:webvh DID>/whois` yields a [[ref: Verifiable Presentation]] published by the [[ref: DID Controller]] that includes
-credentials with the DID as the `credentialSubject`. The contents of the
-presentation are determined solely by the [[ref: DID Controller]], who selects
-which credentials to include. It is up to the resolver or relying party to
-decide what assertions (and issuers) are relevant for establishing trust.
-
 `did:webvh` DIDs **automatically** support a `/whois` service endpoint,
-implicitly defined using the [[spec:LINKED-VP]] service type. The
-`serviceEndpoint` is computed using the standard [DID-to-HTTPS
-transformation](#the-did-to-https-transformation), replacing `did.jsonl` with
-`whois.vp`, and omitting any `.well-known/` prefix.
+selected using the same mechanism as [The `#files`
+Service](#the-files-service), with `path` set to `/whois`. Its
+`serviceEndpoint` is derived the same way, except that the final path segment
+is `whois.vp` instead of `did.jsonl`.
 
-The default `#whois` service is:
+`id` can be an absolute reference that includes the DID with the `#whois`
+fragment (`<did>#whois`), or a relative reference as above.
 
-```json
-{
-  "@context": "https://identity.foundation/linked-vp/contexts/v1",
-  "id": "#whois",
-  "type": "LinkedVerifiablePresentation",
-  "serviceEndpoint": "<did-to-https-translation>/whois.vp"
-}
+The resource located at the `serviceEndpoint` is a [[ref: Linked-VP]]:
 
-```
+- It **MUST** be signed by the DID.
+- It **MUST** contain one or more [[ref: Verifiable Credentials]] about the DID
+  subject, using the DID or an equivalent identifier (such as one listed in the
+  [[ref: DIDDoc]]'s `alsoKnownAs` array) as the `credentialSubject.id`.
+- Those Verifiable Credentials **SHOULD** be [[spec:vc-recognized-entities-1.0]]
+  Verifiable Credentials.
 
-The file located at the `serviceEndpoint` **MUST** contain a [[ref: Verifiable Presentation]] conforming to the [[ref: W3C VCDM]]. It **MUST** be signed by the
-DID. `id` can be an absolute reference that includes the DID with the
-`#whois` fragment (`<did>#whois`), or a relative reference as above.
+The contents of the presentation are determined solely by the
+[[ref: DID Controller]], who selects which credentials to include. It is up to
+the resolver or relying party to decide what assertions (and issuers) are
+relevant for establishing trust. For example, the presentation could include a
+credential linking the DID for a business to that business’s registration ID,
+and a second credential (perhaps an ISO certification) where the
+`credentialSubject.id` is the registration ID.
 
-The presentation **MUST** include at least one [[ref: Verifiable Credential]]
-where the `credentialSubject.id` is the DID. Such [[ref: Verifiable Credentials]] might serve to bind the DID to other identifiers associated with
-the [[ref: DID Controller]]. Additional credentials in the presentation **MAY**
-be associated with those other identifiers, rather than the DID itself. For
-example, the presentation could include a credential linking the DID for a
-business to that business’s registration ID, and a second credential (perhaps an
-ISO certification) where the `credentialSubject.id` is the registration ID.
+::: note future-direction-whois
+
+**Future Direction for `/whois`**
+
+The `whois` service `type` used here is expected to eventually be defined by
+its own, separate specification, rather than by this document. A future
+`whois-vh` specification is also anticipated, extending the `/whois` service
+to be a Linked VP of [[spec:vc-recognized-entities-1.0]] Verifiable Credentials that itself
+has a "verifiable history" -- using a mechanism similar to the one `did:webvh`
+uses for the verifiable history of the DID itself.
+
+:::
 
 A [[ref: DID Controller]] **MAY** explicitly define a `service` with `"id":
-"#whois"` in the [[ref: DIDDoc]]. If present, this entry **MUST** override the
-implicit service defined above. This is required if the controller wishes to:
+"#whois"` or `"id": "<did>#whois"` in the [[ref: DIDDoc]]. If present, this
+entry **MUST** override the implicit service defined above. This is required
+if the controller wishes to:
 
 - Publish the WHOIS Verifiable Presentation in a different format (i.e., not
-  [[ref: W3C VCDM]])
-- Serve the WHOIS presentation from a different location or using a non-default
-  media type
+  [[ref: W3C VCDM]]).
+- Serve the WHOIS presentation from a different location, using a non-default
+  media type, or under a different `id`.
 
-To resolve the DID URL `<did:webvh DID>/whois`, a resolver MUST:
+To dereference the DID URL `<did:webvh DID>/whois`, a DID URL dereferencer MUST:
 
-1. Resolve the base `did:webvh` DID by retrieving, verifying, and processing the
-   [[ref: DID Log]]. The resolver will use either an explicitly defined service
-   with `"id": "#whois"` or `"id": "<did>#whois"`, or the implicit service defined above.
-2. Construct and attempt to retrieve the resource from the `serviceEndpoint`
-   URL.
-   - If the scheme of the `serviceEndpoint` is unsupported by the resolver
-     (e.g., non-HTTP(S)), the resolver **MUST** return the `invalidDid` error.
-   - If the request to the service endpoint results in a "not found" condition
-     (e.g., HTTP 404), the resolver **MUST** return the `notFound` error.
-
-The returned `whois.vp` **MUST** contain a [[ref: W3C VCDM]] [[ref: verifiable presentation]] signed by the DID and containing [[ref: verifiable credentials]]
-that **MUST** have the DID as the `credentialSubject`.
+1. Resolve the base `did:webvh` DID by retrieving, verifying, and processing
+   the [[ref: DID Log]].
+2. Select the `#whois` service using the mechanism described in [DID URL Path
+   Handler Services](#did-url-path-handler-services) -- present in the
+   resolved [[ref: DIDDoc]] either because the [[ref: DID Controller]] defined
+   it explicitly, or because the resolver injected the implicit default.
+3. Retrieve the resource from the resulting URL.
+   - If the scheme of the `serviceEndpoint` is unsupported by the DID URL
+     dereferencer (e.g., non-HTTP(S)), the DID URL dereferencer **MUST**
+     return the `invalidDid` error.
+   - If the request results in a "not found" condition (e.g., HTTP 404), the
+     DID URL dereferencer **MUST** return the `notFound` error.
 
 If a [[ref: DID Controller]] publishes a parallel `did:web` DID and a `whois.vp`
-file, the `/whois` endpoint can be resolved using either DID, returning the same
+file, the `/whois` endpoint can be dereferenced using either DID, returning the same
 content either way. The [[ref: verifiable presentation]] proof can reference
 either DID or include two proofs, each referencing a verification method for one
 of the DIDs. If only one DID is referenced, since both DIDs will have an
@@ -1518,10 +1558,3 @@ of the DIDs. If only one DID is referenced, since both DIDs will have an
 resolver using the DID not referenced in the proof can choose to verify the
 proof with the already resolved DID, or resolve the referenced DID before
 verifying the proof.
-
-A [[ref: DID Controller]] **MAY** explicitly add to their [[ref: DIDDoc]] a
-`did:webvh` service with the `"id": "#whois"` or `"id": "<did>#whois"`. Such an
-entry **MUST** override the implicit `service` above. If the [[ref: DID Controller]] wants to publish the `whois` [[ref: verifiable presentation]] in a
-different format than the [[ref: W3C VCDM]] format, they **MUST** explicitly add
-to their [[ref: DIDDoc]] a service with the `"id": "#whois"` or `"id":
-"<did>#whois"` to specify the name and implied format of the [[ref: verifiable presentation]].

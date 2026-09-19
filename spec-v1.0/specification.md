@@ -982,7 +982,7 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
 - The [[ref: parameter]] `portable` **MUST** be set to `true` in the **first** [[ref: log entry]]. An entry that introduces `portable: true` after the first entry **MUST** be rejected.
 - The [[ref: SCID]] **MUST** be the same in the original and renamed DID. Specifically, the SCID segment of `state.id` in **every** [[ref: log entry]] (including the renamed entry and all subsequent entries) **MUST** equal the `parameters.scid` from the first entry. Only the host/path portion of `state.id` may change under portability; the SCID segment is immutable for the life of the DID. A "portable rename" entry whose `state.id` carries a different SCID **MUST** be rejected.
 - The [[ref: DIDDoc]] **MUST** contain the prior DID string as an `alsoKnownAs` entry.
-- [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
+- [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:rfc1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
 
 **Security Note — Misleading Prior Domain Association**
 

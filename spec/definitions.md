@@ -58,7 +58,7 @@ providers.
 
 [[def: DID Resources, DID Resource]]
 
-~ A DID Resource is an object (often a file) that is referenced by a DID URL, with a path to the resource. The DID URL allows resolvers to locate and retrieve specific content associated with a DID. Examples include configuration files, schemas, credential definitions, or other structured data linked to the DID.
+~ A DID Resource is an object (often a file) that is referenced by a DID URL, with a path to the resource. The DID URL allows DID URL dereferencers to locate and retrieve specific content associated with a DID. Examples include configuration files, schemas, credential definitions, logos, images or other data linked to the DID.
 
 [[def: did:web]]
 
