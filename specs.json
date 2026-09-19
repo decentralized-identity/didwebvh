@@ -60,6 +60,29 @@
             ],
             "status": "Internet Draft"
           }
+        },
+        {
+          "DID-RESOLUTION": {
+            "href": "https://w3c.github.io/did-resolution/",
+            "title": "Decentralized Identifier Resolution (DID Resolution) v1",
+            "rawDate": "2026-09-02",
+            "authors": [
+              "Stephen Curran",
+              "Joe Andrieu"
+            ],
+            "status": "W3C Editor's Draft"
+          }
+        },
+        {
+          "semver": {
+            "href": "https://semver.org",
+            "title": "Semantic Versioning 2.0.0",
+            "rawDate": "2013-06-18",
+            "authors": [
+              "Tom Preston-Werner"
+            ],
+            "status": "Internet Draft"
+          }
         }
       ]
     },
@@ -122,6 +145,18 @@
               "G. Dennis"
             ],
             "status": "Internet Draft"
+          }
+        },
+        {
+          "DID-RESOLUTION": {
+            "href": "https://w3c.github.io/did-resolution/",
+            "title": "Decentralized Identifier Resolution (DID Resolution) v1",
+            "rawDate": "2026-09-02",
+            "authors": [
+              "Stephen Curran",
+              "Joe Andrieu"
+            ],
+            "status": "W3C Editor's Draft"
           }
         },
         {

@@ -211,8 +211,7 @@ Each entry is a JSON object consisting of the following properties.
    [Entry Hash Generation and
    Verification](#entry-hash-generation-and-verification) section of this
    specification.
-3. The value of `versionTime` **MUST** be a timestamp in UTC of the entry in [[ref:
-   ISO8601]] format, as asserted by the [[ref: DID Controller]]. The timestamp
+3. The value of `versionTime` **MUST** be a timestamp in UTC of the entry in [[ref: ISO8601]] format, as asserted by the [[ref: DID Controller]]. The timestamp
    **MUST** be the time the DID will be retrieved by a [[ref: witness]] or resolver,
    or before.
 4. The JSON object `parameters` contains the configurations/options set by the
@@ -275,11 +274,9 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
    in the [Method-Specific  Identifier](#method-specific-identifier) section of this specification.
 
    1. Note: the [[ref: SCID]] for a `did:webvh` DID is not by default in the HTTPS
-      URL for the DID. A [[ref: DID Controller]] **MAY** include the [[ref:
-      SCID]] in the HTTPS URL by inserting additional placeholder `{SCID}`
+      URL for the DID. A [[ref: DID Controller]] **MAY** include the [[ref: SCID]] in the HTTPS URL by inserting additional placeholder `{SCID}`
       strings into the domain name or path components of the method-specific
-      identifier when creating the DID. Additional instance(s) of the [[ref:
-      SCID]] in the domain and/or path parts of the DID does not alter the
+      identifier when creating the DID. Additional instance(s) of the [[ref: SCID]] in the domain and/or path parts of the DID does not alter the
       [DID-to-HTTPS transformation](#the-did-to-https-transformation).
 
 2. **Generate the authorization key pair(s)**
@@ -437,11 +434,9 @@ For each entry:
 1. Update the currently active [[ref: parameters]] with the [[ref: parameters]]
    from the entry (if any). The `parameters` **MUST** adhere to the [`did:webvh`
    DID Method Parameters](#didwebvh-did-method-parameters) section of this
-   specification. Continue processing using the now active set of [[ref:
-   parameters]].
+   specification. Continue processing using the now active set of [[ref: parameters]].
    - While all [[ref: parameters]] in the first [[ref: Log Entry]] take effect
-     immediately, some kinds of [[ref: parameters]] defined in later [[ref:
-     entries]] only take effect *after* that entry has been published. For
+     immediately, some kinds of [[ref: parameters]] defined in later [[ref: entries]] only take effect *after* that entry has been published. For
      example, updates to the `witnesses` array takes effect only
      *after* the entry in which they are defined has been published.
 2. The [[ref: Data Integrity]] proof in the entry **MUST** be valid and signed by
@@ -466,8 +461,7 @@ For each entry:
    (defined in the [[ref: parameters]]) according to the
    [SCID Generation and Verification](#scid-generation-and-verification) section
    of this specification.
-6. Get the value of the [[ref: log entry]] property `state`, which is the [[ref:
-   DIDDoc]] for the version.
+6. Get the value of the [[ref: log entry]] property `state`, which is the [[ref: DIDDoc]] for the version.
       1. Parse the top-level `id` of `state` as a `did:webvh` DID per the [Method-Specific Identifier](#method-specific-identifier) ABNF; if parsing fails, resolution **MUST** terminate.
       2. The SCID segment of `state.id` **MUST** be byte-for-byte identical to the `scid` value in the DID and the first entry's `parameters.scid`. This check **MUST** apply to **every** entry's `state.id`, not just the first. A mismatch **MUST** terminate resolution.
       3. If the DID being resolved matches exactly the value of `state.id` in the current [[ref: DIDDoc]] entry, increment `didIdMatchCount` by `1`.
@@ -819,8 +813,7 @@ Where:
      [[ref: DID Controller]], with the placeholder wherever the [[ref: SCID]] will
      eventually be placed.
    - The `state` JSON object with the value being the initial [[ref: DIDDoc]]
-     with placeholders (the literal string "`{SCID}`") wherever the [[ref:
-     SCID]] will eventually be placed in the [[ref: DIDDoc]].
+     with placeholders (the literal string "`{SCID}`") wherever the [[ref: SCID]] will eventually be placed in the [[ref: DIDDoc]].
 
 2. `JCS` is an implementation of the [[ref: JSON Canonicalization Scheme]]
    [[spec:rfc8785]]. It outputs a canonicalized representation of its JSON
@@ -1011,8 +1004,7 @@ As described in the [parameters](#didwebvh-did-method-parameters) section of
 this specification, a [[ref: DID Controller]] **MAY** include the [[ref: parameter]]
 `nextKeyHashes` with a non-empty list in any [[ref: DID log entry]] to activate
 the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active, all
-[[ref: multikey]] representations of the public keys in the `updateKeys` [[ref:
-parameters]] property in other than the initial version of the [[ref: DID log entry]] **MUST** have their hash in the  `nextKeyHashes` array from the previous
+[[ref: multikey]] representations of the public keys in the `updateKeys` [[ref: parameters]] property in other than the initial version of the [[ref: DID log entry]] **MUST** have their hash in the  `nextKeyHashes` array from the previous
 [[ref: DID log entry]]. If not, terminate the resolution process with an error.
 
 A [[ref: DID Controller]] may turn off the use of pre-rotation by setting the
@@ -1083,8 +1075,7 @@ Witnesses can prevent a [[ref: DID Controller]] from updating/removing
 versions of a DID without detection by the witnesses. [[ref: Witnesses]] are
 also a further mitigation against malicious actors compromising both a [[ref: DID Controller]]'s authorization key(s) to update the DID, and the [[ref: DID Controller]]'s web site where the [[ref: DID log]] is published. With both
 compromises, a malicious actor might be able to take control over the DID by rewriting the
-[[ref: DID Log]] using the keys they have compromised. By adding [[ref:
-witnesses]] to monitor and approve each version update, a malicious actor cannot
+[[ref: DID Log]] using the keys they have compromised. By adding [[ref: witnesses]] to monitor and approve each version update, a malicious actor cannot
 rewrite the previous history without having compromised a sufficient number of
 [[ref: witnesses]], the [[ref: DID Controller]]'s key(s), and the Web Server on
 which the [[ref: DID Log]] is published.
@@ -1097,8 +1088,7 @@ section of this specification. After the first `witness` parameter has been set
 to other than `{}` (empty object) in a [[ref: DID log entry]], and while there
 are active witnesses, a [[ref: threshold]] of the active witnesses must provide
 valid proofs associated with each [[ref: DID log entry]] before the [[ref: DID log entry]] can be published. If a [[ref: DID log entry]] contains a new
-(replacement) list of witnesses (by including a new `witness` [[ref:
-parameter]]) that new list becomes active **AFTER** the new [[ref: DID log entry]] has been published. Such a replacement **MAY** be a `{}` (empty object).
+(replacement) list of witnesses (by including a new `witness` [[ref: parameter]]) that new list becomes active **AFTER** the new [[ref: DID log entry]] has been published. Such a replacement **MAY** be a `{}` (empty object).
 Once the `witness` attribute set to `{}` becomes active, updates to the DID are
 not [[ref: witnessed]].
 
@@ -1142,8 +1132,7 @@ where:
 
 ##### Witness Threshold Algorithm
 
-The use of the [[ref: threshold]] versus needing approvals from all [[ref:
-witnesses]] is to prevent faulty [[ref: witnesses]] from blocking the publishing
+The use of the [[ref: threshold]] versus needing approvals from all [[ref: witnesses]] is to prevent faulty [[ref: witnesses]] from blocking the publishing
 of a new version of the DID. To determine if the [[ref: threshold]] has been
 met, participants **MUST**:
 
@@ -1460,8 +1449,7 @@ The `#whois` service enables recipients of a `did:webvh` DID to retrieve a
 These credentials may help resolvers or relying parties make informed trust
 decisions about the controller of the DID.
 
-The intention is that resolving `<did:webvh DID>/whois` yields a [[ref:
-Verifiable Presentation]] published by the [[ref: DID Controller]] that includes
+The intention is that resolving `<did:webvh DID>/whois` yields a [[ref: Verifiable Presentation]] published by the [[ref: DID Controller]] that includes
 credentials with the DID as the `credentialSubject`. The contents of the
 presentation are determined solely by the [[ref: DID Controller]], who selects
 which credentials to include. It is up to the resolver or relying party to

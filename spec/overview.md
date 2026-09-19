@@ -15,8 +15,7 @@ from trust layers inherited from the web and the absence of a verifiable
 history for the DID.
 
 Tackling these concerns, the `did:webvh` (`did:web` + Verifiable History) DID
-Method aims to enhance `did:web` by introducing features such as a [[ref:
-self-certifying identifiers]] (SCIDs), update key(s) and a verifiable history,
+Method aims to enhance `did:web` by introducing features such as a [[ref: self-certifying identifiers]] (SCIDs), update key(s) and a verifiable history,
 akin to what is available with ledger-based DIDs, but without relying on a
 ledger.
 
@@ -71,13 +70,10 @@ The following is a `tl;dr` summary of how `did:webvh` works:
         - Example [[ref: parameters]] are the version of the `did:webvh` specification and
         hash algorithm being used, as well as the [[ref: SCID]] and update key(s).
     4. `state` -- the new version of the [[ref: DIDDoc]].
-    5. A [[ref: Data Integrity]] (DI) proof across the entry, signed by a [[ref:
-      DID Controller]]-authorized key to update the [[ref: DIDDoc]].
+    5. A [[ref: Data Integrity]] (DI) proof across the entry, signed by a [[ref: DID Controller]]-authorized key to update the [[ref: DIDDoc]].
     6. If the [[ref: DID Controller]] enables support for DID [[ref: witnesses]], an
-       extra file (`did-witness.json`) in the same web location contains [[ref:
-       Data Integrity]] proofs from witness for [[ref: DID Log entries]].
-4. In generating the first version of the [[ref: DIDDoc]], the [[ref: DID Controller]] calculates the [[ref: SCID]] for the DID from the first [[ref:
-  log entry]] (which includes the [[ref: DIDDoc]]). This is done by using the
+       extra file (`did-witness.json`) in the same web location contains [[ref: Data Integrity]] proofs from witness for [[ref: DID Log entries]].
+4. In generating the first version of the [[ref: DIDDoc]], the [[ref: DID Controller]] calculates the [[ref: SCID]] for the DID from the first [[ref: log entry]] (which includes the [[ref: DIDDoc]]). This is done by using the
   string `"{SCID}"` everywhere the actual [[ref: SCID]] is to be placed in order
   to generate the hash. The [[ref: DID Controller]] then replaces the
   placeholders with the calculated [[ref: SCID]], including it as a `parameter`
