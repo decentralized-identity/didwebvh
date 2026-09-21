@@ -113,19 +113,20 @@ information site.
 
 The `did:webvh` DID Method introduces what we hope will be a widely embraced convention for
 all [[ref: DID Methods]] -- the `/whois` path. This feature harkens back to the `WHOIS`
-protocol that was created in the 1970s to provide a directory about people and
-entities in the early days of ARPANET. In the 80's, `whois` evolved into
-[[spec-inform:rfc920]] that has expanded into the [global
-whois](https://en.wikipedia.org/wiki/WHOIS) feature we know today as
+protocol that was created in the 1970s (RFC 742) to provide a directory about
+people and entities in the early days of ARPANET. In the 80's, `whois`
+evolved through a series of RFCs (RFC 812, RFC 954) that expanded into the
+[global whois](https://en.wikipedia.org/wiki/WHOIS) feature we know today as
 [[spec-inform:rfc3912]]. Submit a `whois` request about a domain name, and get
 back the information published about that domain.
 
 We propose that the `/whois` path for a DID enable a comparable, decentralized,
 version of the `WHOIS` protocol for DIDs. Notably, when `<did>/whois` is
-dereferenced (using a standard DID `service` that follows the [[ref: Linked-VP]]
-specification), a [[ref: Verifiable Presentation]] (VP) may be returned (if
-published by the [[ref: DID Controller]]) containing [[ref: Verifiable Credentials]] with
-the DID as the `credentialSubject`, and the VP signed by the DID. Given a DID,
+dereferenced (using the [`#whois` service](#the-whois-service) to locate a
+[[ref: Linked-VP]]), a [[ref: Verifiable Presentation]] (VP) may be returned (if
+published by the [[ref: DID Controller]]) containing
+[[spec:vc-recognized-entities-1.0]] Verifiable Credentials with the DID as the
+`credentialSubject`, and the VP signed by the DID. Given a DID,
 one can gather verifiable data about the [[ref: DID Controller]] by dereferencing
 `<did>/whois` and processing the returned VP. That's powerful -- an efficient,
 highly decentralized, trust registry. For `did:webvh`, the approach is very simple

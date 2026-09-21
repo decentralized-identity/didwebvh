@@ -119,10 +119,11 @@ able to rotate to a new key known only to the attacker.
 
 [[def: Linked-VP, Linked Verifiable Presentation]]
 
-~ A [[spec:DID-CORE]] `service` entry that specifies where a [[ref: verifiable presentation]]
-about the DID subject can be found. The [Decentralized Identity
-Foundation](https://identity.foundation/) hosts the [Linked VP
-Specification](https://identity.foundation/linked-vp/).
+~ A [[ref: Verifiable Presentation]] about a DID subject, discoverable via a
+`service` entry in the subject's [[ref: DIDDoc]], as described by the
+[Decentralized Identity Foundation](https://identity.foundation/)'s [Linked VP
+Specification](https://identity.foundation/linked-vp/). `did:webvh` locates
+its Linked-VP via the [`#whois` Service](#the-whois-service).
 
 [[def: multibase]]
 
