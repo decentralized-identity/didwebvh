@@ -80,7 +80,7 @@ In `did:webvh`, uniqueness of a DID is based on the [[ref: self-certifying ident
 
 The DNS portion of the DID is used solely for discovery of the DID Log and associated files; it is not used for verification of DID control. Further, the DNS name does not need to be owned or directly controlled by the DID Controller. For example, a DID can be published within a namespace provided by a hosting platform (e.g., a GitHub repository or pages site) that serves static files over HTTPS. In such cases, platform policies and HTTPS server authentication are relied upon for access and integrity at the transport layer, while DID verification is provided entirely by the SCID and verifiable history of the DID.
 
-A `did:webvh` identifier may include a domain component that was never actually used to host its DID Log, before being moved — via the [did:webvh portability](#did-portability) capability — to a different domain under the [[ref: DID Controller]]’s control. This creates a potential for misleading claims of association with the original domain. To prevent this, resolvers and clients of resolvers **MUST** ignore any prior domain components when evaluating the history or trustworthiness of a `did:webvh` DID; only the current hosting location and its associated verifiable history are relevant. In addition, the [whois](#whois-linkedvp-service) DID URL capability **SHOULD** be used to obtain attestations about the DID and [[ref: DID Controller]] from relevant authorities.
+A `did:webvh` identifier may include a domain component that was never actually used to host its DID Log, before being moved — via the [did:webvh portability](#did-portability) capability — to a different domain under the [[ref: DID Controller]]’s control. This creates a potential for misleading claims of association with the original domain. To prevent this, resolvers and clients of resolvers **MUST** ignore any prior domain components when evaluating the history or trustworthiness of a `did:webvh` DID; only the current hosting location and its associated verifiable history are relevant. In addition, the [whois](#did-url-whois-linkedvp-service) DID URL capability **SHOULD** be used to obtain attestations about the DID and [[ref: DID Controller]] from relevant authorities.
 
 ### Endpoint Authentication
 
@@ -142,7 +142,7 @@ and refer to [did:web Security and Privacy Considerations](https://w3c-ccg.githu
 ### Post Quantum Attacks
 
 `did:webvh` [[ref: Key Pre-Rotation]] approach provides enough flexibility for "post-quantum safety".
-For guidance on post-quantum attacks mitigation, implementors **SHOULD** refer to [corresponding Implementation Guide section](https://didwebvh.info/latest/implementers-guide/prerotation-keys/#post-quantum-attacks).
+For guidance on post-quantum attacks mitigation, implementers **SHOULD** refer to [corresponding Implementation Guide section](https://didwebvh.info/latest/implementers-guide/prerotation-keys/#post-quantum-attacks).
 
 ### Resolver Validation Checklist (informative)
 
