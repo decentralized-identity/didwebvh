@@ -6,7 +6,7 @@ This section follows the guidelines in [[spec:RFC3552]] and addresses the securi
 
 Implementations of `did:webvh` **MUST** mitigate the following classes of attack for all DID operations:
 
-- **Eavesdropping** — All network communication (e.g., retrieval of `did.jsonl`, `witness.json` files, or other DID-associated resources) **SHOULD** be performed over TLS (HTTPS). Plaintext HTTP **MUST NOT** be used except for testing or non-production deployments where confidentiality is not required. This requirement is not unique to the `did:webvh` method; its application here is as with general web traffic. The verifiability of `did:webvh` ensures that tampering with the contents of individual log entries is detectable, TLS protects against passive observation and other network-based risks.
+- **Eavesdropping** — All network communication (e.g., retrieval of `did.jsonl`, `witness.json` files, or other DID-associated resources) **SHOULD** be performed over TLS (HTTPS). Plaintext HTTP **MUST NOT** be used except for testing or non-production deployments where confidentiality is not required. This requirement is not unique to the `did:webvh` method; its application here is as with general web traffic. The verifiability of `did:webvh` ensures that tampering with the contents of individual log entries is detectable; TLS protects against passive observation and other network-based risks.
 
 - **Replay attacks** — Implementations **MUST** verify the DID Log (including monotonic progression and referenced hashes) and reject logs that do not verify as outlined in the [Read](#read-resolve) section of this specification.
 
@@ -57,7 +57,7 @@ Residual risks include:
   - While this can impact access to the DID Log and associated files, it does not compromise the integrity of the log entries themselves, nor the verifiability of the DID.
 - Compromise of controller private keys.
   - A `did:webvh` [[ref: DID Controller]] can mitigate this risk through the use of [pre-rotation keys](#pre-rotation-key-hash-generation-and-verification).
-  - In doing so, [[ref: DID Controller]]'s **SHOULD** avoid reusing revealed pre‑rotation keys. While not invalid per this specification, re‑use of a pre‑rotation key after disclosure reduces compromise containment. Mitigation: follow the one‑time‑use best practice and securely destroy revealed private keys (see [Pre‑rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)). Resolvers are **NOT REQUIRED** to enforce this, but **MAY** warn.
+  - In doing so, [[ref: DID Controllers]] **SHOULD** avoid reusing revealed pre‑rotation keys. While not invalid per this specification, re‑use of a pre‑rotation key after disclosure reduces compromise containment. Mitigation: follow the one‑time‑use best practice and securely destroy revealed private keys (see [Pre‑rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)). Resolvers are **NOT REQUIRED** to enforce this, but **MAY** warn.
   - Additional good security practices **SHOULD** also be followed, such as using hardware security modules (HSMs) or secure enclaves for key storage, enforcing strong access controls, maintaining secure backups of critical keys, and performing regular key rotations.
 - Weaknesses in underlying cryptographic algorithms after deployment.
 - Misconfiguration of cache control or TTL values.
@@ -122,7 +122,7 @@ Secret data (e.g., controller private keys, witness private keys, random seeds) 
 
 ### International Domain Names
 
-`did:webvh` implementers **MAY** publish [[ref: DID Logs]] on domains that use international domains.
+`did:webvh` implementers **MAY** publish [[ref: DID Logs]] on domains that use international domain names.
  The [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section of this specification
  **MUST** be followed by [[ref: DID Controllers]] and DID resolvers to ensure the proper
  handling of international domains.
@@ -141,8 +141,8 @@ and refer to [did:web Security and Privacy Considerations](https://w3c-ccg.githu
 
 ### Post Quantum Attacks
 
-`did:webvh` [[ref: Key Pre-Rotation]] approach provides enough flexibility for "post-quantum safety".
-For guidance on post-quantum attacks mitigation, implementers **SHOULD** refer to [corresponding Implementation Guide section](https://didwebvh.info/latest/implementers-guide/prerotation-keys/#post-quantum-attacks).
+The `did:webvh` [[ref: Key Pre-Rotation]] approach provides enough flexibility for "post-quantum safety".
+For guidance on post-quantum attacks mitigation, implementers **SHOULD** refer to the [corresponding Implementation Guide section](https://didwebvh.info/latest/implementers-guide/prerotation-keys/#post-quantum-attacks).
 
 ### Resolver Validation Checklist (informative)
 
@@ -163,7 +163,7 @@ and `proofPurpose` required by the active `method`; `verificationMethod` key in
 active `updateKeys`; under pre-rotation, `updateKeys` explicit in every entry
 and every key hashes to a value in previous `nextKeyHashes`.
 
-**Witnesses:** `threshold` is positive integer ≤ count of distinct `witnesses[].id`; all `witnesses[].id` distinct; threshold met by counting verified proofs from distinct witness identifiers, not total proof count; each accepted proof's `versionId` corresponds to an entry in the `did.jsonl` being verified; proofs verified with key from the `did:key` body; `did:key` DID URL in proofs reference the same key material in  body and fragment (multibase values byte-equal).
+**Witnesses:** `threshold` is positive integer ≤ count of distinct `witnesses[].id`; all `witnesses[].id` distinct; threshold met by counting verified proofs from distinct witness identifiers, not total proof count; each accepted proof's `versionId` corresponds to an entry in the `did.jsonl` being verified; proofs verified with key from the `did:key` body; `did:key` DID URL in proofs references the same key material in body and fragment (multibase values byte-equal).
 
 **Failure modes:** unknown parameter values, malformed `witness`, hash algorithm mismatch, and cryptosuite mismatch all **MUST** fail resolution — never silently coerced.
 
@@ -213,10 +213,10 @@ DIDs are public identifiers and can be linked to real-world identities through t
 
 ### Right to Erasure ([GDPR Art. 17](https://gdpr-info.eu/art-17-gdpr/))
 
-While it's possible for [[ref: DID Controller]] to delete published data as described in [Deactivate (Revoke) operation](#deactivate-revoke),
+While it's possible for a [[ref: DID Controller]] to delete published data as described in [Deactivate (Revoke) operation](#deactivate-revoke),
 it's **RECOMMENDED** for monitoring [[ref: watchers]] to cache last known state indefinitely.
-This means that ability and specific process of complete data erasure depends on [[ref: watchers]] behavior
-and **SHOULD** be defined by governance of ecosystem.
+This means that the ability and specific process of complete data erasure depends on [[ref: watchers]]' behavior
+and **SHOULD** be defined by ecosystem governance.
 
 ### Secondary Use
 

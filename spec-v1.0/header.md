@@ -7,7 +7,7 @@ The `did:webvh` DID Method<br>v1.0
 
 This is the specification of the `did:webvh` DID Method, Version 1.0. Please note that we continue to make cleanups (e.g., fixing typos, broken links, missing references, etc.) and making wording clarifications in this version of the specification. With that work there will be no changes to the meaning of the specification.
 
-The current [Editor's Draft](../next) of the specification will be maintained in sync with this version as the cleanups and clarifications to v1.0 are made. When a change to the meaning of the specification is identified, the Editor's Draft synchronization with this version will be stopped, and this message will be updated.
+The current [Editor's Draft](../next) has diverged from this v1.0 version of the specification and is being updated with the intention of publishing a new version of the specification.
 
 **Current Specification:** [v1.0](../)
 

@@ -12,10 +12,10 @@ The following lists the substantive changes in each version of the specification
   - Remove the `prerotation` parameter. The feature is automatically enforced
     when `nextKeyHashes` is present.
   - Clarify the way the [[ref: Pre-Rotation]] feature works, once a `nextKeyHashes`
-    is committed, the next [[ref: DID log entries]] has to be signed by one of the committed keys.
+    is committed, the next [[ref: DID log entry]] has to be signed by one of the committed keys.
   - Clarify how to stop using [[ref: pre-rotation]], including when deactivating the DID.
   - Change the [[ref: witness]] handling by removing the witness [[ref: Data Integrity]]
-    proofs from the [[ref: DID Log]] file and puts them into a separate file
+    proofs from the [[ref: DID Log]] file and putting them into a separate file
     `did-witness.json`. Adjustments to the witness threshold algorithm were also
     made, such as removing the [[ref: DID Controllers]]' `selfweight` attribute,
     and defining that all witness DIDs must be `did:key` DIDs.
@@ -26,7 +26,7 @@ The following lists the substantive changes in each version of the specification
   - Rename the DID Method to `did:webvh` (`did:web` + Verifiable History)
   - Move the DID Method information site to [https://didwebvh.info](https://didwebvh.info).
 - Version 0.4
-  - Removes large non-normative sections, such as the implementer's guide, as they are now published on the [https://didtdw.org/](https://didtdw.org/) information site.
+  - Removes large non-normative sections, such as the implementer's guide, as they are now published on the [https://didwebvh.info](https://didwebvh.info) information site.
   - Removes the use of JSON Patch from the specification. The full DIDDoc is included in each [[ref: DID log entry]].
   - Changes the data format of the [[ref: DID log entries]] from an array to an object. The [[ref: DID Log]] remains in the [[ref: JSON Lines]] format.
   - Changes the [[ref: DID log entry]] array to be named JSON objects or properties.
@@ -37,7 +37,7 @@ The following lists the substantive changes in each version of the specification
   - Specified that the `versionTime` must be recorded as a UTC time zone timestamp.
 - Version 0.3
   - Removes the `cryptosuite` [[ref: parameter]], moving it to implied based on the `method` [[ref: parameter]].
-  - Change base32 encoding with [[ref: base58btc]], as it offers a better expansion rate.
+  - Replace base32 encoding with [[ref: base58btc]], as it offers a better expansion rate.
   - Remove the step to extract part of the [[ref: base58btc]] result during the generation of the [[ref: SCID]].
   - Use [[ref: multihash]] in the [[ref: SCID]] to differentiate the different hash function outputs.
 - Version 0.2
@@ -46,7 +46,7 @@ The following lists the substantive changes in each version of the specification
   - Adds the [[ref: parameter]] `portable` to enable the capability to move a
     `did:tdw` during the creation of the DID.
   - Removes the first two [[ref: Log Entry]] items `entryHash` and `versionId`
-    and replacing them with the new `versionId` as the first item in each
+    and replaces them with the new `versionId` as the first item in each
     [[ref: log entry]]. The new versionId takes the form `<version number>-<entryHash>`,
     where `<version number>` is the incrementing integer of version of the
     entry: 1, 2, 3, etc.
