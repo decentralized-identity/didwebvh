@@ -137,7 +137,7 @@ on the processing steps specified above.
 ::: example
 
 `did:webvh` DIDs and the corresponding web locations of their `did:webvh` log file.
-In the examples,`{SCID}` is a placeholder for where the generated [[ref: SCID]] will be
+In the examples, `{SCID}` is a placeholder for where the generated [[ref: SCID]] will be
 placed in the actual DIDs and HTTPS URLs. Note that when the `{SCID}` follows
 the literal `did:webvh:` as a separate element, the `{SCID}` is not part of the
 HTTPS URL.
@@ -185,7 +185,7 @@ DID](#publishing-a-parallel-didweb-did) section of this specification.
 
 ::: warning
 
-While the transformation from a did:webvh identifier to an HTTPS resource relies on DNS resolution, clients should not assume  that a `did:webvh` identifier is inherently bound to or controlled by the entity associated with the corresponding DNS domain. In fact, a `did:webvh` [[ref: DID Log]] may be obtained from sources other than its corresponding HTTPS location (perhaps indexed by its [[ref: SCID]]), and in such cases, the same verification steps may be applied to determine its validity.
+While the transformation from a did:webvh identifier to an HTTPS resource relies on DNS resolution, clients should not assume that a `did:webvh` identifier is inherently bound to or controlled by the entity associated with the corresponding DNS domain. In fact, a `did:webvh` [[ref: DID Log]] may be obtained from sources other than its corresponding HTTPS location (perhaps indexed by its [[ref: SCID]]), and in such cases, the same verification steps may be applied to determine its validity.
 
 Verification of a did:webvh identifier using this specification ensures cryptographic validity, but that does not imbue "trust" in the identifier itself. Trust in a did:webvh DID should be derived from external sources, such as verifiable credentials issued by trusted parties (possibly discovered by resolving the DID's [/whois](#did-url-whois-linkedvp-service) URL) or via Trust Registries that maintain authoritative records of trusted DIDs in a given context. Implementers should exercise caution and avoid conflating technical verification with trustworthiness, ensuring that reliance on a `did:webvh` identifier is informed by independent verification mechanisms.
 
@@ -271,7 +271,7 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
    reflects the web location at which the [[ref: DID Log]] (`did.jsonl`) will be published
 
    The DID **MUST** be a valid `did:webvh` DID as per the ABNF of a `did:webvh` DID defined
-   in the [Method-Specific  Identifier](#method-specific-identifier) section of this specification.
+   in the [Method-Specific Identifier](#method-specific-identifier) section of this specification.
 
    1. Note: the [[ref: SCID]] for a `did:webvh` DID is not by default in the HTTPS
       URL for the DID. A [[ref: DID Controller]] **MAY** include the [[ref: SCID]] in the HTTPS URL by inserting additional placeholder `{SCID}`
@@ -298,7 +298,7 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
    step 1, including the placement of the `{SICD}` placeholder for the [[ref: SCID]]. Other
    [[ref: DIDDoc]] verifications **SHOULD** be performed.
 
-   All other absolute reference's to the DID in the [[ref: DIDDoc]] must use the form defined
+   All other absolute references to the DID in the [[ref: DIDDoc]] must use the form defined
    in step 1, with the identified placeholder for the [[ref: SCID]] (e.g., `did:webvh:{SCID}:example.com#key-1`,
    `did:webvh:{SCID}:example.com:dids:issuer#key-1`, etc.).
 
@@ -437,7 +437,7 @@ For each entry:
    specification. Continue processing using the now active set of [[ref: parameters]].
    - While all [[ref: parameters]] in the first [[ref: Log Entry]] take effect
      immediately, some kinds of [[ref: parameters]] defined in later [[ref: entries]] only take effect *after* that entry has been published. For
-     example, updates to the `witnesses` array takes effect only
+     example, updates to the `witnesses` array take effect only
      *after* the entry in which they are defined has been published.
 2. The [[ref: Data Integrity]] proof in the entry **MUST** be valid and signed by
    an authorized key as defined in the [Authorized Keys](#authorized-keys)
@@ -470,14 +470,14 @@ For each entry:
    about each version:
       1. The [[ref: DIDDoc]].
       2. The `versionId` of the [[ref: DIDDoc]].
-      3. The UTC `versionTime`of the [[ref: DIDDoc]].
+      3. The UTC `versionTime` of the [[ref: DIDDoc]].
       4. The latest list of active [[ref: multikey]] formatted public keys
          authorized to update the DID, from the `updateKeys` lists in the
          [[ref: parameters]].
       5. If [[ref: pre-rotation]] is being used, the hashes of authorized keys that must
          be used in the `updateKeys` list of the next [[ref: DID log]] entry. The [[ref: pre-rotation]] hashes are in the
          `nextKeyHashes` list in the [[ref: parameters]].
-      6. All other `did:webvh` processing configuration settings as defined by in the
+      6. All other `did:webvh` processing configuration settings as defined in the
          `parameters` object.
       7. Add the value of top level `id`.
       8. The value of `DIDIdMatchCount`.
@@ -525,7 +525,7 @@ where the items in the Metadata JSON object are:
 - `versionTime` — The `versionTime` from the [[ref: Log Entry]] of the resolved DIDDoc version, in [[ref: ISO8601]] timestamp format.
 - `created` — The [[ref: ISO8601]] timestamp of the DID's first [[ref: log entry]], indicating when (according to the [[ref: DID Controller]]) the DID was created.
 - `updated` — The [[ref: ISO8601]] timestamp of the DID's last valid [[ref: log entry]].
-- `scid` — The [[ref: SCID]]] of the resolved DID.
+- `scid` — The [[ref: SCID]] of the resolved DID.
 - `portable` — A boolean value indicating whether the resolved DID has [[ref: portability]] active and so may be moved in the future, as defined in the [portability](#did-portability) section of this specification.
 - `deactivated` — A boolean indicating whether the DID has been deactivated. When `true`, the DID is no longer active.
 - `ttl` - A string containing the unsigned integer value of the DID's `ttl` [[ref: parameter]] (time-to-live) in seconds. The TTL is guidance from the [[ref: DID Controller]] for those resolving the DID about how long to cache the DID. The value is a string containing the integer value because the [[spec: DID-RESOLUTION]] specification requires that DID metadata not be integers. The value needs to be converted to an integer by the resolver client before use.
@@ -633,7 +633,7 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
    section of this specification, and the `proofPurpose` set to `assertionMethod`.
 7. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
    in the `parameters` property **MUST** match a hash in
-   the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]] entry with exception of the first entry, as defined in the
+   the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]] entry with the exception of the first entry, as defined in the
    [Key [[ref: Pre-Rotation]] Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
    section of this specification.
 8. The proof JSON object **MUST** be added as the value of the `proof` property in the [[ref: log entry]].
@@ -647,7 +647,7 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
    Witnesses](#did-witnesses) section of this specification.
 11. The new [[ref: log entry]] **MUST** be appended to the existing contents of
     the [[ref: DID Log]] file `did.jsonl`.
-12. The updated [[ref: DID Log]] file **MUST** be published the appropriate
+12. The updated [[ref: DID Log]] file **MUST** be published at the appropriate
     location defined by the `did:webvh` identifier.
     - This is a logical operation -- how a deployment serves the `did.jsonl`
     content is not constrained.
@@ -671,7 +671,7 @@ A concern with using the [[spec: DID-CORE]] approach to deactivation is the reso
 
 To resolve a prior version of a deactivated `did:webvh` DID, a client can use the appropriate DID Resolution query [[ref: parameters]] `versionId`, `versionTime`, or the did:webvh-specific `versionNumber` (as described in the Read (Resolve) section of this specification). When such a DID is resolved in this way, the DID Resolution Metadata **MUST** include the property name and value `"deactivated": true`.
 
-A [[ref: DID Controller]] can “deactivate” a DID by removing the published [[ref: DID Log]] and associated files and resources. Once removed, attempts to retrieve the [[ref: DID Log]] will result in an `Not Found` error status when resolving the DID. [[ref: Watchers]] monitoring a removed DID **SHOULD** continue to cache the last known valid state of the DID indefinitely so that their clients can still resolve and reference it, even after the [[ref: DID Log]] has been deleted.
+A [[ref: DID Controller]] can “deactivate” a DID by removing the published [[ref: DID Log]] and associated files and resources. Once removed, attempts to retrieve the [[ref: DID Log]] will result in a `Not Found` error status when resolving the DID. [[ref: Watchers]] monitoring a removed DID **SHOULD** continue to cache the last known valid state of the DID indefinitely so that their clients can still resolve and reference it, even after the [[ref: DID Log]] has been deleted.
 
 ### DID Method Processes
 
@@ -734,7 +734,7 @@ The following lists the [[ref: parameters]], their data types, and enumerated va
 - `updateKeys`: A JSON array of [[ref: multikey]] formatted public keys associated with the private keys that are authorized to sign the log entries that update the DID. See the [Authorized Keys](#authorized-keys) section of this specification for additional details.
   - This property **MUST** appear in the first [[ref: log entry]] and **MAY** appear in subsequent entries.
   - If not present in later [[ref: DID log entries]], the previous value continues to apply.
-  - A key from the active `updateKeys` array **MUST** be used to authorize the each [[ref: log entry]], where active is defined as follows.
+  - A key from the active `updateKeys` array **MUST** be used to authorize each [[ref: log entry]], where active is defined as follows.
     - In the first [[ref: log entry]], the active `updateKeys` is the one defined in that entry.
     - In all other [[ref: log entries]] *without* [[ref: Key Pre-Rotation]] active, the active `updateKeys` is that of the most recent **prior** [[ref: log entry]].
     - In all other [[ref: log entries]] *with* [[ref: Key Pre-Rotation]] active, the active `updateKeys` is that of the most current [[ref: log entry]].
@@ -747,7 +747,7 @@ The following lists the [[ref: parameters]], their data types, and enumerated va
   - While [[ref: Key Pre-Rotation]] is active, **every** [[ref: multikey]] in the current entry's `updateKeys` (not only those that appear new) **MUST** have its hash in the previous entry's `nextKeyHashes`.
   - A [[ref: DID Controller]] **MAY** include extra hashes in the `nextKeyHashes` array that are not subsequently used in an `updateKeys` entry. Any unused hashes in `nextKeyHashes` arrays are ignored.
   - The value of `nextKeyHashes` **MAY** be set to an empty array (`[]`) to deactivate [[ref: pre-rotation]]. For additional details about turning off [[ref: pre-rotation]], see the [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification) section of this specification.
-- `witness`: A JSON object declaring the set of witnesses and threshold number of witness proofs required to update the DID. For details of this data and its usage in the DID update approval process, see the [DID Witnesses](#did-witnesses) section of this specification..
+- `witness`: A JSON object declaring the set of witnesses and threshold number of witness proofs required to update the DID. For details of this data and its usage in the DID update approval process, see the [DID Witnesses](#did-witnesses) section of this specification.
   - Defaults to `{}` if not set in the first [[ref: log entry]].
   - If not set in other [[ref: log entries]], its value is retained from the most recent prior value.
   - If the `witness` property is updated from `{}`, the change is immediately active, and the corresponding [[ref: log entry]] **MUST** be [[ref: witnessed]].
@@ -768,7 +768,7 @@ The following lists the [[ref: parameters]], their data types, and enumerated va
 - `deactivated`: A JSON boolean that indicates whether the DID has been deactivated. A deactivated DID is no longer subject to updates but remains resolvable. See the [deactivate (revoke)](#deactivate-revoke) section of this specification for more details.
   - Defaults to `false` if not set in the first [[ref: DID log entry]].
   - If set to `true`, the DID is considered deactivated and no further updates to the DID are permitted.
-- `ttl`: An unsigned integer that indicates how long, in seconds, a resolver should cache the resolved `did:webvh` DID before refreshing. It provides guidance from the [[ref: DID Controller]] on cache duration, with a range of 0 to 2^31. The parameter is analogous to the `TTL` parameter used in DNS [[spec: rfc2181]]. Caching a `did:webvh` can be valuable in places where the business rules require resolving a number of DID URLs for the same DID. For example, a client might want call the resolver to the current [[ref: DIDDoc]], and then make repeated calls to get all of the previous versions of the [[ref: DIDDoc]]. By caching the [[ref: DIDDoc]] state, the resolver would not have to retrieve and process the [[ref: DID Log]] on each call.
+- `ttl`: An unsigned integer that indicates how long, in seconds, a resolver should cache the resolved `did:webvh` DID before refreshing. It provides guidance from the [[ref: DID Controller]] on cache duration, with a range of 0 to 2^31. The parameter is analogous to the `TTL` parameter used in DNS [[spec: rfc2181]]. Caching a `did:webvh` can be valuable in places where the business rules require resolving a number of DID URLs for the same DID. For example, a client might want to call the resolver to get the current [[ref: DIDDoc]], and then make repeated calls to get all of the previous versions of the [[ref: DIDDoc]]. By caching the [[ref: DIDDoc]] state, the resolver would not have to retrieve and process the [[ref: DID Log]] on each call.
   - Defaults to `3600` (1 hour) if not set in the first [[ref: DID log entry]].
   - If set to `0`, indicates that the DID should not be cached.
 
@@ -802,7 +802,7 @@ To generate the [[ref: SCID]] for a `did:webvh` DID, the DID Controller
 
 Where:
 
-1. The `preliminary [[ref: log entry]] with placeholders` consists of the following
+1. The `preliminary log entry with placeholders` consists of the following
    pre-publication JSON object of what will become the first [[ref: log entry]]. The
    placeholder is the literal string "`{SCID}`".
 
@@ -893,7 +893,7 @@ Resulting [[ref: entryHash]]: `QmQ6FJ4fk2xheSSQoEjVpTgx9AQPKhJgtR9hn1nr4EeCrZ`
 
 ##### Verify The Entry Hash
 
-To verify the `entryHash` for a given  `did:webvh` [[ref: DID log entry]], a DID
+To verify the `entryHash` for a given `did:webvh` [[ref: DID log entry]], a DID
 Resolver **MUST** execute the following process:
 
 1. Extract the `versionId` in the [[ref: DID log entry]], and
@@ -934,7 +934,7 @@ Each entry in the [[ref: DID Log]] **MUST** include a [[ref: Data Integrity]] `p
 3. `proofPurpose` is `assertionMethod`,
 4. `verificationMethod` resolves to a [[ref: multikey]] that appears verbatim in the **active** `updateKeys`.
 
-Resolvers **MUST** reject an entry whose proof fails *any* check. A structurally-valid signature over a *different* cryptosuite then allowed by the active `method` parameter **MUST NOT** be accepted.
+Resolvers **MUST** reject an entry whose proof fails *any* check. A structurally-valid signature over a *different* cryptosuite than allowed by the active `method` parameter **MUST NOT** be accepted.
 
 The authorized verification keys for `did:webvh` are the [[ref: multikey]]-formatted
 public keys in the **active** `updateKeys` list from the `parameters` property of
@@ -951,7 +951,7 @@ each [[ref: DID Log]] entry **MUST** be one from the list of active
 The `did:webvh` Implementation Guide contains further discussion on the management
 of keys authorized to update the DID.
 
-The **active** `updateKeys` for subsequent [[ref: entries]] depends if the [[ref: Pre-Rotation]] is active or not.
+The **active** `updateKeys` for subsequent [[ref: entries]] depends on whether [[ref: Pre-Rotation]] is active or not.
 
 ##### No Key Prerotation
 
@@ -982,7 +982,7 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
 - The [[ref: parameter]] `portable` **MUST** be set to `true` in the **first** [[ref: log entry]]. An entry that introduces `portable: true` after the first entry **MUST** be rejected.
 - The [[ref: SCID]] **MUST** be the same in the original and renamed DID. Specifically, the SCID segment of `state.id` in **every** [[ref: log entry]] (including the renamed entry and all subsequent entries) **MUST** equal the `parameters.scid` from the first entry. Only the host/path portion of `state.id` may change under portability; the SCID segment is immutable for the life of the DID. A "portable rename" entry whose `state.id` carries a different SCID **MUST** be rejected.
 - The [[ref: DIDDoc]] **MUST** contain the prior DID string as an `alsoKnownAs` entry.
-- [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
+- [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:rfc1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).
 
 **Security Note — Misleading Prior Domain Association**
 
@@ -997,20 +997,20 @@ compromised by an attacker, the attacker should not be able to take control of
 the DID by using the compromised keys to rotate to new keys the attacker
 controls. Assuming the attacker has not also compromised the committed key
 pairs, they cannot rotate the authorization keys without detection. See the
-non-normative section about [Using [[ref: Pre-Rotation]] Keys]([#using-pre-rotation-keys](https://didwebvh.info/latest/implementers-guide/prerotation-keys/))
+non-normative section about [Using Pre-Rotation Keys](https://didwebvh.info/latest/implementers-guide/prerotation-keys/)
 in the `did:webvh` Implementer's Guide for additional guidance.
 
 As described in the [parameters](#didwebvh-did-method-parameters) section of
 this specification, a [[ref: DID Controller]] **MAY** include the [[ref: parameter]]
 `nextKeyHashes` with a non-empty list in any [[ref: DID log entry]] to activate
 the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active, all
-[[ref: multikey]] representations of the public keys in the `updateKeys` [[ref: parameters]] property in other than the initial version of the [[ref: DID log entry]] **MUST** have their hash in the  `nextKeyHashes` array from the previous
+[[ref: multikey]] representations of the public keys in the `updateKeys` [[ref: parameters]] property in other than the initial version of the [[ref: DID log entry]] **MUST** have their hash in the `nextKeyHashes` array from the previous
 [[ref: DID log entry]]. If not, terminate the resolution process with an error.
 
 A [[ref: DID Controller]] may turn off the use of pre-rotation by setting the
 [[ref: parameter]] `nextKeyHashes` to `[]` (empty array) in any [[ref: DID log entry]]. If
 there is an active set of `nextKeyHashes` at the time, the pre-rotation
-requirements remains in effect for the [[ref: DID Log entry]]. The subsequent
+requirements remain in effect for the [[ref: DID Log entry]]. The subsequent
 [[ref: DID Log entry]] **MUST** use the non-pre-rotation rules.
 
 To create a hash to be included in the `nextKeyHashes` array, the [[ref: DID Controller]] **MUST** execute the following process for each possible future
@@ -1039,7 +1039,7 @@ authorization key.
    `updateKeys` property in the [[ref: parameters]] and the private key can be used to sign the [[ref: log entry]]'s DID update authorizations
    proofs.
 
-A [[ref: DID Controller]] **MAY** add include extra entries (for keys or just random
+A [[ref: DID Controller]] **MAY** include extra entries (for keys or just random
 strings) in a `nextKeyHashes` array.
 
 After rotating from a pre‑rotation public key, the corresponding private key
@@ -1082,7 +1082,7 @@ which the [[ref: DID Log]] is published.
 
 ##### Witness Lists
 
-The list of DIDs that witness DID updates are defined in the `witness`
+The list of DIDs that witness DID updates is defined in the `witness`
 parameter, as described in the [Parameters](#didwebvh-did-method-parameters)
 section of this specification. After the first `witness` parameter has been set
 to other than `{}` (empty object) in a [[ref: DID log entry]], and while there
@@ -1100,7 +1100,7 @@ to identify who the witnesses are, a mechanism should be defined by the
 governance of the ecosystem, such as the entry of the DID in a trust registry.
 Such mechanisms are outside the scope of this specification.
 
-When a [[ref: did:key]] DID is used in any `did:webvh` context — as a witness `id`, as a `verificationMethod` controller, or as an `assertionMethod` reference in a [[ref: Data Integrity]] proof the [[ref: did:key]] specification **MUST** be followed. Notably, the multibase value in the method-specific identifier (the **body** of the DID) **MUST** equal the multibase value in any fragment identifier (if present) that references the lone verification method within the DID. For `did:key:z6MkABC...#z6MkABC...`, body and fragment **MUST** be byte-for-byte equal. Verifiers **MUST** reject any reference where they differ, because the body authoritatively defines the public key while the fragment is the Verification Method id; permitting divergence would let an attacker claim a proof was made by `did:key:A` while actually signing with `did:key:B`.
+When a [[ref: did:key]] DID is used in any `did:webvh` context — as a witness `id`, as a `verificationMethod` controller, or as an `assertionMethod` reference in a [[ref: Data Integrity]] proof — the [[ref: did:key]] specification **MUST** be followed. Notably, the multibase value in the method-specific identifier (the **body** of the DID) **MUST** equal the multibase value in any fragment identifier (if present) that references the lone verification method within the DID. For `did:key:z6MkABC...#z6MkABC...`, body and fragment **MUST** be byte-for-byte equal. Verifiers **MUST** reject any reference where they differ, because the body authoritatively defines the public key while the fragment is the Verification Method id; permitting divergence would let an attacker claim a proof was made by `did:key:A` while actually signing with `did:key:B`.
 
 ##### The `witness` Parameter
 
@@ -1226,7 +1226,7 @@ The following process is used to witness a DID version update:
   - The specification leaves to implementers how [[ref: witness]] proofs are
     conveyed to the [[ref: DID Controller]].
 - The [[ref: DID Controller]] **MUST** add the proof to the record for
-  the applicable `versionId` for the unpublished [[ref: DID log entry]].
+  the applicable `versionId` for the unpublished [[ref: DID log entry]]
   to the `did-witness.json` file.
   - The [[ref: DID Controller]] **MAY** publish the updated `did-witness.json` file
     as new witness proofs are added to the file.
@@ -1273,7 +1273,7 @@ The governance of [[ref: watchers]] is out of scope for this specification, whic
 
 ##### Publishing Watcher URLs
 
-did:webvh provides a mechanisms for notifying resolvers (and their clients via [[spec:DID-RESOLUTION]] metadata) about configured [[ref: watchers]].  The `watchers` [[ref: parameter]] lists URIs that identify the DID's [[ref: watchers]].
+did:webvh provides a mechanism for notifying resolvers (and their clients via [[spec:DID-RESOLUTION]] metadata) about configured [[ref: watchers]].  The `watchers` [[ref: parameter]] lists URIs that identify the DID's [[ref: watchers]].
 
 [[ref: Watchers]] can be used by `did:webvh` resolvers and resolver clients. When resolving a `did:webvh` DID, `did:webvh` resolvers **MUST** provide the active list of [[ref: watchers]] in the DID metadata, as noted in the [read/resolve](#read-resolve) section of this specification.
 
@@ -1305,11 +1305,11 @@ The following HTTP API operations define the interaction between [[ref: watchers
 
 - **GET `<WATCHER URL>/log?scid=<SCID>`**: Returns the latest [[ref: DID Log]] for the given [[ref: SCID]].
 - **POST `<WATCHER URL>/log?did=<DID>`**: Notifies the [[ref: watcher]] of a log update, prompting retrieval of the latest [[ref: DID Log]] and [[ref: witness]] file. This endpoint uses the `did` as the query parameter instead of the [[ref: SCID]] to ensure that the [[ref: watcher]] is notified in the case of the DID moving to a new web location. The [[ref: watcher]] is expected to continue indexing the DID using its [[ref: SCID]].
-- **POST `<WATCHER URL>/log/delete?scid=<SCID>`**: Notifies the [[ref: watcher]] that the given `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` from clients should return a `404 Not Found` status. The body of the URL is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
+- **POST `<WATCHER URL>/log/delete?scid=<SCID>`**: Notifies the [[ref: watcher]] that the given `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` from clients should return a `404 Not Found` status. The body of the request is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow that must be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
 - **GET `<WATCHER URL>/witness?scid=<SCID>`**: Returns the latest `witness.json` file for the given [[ref: SCID]].
 - **GET `<WATCHER URL>/resource?scid=<SCID>&path=<resourcePath>`**: Retrieves the requested resource.
 - **POST `<WATCHER URL>/resource?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] of a new or updated resource.
-- **POST `<WATCHER URL>/resource/delete?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] that the given `<resourcePath>` associated with the `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` and `<resourcePath>` from clients should return a `404 Not Found` status. The body of the URL is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
+- **POST `<WATCHER URL>/resource/delete?scid=<SCID>&path=<resourcePath>`**: Notifies the [[ref: watcher]] that the given `<resourcePath>` associated with the `<SCID>` should be deleted from the [[ref: watcher]]'s cache. If removed, subsequent requests for that `<SCID>` and `<resourcePath>` from clients should return a `404 Not Found` status. The body of the request is a Data Integrity proof from the requester that may be used by the [[ref: Watcher]] to decide on the legitimacy of the request. The [[ref: Watcher]] will act (or not) on the request according to its governance, which is out of scope of this specification. For example, a [[ref: watcher]] might implement a workflow that must be completed to approve the deletion of a `<SCID>` from the [[ref: watcher]]'s cache. The endpoint could be used to carry out a "right to be forgotten" order, such as might be required under Europe's [General Data Protection Regulation (GDPR)](https://gdpr-info.eu/).
 
 #### Publishing a Parallel `did:web` DID
 
