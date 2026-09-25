@@ -48,6 +48,18 @@
           }
         },
         {
+          "draft-msporny-base58-03": {
+            "href": "https://datatracker.ietf.org/doc/html/draft-msporny-base58-03",
+            "title": "The Base58 Encoding Scheme",
+            "rawDate": "2021-03-31",
+            "authors": [
+              "S. Nakamoto",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        },
+        {
           "json-schema-core": {
             "href": "https://json-schema.org/draft/2020-12/json-schema-core",
             "title": "JSON Schema: A Media Type for Describing JSON Documents",
@@ -71,6 +83,30 @@
               "Joe Andrieu"
             ],
             "status": "W3C Editor's Draft"
+          }
+        },
+        {
+          "DID-EXTENSION-RESOLUTION": {
+            "href": "https://w3c.github.io/did-extensions-resolution/",
+            "title": "DID Resolution Extensions Registry",
+            "rawDate": "2024-11-19",
+            "authors": [
+              "The Decentralized Identifier Working Group (W3C)"
+            ],
+            "status": "W3C Technical Report"
+          }
+        },
+        {
+          "LINKED-VP": {
+            "href": "https://identity.foundation/linked-vp/spec/v1.0.0/",
+            "title": "Linked Verifiable Presentation v1.0.0",
+            "rawDate": "2025-07-16",
+            "authors": [
+              "Jan Christoph Ebersbach (identinet)",
+              "Brian Richter (Aviary Tech)",
+              "Markus Sabadello (Danube Tech)"
+            ],
+            "status": "DIF Ratified Specification"
           }
         },
         {
@@ -151,6 +187,18 @@
           }
         },
         {
+          "draft-msporny-base58-03": {
+            "href": "https://datatracker.ietf.org/doc/html/draft-msporny-base58-03",
+            "title": "The Base58 Encoding Scheme",
+            "rawDate": "2021-03-31",
+            "authors": [
+              "S. Nakamoto",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        },
+        {
           "json-schema-core": {
             "href": "https://json-schema.org/draft/2020-12/json-schema-core",
             "title": "JSON Schema: A Media Type for Describing JSON Documents",
@@ -174,6 +222,30 @@
               "Joe Andrieu"
             ],
             "status": "W3C Editor's Draft"
+          }
+        },
+        {
+          "DID-EXTENSION-RESOLUTION": {
+            "href": "https://w3c.github.io/did-extensions-resolution/",
+            "title": "DID Resolution Extensions Registry",
+            "rawDate": "2024-11-19",
+            "authors": [
+              "The Decentralized Identifier Working Group (W3C)"
+            ],
+            "status": "W3C Technical Report"
+          }
+        },
+        {
+          "LINKED-VP": {
+            "href": "https://identity.foundation/linked-vp/spec/v1.0.0/",
+            "title": "Linked Verifiable Presentation v1.0.0",
+            "rawDate": "2025-07-16",
+            "authors": [
+              "Jan Christoph Ebersbach (identinet)",
+              "Brian Richter (Aviary Tech)",
+              "Markus Sabadello (Danube Tech)"
+            ],
+            "status": "DIF Ratified Specification"
           }
         },
         {
