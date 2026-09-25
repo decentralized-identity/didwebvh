@@ -58,7 +58,7 @@ providers.
 
 [[def: DID Resources, DID Resource]]
 
-~ A DID Resource is an object (often a file) that is referenced by a DID URL, with a path to the resource. The DID URL allows resolvers to locate and retrieve specific content associated with a DID. Examples include configuration files, schemas, credential definitions, or other structured data linked to the DID.
+~ A DID Resource is an object (often a file) that is referenced by a DID URL, with a path to the resource. The DID URL allows DID URL dereferencers to locate and retrieve specific content associated with a DID. Examples include configuration files, schemas, credential definitions, logos, images or other data linked to the DID.
 
 [[def: did:web]]
 
@@ -119,10 +119,11 @@ able to rotate to a new key known only to the attacker.
 
 [[def: Linked-VP, Linked Verifiable Presentation]]
 
-~ A [[spec:DID-CORE]] `service` entry that specifies where a [[ref: verifiable presentation]]
-about the DID subject can be found. The [Decentralized Identity
-Foundation](https://identity.foundation/) hosts the [Linked VP
-Specification](https://identity.foundation/linked-vp/).
+~ A [[ref: Verifiable Presentation]] about a DID subject, discoverable via a
+`service` entry in the subject's [[ref: DIDDoc]], as described by the
+[Decentralized Identity Foundation](https://identity.foundation/)'s [Linked VP
+Specification](https://identity.foundation/linked-vp/). `did:webvh` locates
+its Linked-VP via the [`#whois` Service](#the-whois-service).
 
 [[def: multibase]]
 
