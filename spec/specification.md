@@ -411,7 +411,8 @@ The following steps MUST be executed to resolve the [[ref: DIDDoc]] for a `did:w
    `did:webvh` implicit services formally defined in [`did:webvh` Implicit DID
    URL Path Handler Services](#didwebvh-implicit-did-url-path-handler-services),
    the resolver **MUST** add them to the resolved [[ref: DIDDoc]], using the
-   defaults described there.
+   defaults described there. This requirement is **at risk**; see the note in
+   that section.
 
 To process the retrieved [[ref: DID Log]] file, the resolver **MUST** carry out the following steps on each of the [[ref: log entries]] in the order they appear in the file, applying the [[ref: parameters]] from the current and previous entries. Every step **MUST** be performed for **every** entry; in particular, [[ref: Data Integrity]] proof verification (step 2) and `entryHash` verification (step 3) **MUST NOT** be skipped for intermediate entries on the grounds that the resolver only needs the latest [[ref: DIDDoc]].
 
@@ -1383,6 +1384,22 @@ need to know which case applies; it simply locates and processes whatever
 and `path`.
 
 #### `did:webvh` Implicit DID URL Path Handler Services
+
+::: warning At Risk
+
+**Feature at Risk:** The requirement that resolvers automatically add the
+`did:webvh` implicit services (`#files` and `#whois`) to the resolved
+[[ref: DIDDoc]] is at risk of being removed in a future version of this
+specification. Resolvers will continue to add the implicit services to the
+[[ref: DIDDoc]] of a DID whose `method` [[ref: parameter]] is
+`did:webvh:1.0`. Whether, or for how long, DIDs updated to a later version
+will continue to have the implicit services added has not been decided. A
+[[ref: DID Controller]] updating a DID to a version that does not add the
+implicit services would have to explicitly include the corresponding
+`PathHandler`-typed services in the [[ref: DIDDoc]] to support `/whois` and
+general DID URL path handling.
+
+:::
 
 `did:webvh` implicitly defines exactly two `PathHandler`-typed services:
 `#files` and `#whois`. If the resolved [[ref: DIDDoc]] does not already
