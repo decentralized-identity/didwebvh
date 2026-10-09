@@ -3,9 +3,9 @@ The `did:webvh` DID Method<br>v1.0
 
 ![did:webvh Logo](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg)
 
-**Specification Status:** v1.0 - EDITORS DRAFT
+**Specification Status:** v1.x - EDITORS DRAFT
 
-This **v1.0 - Editors Draft** is being maintained in sync with the v1.0 specification (other than this header) while cleanups and clarifications are made to the specification. Once a breaking change is identified, we will stop keeping the two versions of the specification in sync.
+This **Editors Draft** incorporates work towards the next version of the `did:webvh` specification, beyond [v1.0](../v1.0), and is no longer being kept in sync with that version.
 
 **Current Specification:** [v1.0](../v1.0)
 

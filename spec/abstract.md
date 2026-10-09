@@ -30,7 +30,7 @@ limitations as a long-lasting DID. `did:webvh` features include:
 - An optional mechanism for publishing the location of `did:webvh` [[ref: watchers]] in the [[ref: DID log]] that resolvers can use as another
   source of DID data for long term resolution or detection of malicious [[ref: DID Controllers]].
 - DID URL path handling that defaults (but can be overridden) to automatically
-  resolving `<did>/path/to/file` by using a comparable DID-to-HTTPS translation
+  dereferencing `<did>/path/to/file` by using a comparable DID-to-HTTPS translation
   as for the [[ref: DIDDoc]].
 - A DID URL path `<did>/whois` that defaults to automatically returning (if
   published by the [[ref: DID controller]]) a [[ref: Verifiable Presentation]]
