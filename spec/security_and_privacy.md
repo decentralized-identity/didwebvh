@@ -91,9 +91,9 @@ DID resource retrieval endpoints **MUST** be authenticated using TLS server auth
 A `did:webvh` resolver acts as an HTTP client on behalf of an untrusted DID string — a Server-Side Request Forgery vector without explicit safeguards. Resolvers **MUST**:
 
 1. **No automatic redirects.** Do not auto-follow HTTP 3xx responses when fetching `did.jsonl` or `did-witness.json`. If redirect-following is an opt-in, re-apply every check below at each target.
-2. **IP-literal rejection.** Reject IPv4/IPv6 literal hosts both (a) after percent-decoding the DID's domain segment, and (b) after DNS resolution. Default deny: loopback (`127.0.0.0/8`, `::1`), private (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `fc00::/7`), link-local (`169.254.0.0/16`, `fe80::/10`). Dev opt-ins permitted but off by default.
-3. **Case-insensitive percent-decoding.** Per [[spec:rfc3986]] §2.1, normalise hex case **before** any allow/deny decision. Rejecting `%3A` but accepting `%3a` is non-compliant.
-4. **Re-validate after decoding.** All host/path checks apply to decoded values. Percent-encoded IP literals and traversal sequences (`%2E%2E`, `%2e%2e`) **MUST** be rejected after decoding.
+2. **IP-literal rejection.** Reject IPv4/IPv6 literal hosts (a) by validating the unencoded ASCII domain and excluding numeric final labels as specified in [Method-Specific Identifier](#method-specific-identifier), and (b) after DNS resolution. Default deny: loopback (`127.0.0.0/8`, `::1`), private (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `fc00::/7`), link-local (`169.254.0.0/16`, `fe80::/10`). Dev opt-ins permitted but off by default.
+3. **Case-insensitive port separator.** Per [[spec:rfc3986]] §2.1, both `%3A` and `%3a` **MUST** be recognized as a port separator. No other percent-encoding is permitted in the domain name.
+4. **Re-validate paths after decoding.** All path checks apply to decoded values. Percent-encoded traversal sequences (`%2E%2E`, `%2e%2e`) **MUST** be rejected after decoding.
 5. **Response size cap.** Enforce a max body size for both files; check `Content-Length` first; treat absence as grounds for a stricter cap or rejection. Suggested default: 5 MiB.
 6. **Operation timeout.** Enforce a wall-clock timeout on the complete resolution. Suggested default: 30 s.
 7. **HTTPS only.** Reject any non-`https` scheme, including after a redirect.
@@ -122,10 +122,29 @@ Secret data (e.g., controller private keys, witness private keys, random seeds) 
 
 ### International Domain Names
 
-`did:webvh` implementers **MAY** publish [[ref: DID Logs]] on domains that use international domain names.
- The [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section of this specification
- **MUST** be followed by [[ref: DID Controllers]] and DID resolvers to ensure the proper
- handling of international domains.
+`did:webvh` supports internationalized domain names by carrying them in the
+DID as IDNA2008 A-labels, as specified in
+[International Domain Names](#international-domain-names). Conversion from
+U-labels takes place once, when the [[ref: DID Controller]] creates the DID.
+Resolvers treat the domain as opaque ASCII and apply no IDNA processing.
+This removes any dependence of resolution on the IDNA implementation of the
+resolver's platform, so every conforming resolver retrieves the
+[[ref: DID Log]] from the same HTTPS URL.
+
+Internationalized domain names make homograph attacks possible: visually
+confusable domain names that differ in their A-labels. Two such DIDs are
+different DIDs with different [[ref: SCIDs]], and resolution cannot confuse
+one with the other. A person shown the Unicode display form, however, might.
+Software that displays U-labels **SHOULD** apply the confusable and
+mixed-script detection in [[spec:UTS39]], **SHOULD** follow the guidance on
+IDN display in [[spec:RFC5890]], and **SHOULD** make the A-label form
+available for inspection.
+
+[[ref: DID Controllers]] **SHOULD** confirm, before creating a DID on an
+internationalized domain, that the A-label host name they derived is the one
+registered in the DNS and named in the TLS certificate of the publishing
+server. A host name derived with a different UTS #46 profile can be a
+different domain.
 
 ### Cross-Origin Resource Sharing (CORS) Policy Considerations
 

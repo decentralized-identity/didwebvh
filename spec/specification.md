@@ -33,13 +33,15 @@ base58btc-char            = %x31-39       ; 1-9
                           / %x61-6B       ; a-k
                           / %x6D-7A       ; m-z
 
-webvh-domain              = encoded-domain-name
-                             [ percent-encoded-port ]
+webvh-domain              = domain-name [ percent-encoded-port ]
 
-encoded-domain-name       = encoded-domain-label
-                             1*( "." encoded-domain-label )
+domain-name               = domain-label 1*( "." domain-label )
 
-encoded-domain-label      = 1*( ALPHA / DIGIT / "-" / pct-encoded )
+domain-label              = let-dig [ *61let-dig-hyp let-dig ]
+
+let-dig                   = ALPHA / DIGIT
+
+let-dig-hyp               = ALPHA / DIGIT / "-"
 
 percent-encoded-port      = "%3A" port-number
 
@@ -52,15 +54,36 @@ ABNF character strings are case-insensitive by default, so `"%3A"` accepts eithe
 
 The `scid` production describes the base58btc-encoded SHA-256 multihash generated and verified as specified in [SCID Generation and Verification](#scid-generation-and-verification). The `{SCID}` value used temporarily during DID creation is a placeholder and is not a conforming `scid`; it **MUST** be replaced before the DID is published or resolved.
 
-The `webvh-domain` identifies the web origin from which the DID Log can be retrieved. After percent-decoding and applying the IDNA processing defined in [The DID to HTTPS Transformation](#the-did-to-https-transformation):
+The `webvh-domain` identifies the web origin from which the [[ref: DID Log]]
+can be retrieved. The `domain-name` is an ASCII fully qualified domain name.
+It **MUST NOT** contain percent-encoding. The only percent-encoded sequence
+permitted in `webvh-domain` is the `%3A` (or `%3a`) separator that introduces
+`percent-encoded-port`. A domain name that contains non-ASCII characters
+**MUST** be expressed using IDNA2008 A-labels, as specified in
+[International Domain Names](#international-domain-names).
 
-- the result **MUST** be a fully qualified domain name conforming to [[spec:RFC1035]], [[spec:RFC1123]], and [[spec:RFC2181]];
-- the domain name **MUST** match the applicable TLS server identity requirements in [[spec:RFC9525]];
-- the domain **MUST NOT** be an IPv4 or IPv6 address, including a non-canonical textual representation that a URL parser would normalize to an IP address;
-- every DNS label **MUST** be non-empty, no more than 63 octets after IDNA processing, and the complete domain name **MUST** satisfy the DNS length limit; and
-- percent-encoding **MUST** be valid and **MUST** be decoded exactly once before domain and port validation.
+The `domain-name`:
 
-A percent-encoded colon (`%3A` or `%3a`) **MUST NOT** appear within `encoded-domain-name`. A `%3A` immediately followed by one to five decimal digits at the end of `webvh-domain` **MUST** be parsed as `percent-encoded-port`; if `percent-encoded-port` is present, `port-number` **MUST** represent a decimal integer in the range 1 through 65535 inclusive. The domain component **MUST NOT** contain more than one percent-encoded port separator.
+- **MUST** conform to [[spec:RFC1035]], [[spec:RFC1123]] and [[spec:RFC2181]].
+  In particular, every label **MUST** be an LDH label as defined in
+  [[spec:RFC5890]] Section 2.3.1, of between 1 and 63 octets.
+- **MUST NOT** exceed 253 octets in total, excluding any port.
+- **MUST** match the applicable TLS server identity requirements in
+  [[spec:RFC9525]].
+- **MUST NOT** be, or be interpretable as, an IPv4 or IPv6 address. This
+  includes non-canonical textual forms that a URL parser would normalize to an
+  IP address. To this end, the final label **MUST NOT** consist only of
+  decimal digits, and **MUST NOT** consist of `0x` or `0X` followed only by
+  zero or more hexadecimal digits.
+- **MUST**, if any label begins with the characters `xn--` in any letter case,
+  write that label entirely in lowercase.
+
+A percent-encoded colon **MUST NOT** appear within `domain-name`. A `%3A` or
+`%3a` immediately followed by one to five decimal digits at the end of
+`webvh-domain` **MUST** be parsed as `percent-encoded-port`. If
+`percent-encoded-port` is present, `port-number` **MUST** represent a decimal
+integer in the range 1 through 65535 inclusive. The domain component
+**MUST NOT** contain more than one percent-encoded port separator.
 
 Each `webvh-path-segment` represents one segment of the path used to retrieve the DID Log. A path segment **MUST** be non-empty. After percent-decoding exactly once, it:
 
@@ -95,6 +118,95 @@ These are syntax templates: `<SCID>` stands for an actual conforming SCID and is
 
 As specified in the [DID-to-HTTPS Transformation](#the-did-to-https-transformation) section of this specification, `did:webvh` and `did:web` DIDs that have the same fully qualified domain and path transform to the same HTTPS URL, with the exception of the final file: `did.json` for `did:web` and `did.jsonl` for `did:webvh`. For `did:webvh` DIDs using [[ref: witnesses]], a `did-witness.json` file **MUST** also be available logically beside the `did.jsonl` file. See the [witnesses](#did-witnesses) section of this specification for details.
 
+#### Case Sensitivity and Normalization
+
+This section defines the case sensitivity and normalization of the
+`did:webvh` method-specific identifier, as required by [[spec:DID-CORE]]
+Section 8.1.
+
+- **Comparison.** Two `did:webvh` DIDs are the same DID if and only if they
+  are identical character for character after the hexadecimal digits of every
+  percent-encoded octet have been converted to uppercase. No other
+  normalization is applied when comparing DIDs. In particular, letter case in
+  the SCID, the domain name and the path segments is significant for DID
+  comparison, even though DNS treats domain names case-insensitively.
+- **No resolver normalization.** Resolvers **MUST NOT** apply Unicode
+  normalization, IDNA mapping, Punycode conversion or case folding to any part
+  of a `did:webvh` DID, either when parsing it or when comparing it to the
+  `id` of a resolved [[ref: DIDDoc]].
+- **Canonical form for producers.** [[ref: DID Controllers]] **MUST** use
+  uppercase hexadecimal digits in all percent-encoding, and **MUST NOT**
+  percent-encode any character that is permitted unencoded by the
+  `webvh-method-specific-id` rule. They **SHOULD** use lowercase for all
+  letters in the domain name, except where the [[ref: SCID]] is placed in the
+  domain name.
+- **Path segments.** Percent-encoded octets in a `webvh-path-segment`
+  represent UTF-8 [[spec:RFC3629]]. A path segment whose decoded octets are
+  not well-formed UTF-8 is invalid. [[ref: DID Controllers]] **SHOULD** apply
+  Unicode Normalization Form C [[spec:UAX15]] to path text before
+  percent-encoding it.
+
+Because the DID string, including its domain and path, is part of the input
+to [SCID generation](#scid-generation-and-verification), DIDs that differ in
+encoding have different SCIDs and are different DIDs, even if they transform
+to the same HTTPS URL. Only the form recorded in the [[ref: DID Log]]
+resolves, because resolution requires the resolved DID to match `state.id`
+exactly.
+
+#### International Domain Names
+
+A `did:webvh` DID **MAY** use an internationalized domain name (IDN). In the
+DID, every label of an IDN that contains non-ASCII characters **MUST** be
+represented by its A-label, as defined in [[spec:RFC5890]] Section 2.3.2.1
+and constructed as specified in [[spec:RFC5891]] Section 4.4. U-labels,
+whether raw or percent-encoded, **MUST NOT** appear in a `did:webvh` DID.
+
+**Creating a DID on an IDN.** A [[ref: DID Controller]] converting a Unicode
+domain name to A-labels **SHOULD** apply the UTS #46 `ToASCII` operation
+[[spec:UTS46]] with:
+
+- `Transitional_Processing` = `false`
+- `CheckHyphens` = `false`
+- `CheckBidi` = `true`
+- `CheckJoiners` = `true`
+- `UseSTD3ASCIIRules` = `false`
+- `VerifyDnsLength` = `false`
+
+This is equivalent to the WHATWG URL "domain to ASCII" algorithm with
+*beStrict* set to `false` [[spec:URL]], and it produces the same host that
+conforming web browsers and HTTP clients connect to. The result **MUST**
+satisfy the `domain-name` rule and the validation requirements in
+[Method-Specific Identifier](#method-specific-identifier). The
+[[ref: DID Controller]] **SHOULD** confirm that the resulting host name
+matches the TLS certificate of the server that will publish the
+[[ref: DID Log]] before creating the DID.
+
+**Resolving a DID on an IDN.** An A-label is an ordinary LDH label. Resolvers
+process it exactly like any other label: they validate it as specified in
+[Method-Specific Identifier](#method-specific-identifier) and copy it
+verbatim into the HTTPS URL. Resolvers are not required to verify that a
+label beginning with `xn--` is a valid A-label. A label that is not a valid
+A-label cannot be registered in the DNS under IDNA2008, so resolving it fails
+at DNS lookup or TLS verification.
+
+**Displaying a DID on an IDN.** Software that presents a `did:webvh` DID to a
+person **MAY** convert A-labels to U-labels for display, using the UTS #46
+`ToUnicode` operation. When it does, it **SHOULD** apply the confusable and
+mixed-script detection described in [[spec:UTS39]], and **SHOULD** make the
+A-label form available. The display form is not a `did:webvh` DID. It
+**MUST NOT** be used for DID comparison, as the value of any `id`,
+`controller` or `alsoKnownAs` property, or as input to resolution.
+
+::: note Why A-labels
+Placing A-labels in the DID makes the DID-to-HTTPS transformation independent
+of Unicode and IDNA processing. Every resolver produces the same HTTPS URL by
+copying the domain verbatim, whatever its platform's IDNA implementation. The
+choice of IDNA profile matters only once, when the [[ref: DID Controller]]
+creates the DID. A-labels are also the form used by the DNS, by TLS
+certificates and by `did:web` resolvers, and they satisfy the [[spec:DID-CORE]]
+`idchar` rule without percent-encoding.
+:::
+
 ### The DID to HTTPS Transformation
 
 The `did:webvh` [method-specific identifier](#method-specific-identifier) is
@@ -104,18 +216,20 @@ from DID to HTTPS URL, including a number of examples.
 
 Given a `did:webvh`, the HTTPS URL for the [[ref: DID Log]] is generated by
 carrying out the following steps. The steps are carried out by the [[ref: DID Controller]] to determine where to publish the [[ref: DID Log]], and by all resolvers to
-retrieve the [[ref: DID Log]]. The process described here includes the appropriate handling of [international domain names](#international-domain-names).
+retrieve the [[ref: DID Log]]. International domain names require no special
+processing in this transformation, because the DID carries them as A-labels
+(see [International Domain Names](#international-domain-names)).
 
  1. **Remove the 'did:webvh:' prefix** from the input identifier.
  2. **Remove the SCID segment**, which is the first segment after the prefix.
  3. **Transform the domain component**, which is the first component, up to the first `:` delimiter, of the remaining method-specific identifier.
-    - Validate all percent-encoding and percent-decode the component exactly once.
-    - If the decoded component contains a port separator, separate and validate the port as a decimal integer in the range 1 through 65535 inclusive.
-    - Apply Unicode normalization and IDNA2008 processing to the decoded domain name.
-    - Validate the resulting domain name and reject any IPv4 or IPv6 address, including an input that the URL parser normalizes to an IP address.
+    - If the component ends with `%3A` or `%3a` followed by one to five decimal digits, separate the port and validate it as a decimal integer in the range 1 through 65535 inclusive.
+    - Reject the component if what remains contains any `%` character.
+    - Validate the domain name as specified in [Method-Specific Identifier](#method-specific-identifier), including the LDH, length and IP-address requirements.
+    - Do not apply percent-decoding, Unicode normalization, IDNA processing or case folding to the domain name. The validated domain name is used verbatim in the HTTPS URL.
     - Re-encode the port separator as the canonical uppercase string `%3A` when producing a DID representation. Preserve the ordinary `:` separator when producing the HTTPS URL.
  4. **Transform the method-specific deployment path**, consisting of the zero or more components after the domain component and delimited by `:` characters.
-    - For each component, validate its percent-encoding and percent-decode it exactly once.
+    - For each component, validate its percent-encoding and percent-decode it exactly once. The decoded octets **MUST** be well-formed UTF-8. Do not apply Unicode normalization to the decoded value.
     - Reject a component if its decoded value is empty, is `.` or `..`, contains `/`, `\\`, or U+0000, or begins or ends with whitespace.
     - Percent-encode the validated decoded value according to [[spec:RFC3986]], using uppercase hexadecimal digits.
     - Join the resulting encoded path segments using `/`.
@@ -124,6 +238,10 @@ retrieve the [[ref: DID Log]]. The process described here includes the appropria
     - Format as `https://{domain}/{encoded_path}/did.jsonl` if there are path segments and no port.
     - If no path segments exist, format as `https://{domain}:{port}/.well-known/did.jsonl` or `https://{domain}/.well-known/did.jsonl` as applicable.
  6. The content type for the `did.jsonl` file **SHOULD** be `text/jsonl`.
+
+Any validation failure in steps 3 or 4 **MUST** cause parsing, transformation
+and resolution to fail with `invalidDid`, and **MUST** occur before any
+network request is made.
 
 The DID URL path, query, and fragment, if present, **MUST** be separated from the DID before this transformation is applied. They **MUST NOT** be interpreted as part of the SCID, domain, port, or method-specific deployment path.
 
@@ -168,11 +286,17 @@ path w/ port
 
 `https://example.com:3000/dids/issuer/did.jsonl`
 
-internationalized domain
+internationalized domain (`jp納豆.例.jp`) and path (`用户`)
 
- `did:webvh:{SCID}:jp納豆.例.jp:用户` -->
+`did:webvh:{SCID}:xn--jp-cd2fp15c.xn--fsq.jp:%E7%94%A8%E6%88%B7` -->
 
- `https://xn--jp-cd2fp15c.xn--fsq.jp/%E7%94%A8%E6%88%B7/did.jsonl`
+`https://xn--jp-cd2fp15c.xn--fsq.jp/%E7%94%A8%E6%88%B7/did.jsonl`
+
+The [[ref: DID Controller]] derived the A-labels `xn--jp-cd2fp15c` and
+`xn--fsq` from the U-labels `jp納豆` and `例` when creating the DID (see
+[International Domain Names](#international-domain-names)). The non-ASCII
+path segment `用户` is carried as percent-encoded UTF-8 with uppercase
+hexadecimal digits.
 
 :::
 
@@ -273,6 +397,12 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
    The DID **MUST** be a valid `did:webvh` DID as per the ABNF of a `did:webvh` DID defined
    in the [Method-Specific Identifier](#method-specific-identifier) section of this specification.
 
+   If the domain name contains non-ASCII characters, the [[ref: DID Controller]]
+   **MUST** express it using A-labels before constructing the DID string, as
+   specified in [International Domain Names](#international-domain-names). The
+   DID string chosen at this step is bound into the [[ref: SCID]] and cannot
+   later be re-encoded.
+
    1. Note: the [[ref: SCID]] for a `did:webvh` DID is not by default in the HTTPS
       URL for the DID. A [[ref: DID Controller]] **MAY** include the [[ref: SCID]] in the HTTPS URL by inserting additional placeholder `{SCID}`
       strings into the domain name or path components of the method-specific
@@ -295,7 +425,7 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
 
 3. **Create the initial [[ref: DIDDoc]] for the DID**
    The [[ref: DIDDoc]] **MUST** contain the top level `id` property which **MUST** be the DID string from
-   step 1, including the placement of the `{SICD}` placeholder for the [[ref: SCID]]. Other
+   step 1, including the placement of the `{SCID}` placeholder for the [[ref: SCID]]. Other
    [[ref: DIDDoc]] verifications **SHOULD** be performed.
 
    All other absolute references to the DID in the [[ref: DIDDoc]] must use the form defined
@@ -1327,6 +1457,13 @@ this is being done, the `did:webvh` DIDDoc **SHOULD** have the corresponding
    `did:web` DID itself if it was duplicated in the earlier steps.
 6. Publish the resulting [[ref: DIDDoc]] as the file `did.json` at the web location
    determined by the specified `did:web` DID-to-HTTPS transformation.
+
+Because the text replacement in step 3 preserves the domain and path
+components exactly, a parallel `did:web` DID carries the same A-label domain
+and percent-encoded path as its `did:webvh` DID. `did:web` resolvers, which
+construct the HTTPS URL by prefixing `https://` to the domain, can therefore
+resolve parallel `did:web` DIDs on internationalized domains without any IDNA
+processing.
 
 The benefit of doing this is that resolvers that have not been updated to
 support `did:webvh` can continue to resolve the [[ref: DID Controller]]'s DIDs.
