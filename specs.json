@@ -140,6 +140,130 @@
       ]
     },
     {
+      "title": "The did:webvh DID Method -- did:web + Verifiable History - Experimental (on VH-Log)",
+      "spec_directory": "./spec-exp",
+      "markdown_paths": [
+        "header.md",
+        "abstract.md",
+        "overview.md",
+        "specification.md",
+        "security_and_privacy.md",
+        "definitions.md",
+        "references.md",
+        "version.md"
+      ],
+      "source": {
+        "host": "github",
+        "account": "decentralized-identity",
+        "repo": "didwebvh"
+      },
+      "output_path": "./experimental",
+      "logo": "https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg",
+      "logo_link": "https://github.com/decentralized-identity/didwebvh",
+      "katex": true,
+      "external_specs": [
+        {
+          "multiformats": {
+            "href": "https://datatracker.ietf.org/doc/draft-multiformats-multibase/08/",
+            "title": "Multiformats",
+            "rawDate": "2024-02-21",
+            "authors": [
+              "Juan Benet",
+              "Manu Sporny"
+            ],
+            "status": "Internet Draft"
+          }
+        },
+        {
+          "di-eddsa-v1.0": {
+            "href": "https://www.w3.org/TR/vc-di-eddsa",
+            "title": "Data Integrity EdDSA Cryptosuites v1.0",
+            "rawDate": "2024-12-08",
+            "authors": [
+              "Dave Longley",
+              "Manu Sporny"
+            ],
+            "status": "W3C Technical Recommendation"
+          }
+        },
+        {
+          "DID-RESOLUTION": {
+            "href": "https://w3c.github.io/did-resolution/",
+            "title": "Decentralized Identifier Resolution (DID Resolution) v1",
+            "rawDate": "2026-09-02",
+            "authors": [
+              "Stephen Curran",
+              "Joe Andrieu"
+            ],
+            "status": "W3C Editor's Draft"
+          }
+        },
+        {
+          "DID-EXTENSION-RESOLUTION": {
+            "href": "https://w3c.github.io/did-extensions-resolution/",
+            "title": "DID Resolution Extensions Registry",
+            "rawDate": "2024-11-19",
+            "authors": [
+              "The Decentralized Identifier Working Group (W3C)"
+            ],
+            "status": "W3C Technical Report"
+          }
+        },
+        {
+          "LINKED-VP": {
+            "href": "https://identity.foundation/linked-vp/spec/v1.0.0/",
+            "title": "Linked Verifiable Presentation v1.0.0",
+            "rawDate": "2025-07-16",
+            "authors": [
+              "Jan Christoph Ebersbach (identinet)",
+              "Brian Richter (Aviary Tech)",
+              "Markus Sabadello (Danube Tech)"
+            ],
+            "status": "DIF Ratified Specification"
+          }
+        },
+        {
+          "vc-recognized-entities-1.0": {
+            "href": "https://w3c.github.io/vc-recognized-entities/",
+            "title": "Recognized Entities v1.0",
+            "rawDate": "2026-09-14",
+            "authors": [
+              "Manu Sporny",
+              "Dave Longley",
+              "David Chadwick",
+              "Isaac Henderson Johnson Jeyakumar",
+              "Shigeya Suzuki",
+              "Steve Capell",
+              "Phil Archer"
+            ],
+            "status": "W3C Working Draft"
+          }
+        },
+        {
+          "VH-LOG": {
+            "href": "https://swcurran.github.io/VH-Log/",
+            "title": "Verifiable History Log (VH-Log)",
+            "rawDate": "2026-10-07",
+            "authors": [
+              "Stephen Curran"
+            ],
+            "status": "Editors Draft"
+          }
+        },
+        {
+          "DID-VH": {
+            "href": "https://swcurran.github.io/didvh/",
+            "title": "The did:vh DID Method -- DID + Verifiable History",
+            "rawDate": "2026-10-07",
+            "authors": [
+              "Stephen Curran"
+            ],
+            "status": "Editors Draft"
+          }
+        }
+      ]
+    },
+    {
       "title": "The did:webvh DID Method -- did:web + Verifiable History - v1.0",
       "spec_directory": "./spec-v1.0",
       "markdown_paths": [
