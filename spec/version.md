@@ -2,6 +2,14 @@
 
 The following lists the substantive changes in each version of the specification.
 
+- Next version (editor's draft)
+  - Specifies that internationalized domain names are carried in the DID as
+    IDNA2008 A-labels converted by the [[ref: DID Controller]], removes Unicode
+    normalization and IDNA processing from the
+    [DID-to-HTTPS Transformation](#the-did-to-https-transformation), and defines
+    the [case sensitivity and normalization](#case-sensitivity-and-normalization)
+    of the method-specific identifier as required by DID Core Section 8.1.
+
 - Version 1.0
   - Adds clarifications about the handling of default values for unspecified parameters when introduced, and defines that `null` should **NOT** be used for parameters, to ensure that the parameter data types are always retained.
   - Removes the `weight` value and clarifies permitted values of `threshold`.
