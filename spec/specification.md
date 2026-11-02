@@ -377,7 +377,9 @@ verification algorithm in this specification.
 
 5. **SCID changes under portability.** Entry N has `state.id: "did:webvh:Qm222...:new.example.com"` while entry N-1 carried `Qm111...` — the [[ref: SCID]] is immutable across all entries.
 
-6. **Unknown `method` value.** First entry has `parameters.method: "did:webvh:99.0"`, `"did:webvh:1.0-rc1"`, or `"didwebvh:1.0"` — unrecognised values are rejected and never silently downgraded.
+6. **DID moved without portability.** Entry N changes `state.id` from `did:webvh:Qm111...:example.com` to `did:webvh:Qm111...:new.example.com`, but the first entry has `portable: false` (or omits it), or an entry before N sets `portable: false` — the DID is not portable, so it cannot be moved.
+
+7. **Unknown `method` value.** First entry has `parameters.method: "did:webvh:99.0"`, `"did:webvh:1.0-rc1"`, or `"didwebvh:1.0"` — unrecognised values are rejected and never silently downgraded.
 
 :::
 
@@ -601,7 +603,8 @@ For each entry:
 6. Get the value of the [[ref: log entry]] property `state`, which is the [[ref: DIDDoc]] for the version.
       1. Parse the top-level `id` of `state` as a `did:webvh` DID per the [Method-Specific Identifier](#method-specific-identifier) ABNF; if parsing fails, resolution **MUST** terminate.
       2. The SCID segment of `state.id` **MUST** be byte-for-byte identical to the `scid` value in the DID and the first entry's `parameters.scid`. This check **MUST** apply to **every** entry's `state.id`, not just the first. A mismatch **MUST** terminate resolution.
-      3. If the DID being resolved matches exactly the value of `state.id` in the current [[ref: DIDDoc]] entry, increment `didIdMatchCount` by `1`.
+      3. If `state.id` is not the same as the previous entry's `state.id`, the entry moves the DID, and the move **MUST** meet the conditions of the [DID Portability](#did-portability) section of this specification. In particular, `portable` **MUST** have been set to `true` in the first entry and not since set to `false`, and the [[ref: DIDDoc]] **MUST** contain the previous entry's `state.id` in its `alsoKnownAs` array. If not, resolution **MUST** terminate.
+      4. If the DID being resolved matches exactly the value of `state.id` in the current [[ref: DIDDoc]] entry, increment `didIdMatchCount` by `1`. A non-matching `state.id` is not an error; for example, entries from before a [[ref: portability]] move contain the prior DID.
 7. If [[ref: Key Pre-Rotation]] is active (the previously active `nextKeyHashes` is non-empty), the entry being processed **MUST** include an explicit `parameters.updateKeys` and **MUST NOT** rely on inheritance. The hash of **every** [[ref: multikey]] in `parameters.updateKeys` (computed per [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)) **MUST** appear in the previous entry's `nextKeyHashes`. The check applies to the **full** `updateKeys` set, not only keys that are new relative to the previous entry. A key not in the previous entry's `nextKeyHashes` **MUST** cause resolution to terminate, even if it appeared in an earlier entry's `updateKeys`.
 8. As each [[ref: log entry]] is processed and verified, collect the following information
    about each version:
@@ -1099,7 +1102,7 @@ DIDDoc to one that resolves to a different HTTPS URL if the following conditions
   from the creation of the DID.
 - The [[ref: log entry]] in which the DID is renamed **MUST** be a valid DID entry
   building on the prior [[ref: DID log entries]], per this specification.
-- The [[ref: parameter]] `portable` **MUST** be set to `true` in the **first** [[ref: log entry]]. An entry that introduces `portable: true` after the first entry **MUST** be rejected.
+- The [[ref: parameter]] `portable` **MUST** be set to `true` in the **first** [[ref: log entry]], and not since set to `false`. An entry that introduces `portable: true` after the first entry **MUST** be rejected.
 - The [[ref: SCID]] **MUST** be the same in the original and renamed DID. Specifically, the SCID segment of `state.id` in **every** [[ref: log entry]] (including the renamed entry and all subsequent entries) **MUST** equal the `parameters.scid` from the first entry. Only the host/path portion of `state.id` may change under portability; the SCID segment is immutable for the life of the DID. A "portable rename" entry whose `state.id` carries a different SCID **MUST** be rejected.
 - The [[ref: DIDDoc]] **MUST** contain the prior DID string as an `alsoKnownAs` entry.
 - [[ref: DID Controllers]] **SHOULD** account for any DNS requirements in making domain changes that impact a `did:webvh` DID being moved, such as those outlined in [[spec:rfc1034]] (“Domain Names - Concepts and Facilities”), and [[spec:rfc1035]] (“Domain Names Implementation and Specification”).

@@ -381,12 +381,17 @@ non-exhaustive; the normative rejection criteria are defined in the
 3. **`portable` set after the first entry.** Entry 3 sets `"portable": true`.
    Portability can be enabled only in the first entry.
 
-4. **Unknown `method` value.** First entry has `parameters.method:
+4. **DID moved without portability.** Entry N changes `state.id` from
+   `did:webvh:Qm111...:example.com` to `did:webvh:Qm111...:new.example.com`,
+   but the first entry has `portable: false` (or omits it), or an entry before
+   N sets `portable: false` — the DID is not portable, so it cannot be moved.
+
+5. **Unknown `method` value.** First entry has `parameters.method:
    "did:webvh:99.0"`, `"did:webvh:1.0-rc1"`, `"didwebvh:1.0"` or
    `"did:vh:1.0"` — unrecognised values are rejected and never silently
    downgraded.
 
-5. **`logVersion` present.** An entry includes `"logVersion": "vh-log:1.0"`.
+6. **`logVersion` present.** An entry includes `"logVersion": "vh-log:1.0"`.
    `did:webvh` uses `method` as its version parameter, so `logVersion` is not
    permitted.
 
@@ -538,7 +543,9 @@ A `did:webvh` [[ref: Resolver]] **MUST** apply the following
    3. If the `state.id` is not the same as in the previous entry, the change
       **MUST** be permitted by [DID Portability](#did-portability).
    4. If the `did` input is exactly equal to `state.id`, increment
-      `didIdMatchCount` by `1`.
+      `didIdMatchCount` by `1`. A non-matching `state.id` is not an error;
+      for example, entries from before a [[ref: portability]] move contain the
+      prior DID.
 
    After all entries have been processed, if `didIdMatchCount` is `0`, no
    entry's `state.id` matches the DID being resolved, and the

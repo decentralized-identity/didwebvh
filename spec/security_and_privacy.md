@@ -176,7 +176,7 @@ verification algorithm in this specification.
 
 **Log structure:** unbroken `1, 2, 3, ...` version sequence; strictly increasing UTC ISO8601 `versionTime`; every `versionTime` ≤ now (bounded skew); `entryHash` chain verified for every entry; `method` is an explicitly supported value (never silently downgraded).
 
-**SCID & identity:** first entry's `parameters.scid` is the genesis self-hash; every entry's `state.id` parses as a `did:webvh` DID; every entry's `state.id` [[ref: SCID]] equals first entry's `parameters.scid` and [[ref: SCID]] in the DID; requested DID matches at least one entry's `state.id`; `portable: true` only in first entry; [[ref: SCID]] never changes.
+**SCID & identity:** first entry's `parameters.scid` is the genesis self-hash; every entry's `state.id` parses as a `did:webvh` DID; every entry's `state.id` [[ref: SCID]] equals first entry's `parameters.scid` and [[ref: SCID]] in the DID; requested DID matches at least one entry's `state.id`; `portable: true` only in first entry; `state.id` changes only while portability is active, with the prior `state.id` in `alsoKnownAs`; [[ref: SCID]] never changes.
 
 **Keys & proofs:** every proof has `type: DataIntegrityProof`, the `cryptosuite`
 and `proofPurpose` required by the active `method`; `verificationMethod` key in
