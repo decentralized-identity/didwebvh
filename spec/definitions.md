@@ -122,8 +122,9 @@ able to rotate to a new key known only to the attacker.
 ~ A [[ref: Verifiable Presentation]] about a DID subject, discoverable via a
 `service` entry in the subject's [[ref: DIDDoc]], as described by the
 [Decentralized Identity Foundation](https://identity.foundation/)'s [Linked VP
-Specification](https://identity.foundation/linked-vp/). `did:webvh` locates
-its Linked-VP via the [`#whois` Service](#the-whois-service).
+Specification](https://identity.foundation/linked-vp/). A `did:webvh`
+[[ref: DID Controller]] can publish a Linked-VP using a [`/whois`
+service](#common-did-url-path-services).
 
 [[def: multibase]]
 

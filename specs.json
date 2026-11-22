@@ -1,13 +1,14 @@
 {
   "specs": [
     {
-      "title": "The did:webvh DID Method -- did:web + Verifiable History - v1.0 (Editors Draft)",
+      "title": "The did:webvh DID Method -- did:web + Verifiable History - v2.0 (Editors Draft)",
       "spec_directory": "./spec",
       "markdown_paths": [
         "header.md",
         "abstract.md",
         "overview.md",
         "specification.md",
+        "upgrading.md",
         "security_and_privacy.md",
         "definitions.md",
         "references.md",

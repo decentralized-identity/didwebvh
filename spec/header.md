@@ -1,21 +1,22 @@
-The `did:webvh` DID Method<br>v1.0
+The `did:webvh` DID Method<br>v2.0 (Editors Draft)
 ==================
 
 ![did:webvh Logo](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/didwebvh.jpg)
 
-**Specification Status:** v1.x - EDITORS DRAFT
+**Specification Status:** v2.0 - EDITORS DRAFT
 
-This **Editors Draft** incorporates work towards the next version of the `did:webvh` specification, beyond [v1.0](../v1.0), and is no longer being kept in sync with that version.
+This **Editors Draft** incorporates work towards v2.0 of the `did:webvh` specification. It is not kept in sync with [v1.0](../v1.0). See [Upgrading a DID](#upgrading-a-did) for how DIDs created under v1.0 are resolved and upgraded.
 
 **Current Specification:** [v1.0](../v1.0)
 
-**Specification Version:** v1.0 (see [Changelog](#didwebvh-version-changelog))
+**Specification Version:** v2.0 (Editors Draft) (see [Changelog](#didwebvh-version-changelog))
 
 **Source of Latest Draft:**
   [https://github.com/decentralized-identity/didwebvh](https://github.com/decentralized-identity/didwebvh)
 
 **Previous Versions:**
 
+- [v1.0](../v1.0)
 - [v0.5](../v0.5)
 - [v0.4](../v0.4)
 - [v0.3](../v0.3)
