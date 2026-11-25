@@ -56,8 +56,7 @@ Residual risks include:
 - Compromise of the web hosting infrastructure serving the DID resources.
   - While this can impact access to the DID Log and associated files, it does not compromise the integrity of the log entries themselves, nor the verifiability of the DID.
 - Compromise of controller private keys.
-  - A `did:webvh` [[ref: DID Controller]] can mitigate this risk through the use of [pre-rotation keys](#pre-rotation-key-hash-generation-and-verification).
-  - In doing so, [[ref: DID Controllers]] **SHOULD** avoid reusing revealed pre‑rotation keys. While not invalid per this specification, re‑use of a pre‑rotation key after disclosure reduces compromise containment. Mitigation: follow the one‑time‑use best practice and securely destroy revealed private keys (see [Pre‑rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)). Resolvers are **NOT REQUIRED** to enforce this, but **MAY** warn.
+  - [Pre-rotation keys](#pre-rotation-key-hash-generation-and-verification) limit this risk: a compromised key that has already signed an entry cannot sign another, and a key committed in `prerotationHashes` but not yet used is not revealed. A [[ref: DID Controller]] can also commit the hash of a recovery key, held in cold storage, in each entry's `prerotationHashes`, so that it can regain control if the keys it intended to use next are lost or compromised.
   - Additional good security practices **SHOULD** also be followed, such as using hardware security modules (HSMs) or secure enclaves for key storage, enforcing strong access controls, maintaining secure backups of critical keys, and performing regular key rotations.
 - Weaknesses in underlying cryptographic algorithms after deployment.
 - Misconfiguration of cache control or TTL values.
@@ -66,13 +65,13 @@ Residual risks include:
 
 ### Integrity Protection and Update Authentication
 
-All DID operations (create, update, deactivate) are integrity-protected by the cryptographic verification of DID Log entries. Update authentication is provided by verifying the [[ref: DID Controller]]'s proof(s) against the valid `updateKeys` in the DID [[ref: Parameters]].
+All DID operations (create, update, deactivate) are integrity-protected by the cryptographic verification of [[ref: DID Log entries]]. Update authentication is provided by verifying the [[ref: DID Controller]]'s proof(s) against the keys authorized for the entry: the first entry's `updateKeys`, or a [[ref: pre-rotation]] key committed in the previous entry's `prerotationHashes` that has not signed an earlier entry (see [Authorized Keys](#authorized-keys)).
 
 Because a `did:webvh` DID document and its associated log entries are self-certifying, they can be verified and trusted regardless of how they are retrieved — whether directly from the host, via a cache, through a CDN, from a [DID Watcher](#did-watchers), or via a trusted resolver service. The verification process ensures authenticity and integrity independent of the transport channel.
 
 ### Authentication Characteristics
 
-The authentication of DID updates is based on possession of the private keys associated with the update and pre-rotation keys. The security of the DID therefore depends on the strength of these keys, their secure storage, and the cryptographic algorithms used.
+The authentication of DID updates is based on possession of the private keys associated with the keys in the first entry's `updateKeys` and the [[ref: pre-rotation]] keys committed in `prerotationHashes`. The security of the DID therefore depends on the strength of these keys, their secure storage, and the cryptographic algorithms used.
 
 ### Unique Assignment of DIDs
 
@@ -161,8 +160,64 @@ and refer to [did:web Security and Privacy Considerations](https://w3c-ccg.githu
 
 ### Post Quantum Attacks
 
-The `did:webvh` [[ref: Key Pre-Rotation]] approach provides enough flexibility for "post-quantum safety".
-For guidance on post-quantum attacks mitigation, implementers **SHOULD** refer to the [corresponding Implementation Guide section](https://didwebvh.info/latest/implementers-guide/prerotation-keys/#post-quantum-attacks).
+A sufficiently capable quantum computer is expected to be able to calculate
+the private key of an elliptic curve key pair, such as an Ed25519 key used with
+the `eddsa-jcs-2022` cryptosuite, from its public key. An attacker able to do
+so could use any public key it sees to sign an update to the DID.
+
+The required [[ref: Key Pre-Rotation]] of `did:webvh` limits this threat for
+the keys that authorize updates:
+
+- A key that can sign the next [[ref: log entry]] is published only as a hash,
+  in the previous entry's `prerotationHashes`. Calculating a public key from
+  its hash is not expected to become feasible with a quantum computer, so the
+  attack cannot start until the key is revealed.
+- A key is revealed only when it signs an entry, and it then becomes a
+  [[ref: used key]] that cannot sign a later entry in the log. Calculating its
+  private key therefore does not let the attacker extend the
+  genuine [[ref: DID Log]].
+
+Some exposure remains:
+
+- **Alternative entries signed with revealed keys.** Each published entry
+  reveals the key that signed it. An attacker that calculates that private key
+  can sign a *different* entry in the same position, starting an alternative
+  log that replaces the genuine entry and every entry after it. In the
+  alternative log the key has not been used, so the entry verifies, and
+  [[ref: pre-rotation]] does not prevent this. The same applies to an entry
+  that has been shared, such as with [[ref: witnesses]], but not yet
+  published. For resolvers to use the alternative log, the attacker would
+  also have to:
+  - obtain write access to the web location of the [[ref: DID Log]] and
+    replace the published log, and
+  - if [[ref: witnesses]] are active, provide the threshold of witness proofs
+    for the alternative entries, which an attacker able to calculate private
+    keys can do by calculating the witnesses' private keys as well (see
+    below).
+
+  A replaced log can be detected by [[ref: watchers]] and others holding a
+  copy of the earlier log, whose entries diverge from it.
+- **Keys in the DIDDoc.** Pre-rotation protects only the keys that authorize
+  updates. Verification methods in the [[ref: DIDDoc]] are public, so a
+  [[ref: DID Controller]] **SHOULD NOT** also use a key that authorizes updates
+  as a verification method in the [[ref: DIDDoc]].
+- **Witness keys.** [[ref: Witness]] `did:key` public keys are published and
+  are not pre-rotated, so an attacker able to calculate their private keys
+  could forge witness proofs. Witnesses alone do not allow an attacker to
+  extend the genuine log, because each entry also has to be signed by an
+  authorized key, but they do not stop the alternative entries described
+  above.
+- **DIDs not yet upgraded.** A v1.0 DID that does not use pre-rotation has its
+  update keys published in `updateKeys` and can use them repeatedly, so it does
+  not have this protection until it is upgraded to v2.0.
+
+The defence against an attacker able to calculate private keys is to move to
+a post-quantum cryptosuite, by upgrading the `method` version to one that
+permits it (see [Cryptographic Agility](#cryptographic-agility) and
+[Upgrading a DID](#upgrading-a-did)), before such an attack is possible. For
+more guidance on mitigating post-quantum attacks, implementers are advised to
+consult the [corresponding Implementation Guide
+section](https://didwebvh.info/latest/implementers-guide/prerotation-keys/#post-quantum-attacks).
 
 ### Resolver Validation Checklist (informative)
 
@@ -179,9 +234,12 @@ verification algorithm in this specification.
 **SCID & identity:** first entry's `parameters.scid` is the genesis self-hash; every entry's `state.id` parses as a `did:webvh` DID; every entry's `state.id` [[ref: SCID]] equals first entry's `parameters.scid` and [[ref: SCID]] in the DID; requested DID matches at least one entry's `state.id`; `portable: true` only in first entry; [[ref: SCID]] never changes.
 
 **Keys & proofs:** every proof has `type: DataIntegrityProof`, the `cryptosuite`
-and `proofPurpose` required by the active `method`; `verificationMethod` key in
-active `updateKeys`; under pre-rotation, `updateKeys` explicit in every entry
-and every key hashes to a value in previous `nextKeyHashes`.
+and `proofPurpose` required by the active `method`; `updateKeys` only in the
+first entry, which is signed by one of its keys; `prerotationHashes` explicit
+in every entry; every later entry signed by a key that hashes to a value in
+the previous entry's `prerotationHashes` and has not signed an earlier entry
+(or, for an upgrading entry, as defined in [Upgrading from v1.0 to
+v2.0](#upgrading-from-v10-to-v20)).
 
 **Witnesses:** `threshold` is positive integer ≤ count of distinct `witnesses[].id`; all `witnesses[].id` distinct; threshold met by counting verified proofs from distinct witness identifiers, not total proof count; each accepted proof's `versionId` corresponds to an entry in the `did.jsonl` being verified; proofs verified with key from the `did:key` body; `did:key` DID URL in proofs references the same key material in body and fragment (multibase values byte-equal).
 

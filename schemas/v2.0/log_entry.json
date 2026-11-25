@@ -59,12 +59,11 @@
                     "minItems": 1,
                     "uniqueItems": true
                 },
-                "nextKeyHashes": {
+                "prerotationHashes": {
                     "type": "array",
                     "items": {
                         "type": "string"
                     },
-                    "minItems": 1,
                     "uniqueItems": true
                 },
                 "watchers": {
@@ -102,6 +101,26 @@
                 },
                 "ttl": {
                     "type": "integer"
+                }
+            },
+            "required": [
+                "prerotationHashes"
+            ],
+            "if": {
+                "required": [
+                    "scid"
+                ]
+            },
+            "then": {
+                "required": [
+                    "updateKeys"
+                ]
+            },
+            "else": {
+                "not": {
+                    "required": [
+                        "updateKeys"
+                    ]
                 }
             }
         },

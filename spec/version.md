@@ -20,6 +20,15 @@ The following lists the substantive changes in each version of the specification
     [DID-to-HTTPS Transformation](#the-did-to-https-transformation), and defines
     the [case sensitivity and normalization](#case-sensitivity-and-normalization)
     of the method-specific identifier as required by DID Core Section 8.1.
+  - Requires [[ref: key pre-rotation]]. `updateKeys` appears only in the
+    first entry, binding the keys that sign it into the [[ref: SCID]].
+    `nextKeyHashes` is replaced by `prerotationHashes`, required in every
+    entry: each later entry is signed by a key whose hash is in the previous
+    entry's `prerotationHashes`, and a key can sign only one entry. A hash
+    can be listed in several entries, such as for a recovery key. Setting
+    `prerotationHashes` to `[]` stops further updates. [Upgrading from v1.0
+    to v2.0](#upgrading-from-v10-to-v20) defines which keys sign the entry
+    that upgrades a DID, with and without pre-rotation active under v1.0.
 
 - Version 1.0
   - Adds clarifications about the handling of default values for unspecified parameters when introduced, and defines that `null` should **NOT** be used for parameters, to ensure that the parameter data types are always retained.

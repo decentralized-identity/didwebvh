@@ -67,8 +67,10 @@ The following is a `tl;dr` summary of how `did:webvh` works:
     2. `versionTime` -- as asserted by the [[ref: DID Controller]].
     3. `parameters` -- a set of [[ref: parameters]] that impact the processing of the current and
       future [[ref: log entries]].
-        - Example [[ref: parameters]] are the version of the `did:webvh` specification and
-        hash algorithm being used, as well as the [[ref: SCID]] and update key(s).
+        - Example [[ref: parameters]] are the version of the `did:webvh` specification
+        being used, the [[ref: SCID]], the keys that sign the
+        first entry, and the hashes of the [[ref: pre-rotation]] keys that can
+        sign the next entry.
     4. `state` -- the new version of the [[ref: DIDDoc]].
     5. A [[ref: Data Integrity]] (DI) proof across the entry, signed by a [[ref: DID Controller]]-authorized key to update the [[ref: DIDDoc]].
     6. If the [[ref: DID Controller]] enables support for DID [[ref: witnesses]], an
