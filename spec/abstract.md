@@ -19,8 +19,9 @@ limitations as a long-lasting DID. `did:webvh` features include:
   a connection to the predecessor DID(s) and preserving the DID's verifiable history.
 - [[ref: DIDDoc]] updates contain a proof signed by the [[ref: DID Controller's]] *authorized* to
   update the DID.
-- An optional mechanism for publishing "pre-rotation" keys to prevent the loss of
-  control of a DID in cases where an active private key is compromised.
+- Required "pre-rotation": each update commits to hashes of the keys that can
+  sign the next update, preventing the loss of control of a DID in cases where
+  an active private key is compromised.
 - An optional mechanism for having collaborating [[ref: witnesses]]
   that approve of updates to the DID by a [[ref: DID Controller]] before publication.
 - Support for cryptographic agility through versioned specification upgrades,

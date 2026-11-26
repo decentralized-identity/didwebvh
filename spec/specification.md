@@ -367,7 +367,7 @@ verification algorithm in this specification.
    "did:key:X"}, {"id": "did:key:X"}]}` — the same `did:key` appears more than
    once in the witnesses list; each witness has to be unique.
 
-2. **Pre-rotation active but `updateKeys` omitted.** If entry N-1 commits `nextKeyHashes: ["H1","H2"]`, then entry N has to contain an explicit `updateKeys` whose every member hashes to a value in `["H1","H2"]`. An entry N omitting `updateKeys` (intending to inherit) is invalid.
+2. **Signing key not committed.** Entry N-1 sets `prerotationHashes: ["H1","H2"]`, and entry N is signed by key K3, whose hash is not `H1` or `H2`. Entry N fails verification, even if K3 signed, or was committed in, an earlier entry.
 
 3. **Wrong cryptosuite on log-entry proof.** `{"type":"DataIntegrityProof","cryptosuite":"ecdsa-jcs-2019","proofPurpose":"assertionMethod"}` — rejected even if the signature is structurally valid, because the active `method` [[ref: parameter]] (`did:webvh:2.0`) requires `eddsa-jcs-2022`.
 
@@ -378,6 +378,16 @@ verification algorithm in this specification.
 6. **Unknown `method` value.** First entry has `parameters.method: "did:webvh:99.0"`, `"did:webvh:2.0-rc1"`, or `"didwebvh:2.0"` — unrecognised values are rejected and never silently downgraded.
 
 7. **`method` downgrade.** Entry N-1 has an active `method` of `did:webvh:2.0` and entry N sets `parameters.method: "did:webvh:1.0"` — a change to a lower version is never permitted. See [Upgrading a DID](#upgrading-a-did).
+
+8. **Entry after `prerotationHashes: []`.** Entry N sets `prerotationHashes: []`. Entry N+1 fails verification whatever key signs it: no key is committed for it.
+
+9. **Reused key.** Entry 2 is signed by key K1. Entries 2 and 3 both list K1's hash in `prerotationHashes` (as a recovery key, for example), and entry 4 is signed by K1. Entry 4 fails verification: K1 already signed entry 2. Listing K1's hash again is valid; signing with it again is not.
+
+10. **`prerotationHashes` omitted, or `updateKeys` after the first entry.** An entry without a `prerotationHashes` property, or a later entry that includes `updateKeys`, fails verification.
+
+11. **Upgrading entry lists `updateKeys`.** A v1.0 entry N-1 sets `nextKeyHashes: ["H1"]`, and entry N upgrades to `did:webvh:2.0` with `updateKeys: ["K1"]`, where K1 hashes to `H1`. Entry N fails verification: under v2.0, `updateKeys` appears only in the first entry, and entry N is instead signed by K1 without listing it. See [Upgrading from v1.0 to v2.0](#upgrading-from-v10-to-v20).
+
+12. **Upgrading entry signed by a revealed key.** Pre-rotation is active under v1.0, and the upgrading entry is signed by a key whose hash is in the previous entry's `nextKeyHashes` but that appeared in the `updateKeys` of an earlier v1.0 entry. The upgrading entry fails verification: that key is a [[ref: used key]].
 
 :::
 
@@ -414,14 +424,21 @@ Creating a `did:webvh` DID is done by carrying out the following steps.
    At the same time, generate any other key pairs that will be placed into the initial
    [[ref: DIDDoc]] for the DID.
 
-   1. If the DID is to use [[ref: pre-rotation]], additional key generation will
-      be necessary to generate the required "next" authorization keys and their
-      corresponding [[ref: pre-rotation]] hashes.
-   2. For each authorization key pair, generate a [[ref: multikey]] based on the
-      key pair's public key. The [[ref: multikey]] representations of the public
-      keys are placed in the `updateKeys` property in [[ref: parameters]].
-   3. The public key(s) of the authorization key pair(s) **MAY** be used in the
-      [[ref: DIDDoc]] as well, but that is not required.
+   1. For each key pair that will sign the first [[ref: log entry]], generate a
+      [[ref: multikey]] based on the key pair's public key. The
+      [[ref: multikey]] representations of the public keys are placed in the
+      `updateKeys` property in [[ref: parameters]].
+   2. Generate the key pair(s) that can sign the next [[ref: log entry]], and
+      calculate their [[ref: pre-rotation]] hashes for the `prerotationHashes`
+      property in [[ref: parameters]], as defined in [Pre-Rotation Key Hash
+      Generation and
+      Verification](#pre-rotation-key-hash-generation-and-verification).
+   3. The public key(s) of the authorization key pair(s) **SHOULD NOT** be used
+      in the [[ref: DIDDoc]] as well. A key is best used for a single purpose:
+      a key that authorizes updates can sign only one [[ref: log entry]], and
+      publishing it in the [[ref: DIDDoc]] exposes it to the
+      [post-quantum attacks](#post-quantum-attacks) that
+      [[ref: pre-rotation]] otherwise mitigates.
 
 3. **Create the initial [[ref: DIDDoc]] for the DID**
    The [[ref: DIDDoc]] **MUST** contain the top level `id` property which **MUST** be the DID string from
@@ -587,7 +604,9 @@ For each entry:
 2. The [[ref: Data Integrity]] proof in the entry **MUST** be valid and signed by
    an authorized key as defined in the [Authorized Keys](#authorized-keys)
    section of this specification, and with a `proofPurpose` set to `assertionMethod`.
-   1. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]]
+   1. If no key is authorized for the entry — for example, after an entry
+      that set `prerotationHashes` to `[]` — resolution **MUST** terminate.
+   2. If the [[ref: DID Controller]] has opted to use [[ref: witnesses]]
       resolvers **MUST** retrieve and verify the DID's `did-witness.json` file. For
       details, see the [DID Witnesses](#did-witnesses) section of this
       specification.
@@ -610,18 +629,18 @@ For each entry:
       1. Parse the top-level `id` of `state` as a `did:webvh` DID per the [Method-Specific Identifier](#method-specific-identifier) ABNF; if parsing fails, resolution **MUST** terminate.
       2. The SCID segment of `state.id` **MUST** be byte-for-byte identical to the `scid` value in the DID and the first entry's `parameters.scid`. This check **MUST** apply to **every** entry's `state.id`, not just the first. A mismatch **MUST** terminate resolution.
       3. If the DID being resolved matches exactly the value of `state.id` in the current [[ref: DIDDoc]] entry, increment `didIdMatchCount` by `1`.
-7. If [[ref: Key Pre-Rotation]] is active (the previously active `nextKeyHashes` is non-empty), the entry being processed **MUST** include an explicit `parameters.updateKeys` and **MUST NOT** rely on inheritance. The hash of **every** [[ref: multikey]] in `parameters.updateKeys` (computed per [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)) **MUST** appear in the previous entry's `nextKeyHashes`. The check applies to the **full** `updateKeys` set, not only keys that are new relative to the previous entry. A key not in the previous entry's `nextKeyHashes` **MUST** cause resolution to terminate, even if it appeared in an earlier entry's `updateKeys`.
+7. Verify [[ref: key pre-rotation]]. The entry **MUST** include a `parameters.prerotationHashes` property, and only the first entry **MUST** include `parameters.updateKeys`; otherwise, resolution **MUST** terminate. For every entry after the first, the key that signed the entry's proof (step 2) **MUST** be authorized as defined in [Authorized Keys](#authorized-keys): its hash, computed per [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification), **MUST** appear in the previous entry's `prerotationHashes`, and the key **MUST NOT** be a [[ref: used key]]. A key that does not meet both conditions **MUST** cause resolution to terminate. The keys authorized to sign an entry that upgrades a DID from v1.0 are defined in [Upgrading from v1.0 to v2.0](#upgrading-from-v10-to-v20).
 8. As each [[ref: log entry]] is processed and verified, collect the following information
    about each version:
       1. The [[ref: DIDDoc]].
       2. The `versionId` of the [[ref: DIDDoc]].
       3. The UTC `versionTime` of the [[ref: DIDDoc]].
-      4. The latest list of active [[ref: multikey]] formatted public keys
-         authorized to update the DID, from the `updateKeys` lists in the
-         [[ref: parameters]].
-      5. If [[ref: pre-rotation]] is being used, the hashes of authorized keys that must
-         be used in the `updateKeys` list of the next [[ref: DID log]] entry. The [[ref: pre-rotation]] hashes are in the
-         `nextKeyHashes` list in the [[ref: parameters]].
+      4. The hashes of the keys authorized to sign the next
+         [[ref: log entry]], from the entry's `prerotationHashes`.
+      5. The [[ref: used keys]]: the keys in the first entry's `updateKeys`
+         and the key that signed each later entry processed so far (and, for
+         a DID upgraded from v1.0, the keys in the `updateKeys` of every v1.0
+         entry).
       6. All other `did:webvh` processing configuration settings as defined in the
          `parameters` object.
       7. Add the value of top level `id`.
@@ -736,12 +755,14 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
    Method Parameters](#didwebvh-did-method-parameters) section of this
    specification. Any [[ref: parameters]] defined in the JSON object override the
    previously active value, while any [[ref: parameters]] not included imply the
-   existing values remain in effect. If no changes to the [[ref: parameters]]
-   are needed, an empty JSON object `{}` **MUST** be used.
+   existing values remain in effect. The `prerotationHashes` [[ref: parameter]]
+   **MUST** be included, committing to the key(s) that can sign the next
+   entry; if no other changes to the [[ref: parameters]] are needed, it is
+   the only property.
    - While all [[ref: parameters]] in the first [[ref: Log Entry]] take effect
      immediately, some types of [[ref: parameters]] defined in later [[ref: entries]] only take
-     effect after the entry has been published. For example, rotating the keys
-     authorized to update a DID or changing the [[ref: witnesses]] for a DID take effect
+     effect after the entry has been published. For example, the keys
+     committed in `prerotationHashes` and changes to the [[ref: witnesses]] for a DID take effect
      only *after* the entry in which they are defined has been published.
 3. Generate a preliminary [[ref: DID log entry]] JSON object containing the following properties:
    1. The value of `versionId` **MUST** be the value of `versionId` from the *previous* [[ref: DID log entry]].
@@ -759,11 +780,12 @@ verifiable [[ref: DID Log Entry]] follows a similar process to the
 6. Generate a [[ref: Data Integrity]] proof on the [[ref: DID log entry]] using
    an authorized key, as defined in the [Authorized Keys](#authorized-keys)
    section of this specification, and the `proofPurpose` set to `assertionMethod`.
-7. If [[ref: Key Pre-Rotation]] is being used, the hash of all `updateKeys` entries
-   in the `parameters` property **MUST** match a hash in
-   the array of `nextKeyHashes` [[ref: parameter]] from the previous [[ref: DID log]] entry with the exception of the first entry, as defined in the
-   [Key [[ref: Pre-Rotation]] Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification)
-   section of this specification.
+7. The key used in the previous step **MUST** be one whose hash is in the
+   `prerotationHashes` [[ref: parameter]] of the previous [[ref: DID log]]
+   entry, and **MUST NOT** be a [[ref: used key]]. Once used, the key
+   cannot sign another entry, and its private key **SHOULD** be securely
+   destroyed, as described in [Pre-Rotation Key Hash Generation and
+   Verification](#pre-rotation-key-hash-generation-and-verification).
 8. The proof JSON object **MUST** be added as the value of the `proof` property in the [[ref: log entry]].
 9. The entry **MUST** be made a [[ref: JSON Line]] by removing extra whitespace, adding a `\n`
    to the entry.
@@ -797,9 +819,9 @@ section of this specification.
 
 Deactivating a DID allows a [[ref: DID Controller]] to signal that the DID is no longer being maintained or updated. There is an explicit approach to deactivation that aligns with the [[spec: DID-CORE]] specification, and other approaches that a `did:webvh` [[ref: DID Controller]] can use if the [[spec: DID-CORE]] approach does not achieve their desired outcome. This section covers the various methods for signaling that a DID is retired.
 
-To deactivate a `did:webvh` DID per the [[spec:DID-CORE]] specification, the [[ref: DID Controller]] **MUST** add to the [[ref: DID log entry]] [[ref: parameters]] the property name and value `"deactivated": true`. Once done, a resolver **MUST NOT** return the [[ref: DIDDoc]] and **MUST** include `"deactivated": true` in the DID Resolution Metadata. A [[ref: DID Controller]] deactivating a `did:webvh` DID **MAY** update some [[ref: parameters]] attributes to further indicate the deactivation of the DID, such as setting the `updateKeys` array to `[]`, preventing further versions of the DID. If the DID is using [[ref: pre-rotation]], two [[ref: DID log entries]] are required to accomplish that state: the first to stop the use of pre-rotation, and the second to set `updateKeys` to []. For additional details about turning off [[ref: pre-rotation]] see the [pre-rotation](#pre-rotation) section of this specification.
+To deactivate a `did:webvh` DID per the [[spec:DID-CORE]] specification, the [[ref: DID Controller]] **MUST** add to the [[ref: DID log entry]] [[ref: parameters]] the property name and value `"deactivated": true`. Once done, a resolver **MUST NOT** return the [[ref: DIDDoc]] and **MUST** include `"deactivated": true` in the DID Resolution Metadata. Because no entry can follow the deactivating entry, there is no need to also remove the authorized keys when deactivating.
 
-A concern with using the [[spec: DID-CORE]] approach to deactivation is the resolver requirement that the [[ref: DIDDoc]] not be returned for a deactivated DID. A [[ref: DID Controller]] might want the final [[ref: DIDDoc]] to continue to be resolved, while also signaling that the DID is no longer being updated. In the future, a DID Resolution query parameter (`returnDeactivatedDidDocument=true`) has been proposed to be added to the [[spec: DID-RESOLUTION]] specification to allow a client to request the [[ref: DIDDoc]] of a deactivated DID. However, even if that parameter is adopted, it places the burden on the resolver client to decide whether and how to use it. An alternative that a `did:webvh` [[ref: DID Controller]] could use is to signal that a DID is no longer being updated by setting the `updateKeys` array to empty (`[]`), as discussed above, and not setting the `deactivated` [[ref: parameter]] to `true`. The result is that the final [[ref: DIDDoc]] continues to be returned by default, and the DID Resolution Metadata indicates that the DID can no longer be updated.
+A concern with using the [[spec: DID-CORE]] approach to deactivation is the resolver requirement that the [[ref: DIDDoc]] not be returned for a deactivated DID. A [[ref: DID Controller]] might want the final [[ref: DIDDoc]] to continue to be resolved, while also signaling that the DID is no longer being updated. In the future, a DID Resolution query parameter (`returnDeactivatedDidDocument=true`) has been proposed to be added to the [[spec: DID-RESOLUTION]] specification to allow a client to request the [[ref: DIDDoc]] of a deactivated DID. However, even if that parameter is adopted, it places the burden on the resolver client to decide whether and how to use it. An alternative that a `did:webvh` [[ref: DID Controller]] could use is to signal that a DID is no longer being updated by setting the `prerotationHashes` array to empty (`[]`), as discussed above, and not setting the `deactivated` [[ref: parameter]] to `true`. The result is that the final [[ref: DIDDoc]] continues to be returned by default, and no further entry can be signed: a resolver treats any entry after it as invalid, as defined in [Authorized Keys](#authorized-keys), just as it does any entry after a deactivating entry.
 
 To resolve a prior version of a deactivated `did:webvh` DID, a client can use the appropriate DID Resolution query [[ref: parameters]] `versionId`, `versionTime`, or the did:webvh-specific `versionNumber` (as described in the Read (Resolve) section of this specification). When such a DID is resolved in this way, the DID Resolution Metadata **MUST** include the property name and value `"deactivated": true`.
 
@@ -821,7 +843,7 @@ All `did:webvh` [[ref: Log entries]] contain the JSON object `parameters`. This 
 
 - **Allowed Values**: Each parameter is constrained by the data type, structure and allowed values specified in this section.  If a value does not conform, the parameter is invalid and resolvers **MUST** reject the [[ref: log entry]].
 
-- **Deactivation**: Parameters that support deactivation (such as `witness` or `nextKeyHashes`) are set to defined values, described below, to indicate they are no longer active.
+- **Deactivation**: Parameters that support deactivation (such as `witness` or `prerotationHashes`) are set to defined values, described below, to indicate they are no longer active.
 
 - The JSON `null` value **MUST NOT** be used to indicate default or deactivated values, as it removes the typing information required for proper interpretation.
 
@@ -838,8 +860,8 @@ An example of the `parameters` property in the first [[ref: DID Log]] entry:
   "updateKeys": [
     "z82LkqR25TU88tztBEiFydNf4fUPn8oWBANckcmuqgonz9TAbK9a7WGQ5dm7jyqyRMpaRAe"
   ],
-  "nextKeyHashes": [
-    "enkkrohe5ccxyc7zghic6qux5inyzthg2tqka4b57kvtorysc3aa"
+  "prerotationHashes": [
+    "QmZreDcjvWEpyRFznQeExWNCsvMLk5i59AcRJJuQC8UodJ"
   ],
   "method": "did:webvh:2.0",
   "scid": "{SCID}"
@@ -865,22 +887,16 @@ The following lists the [[ref: parameters]], their data types, and enumerated va
 - `scid`: The [[ref: SCID]] value for the DID.
   - **MUST** appear in the first [[ref: log entry]].
   - **MUST NOT** appear in later [[ref: log entries]].
-- `updateKeys`: A JSON array of [[ref: multikey]] formatted public keys associated with the private keys that are authorized to sign the log entries that update the DID. See the [Authorized Keys](#authorized-keys) section of this specification for additional details.
-  - This property **MUST** appear in the first [[ref: log entry]] and **MAY** appear in subsequent entries.
-  - If not present in later [[ref: DID log entries]], the previous value continues to apply.
-  - A key from the active `updateKeys` array **MUST** be used to authorize each [[ref: log entry]], where active is defined as follows.
-    - In the first [[ref: log entry]], the active `updateKeys` is the one defined in that entry.
-    - In all other [[ref: log entries]] *without* [[ref: Key Pre-Rotation]] active, the active `updateKeys` is that of the most recent **prior** [[ref: log entry]].
-    - In all other [[ref: log entries]] *with* [[ref: Key Pre-Rotation]] active, the active `updateKeys` is that of the most current [[ref: log entry]].
-  - `updateKeys` **SHOULD** be set to an empty array `[]` when deactivating the DID. See the [deactivate](#deactivate-revoke) section of this specification for more details.
-- `nextKeyHashes`: A JSON array of strings that are hashes of [[ref: multikey]] formatted public keys that **MAY** be added to the `updateKeys` list in the next [[ref: log entry]]. At least one entry of `nextKeyHashes` **MUST** be added to the next `updateKeys` list.
+- `updateKeys`: A JSON array of [[ref: multikey]] formatted public keys associated with the private keys authorized to sign the first [[ref: log entry]]. See the [Authorized Keys](#authorized-keys) section of this specification for additional details.
+  - This property **MUST** appear in the first [[ref: log entry]], and **MUST** contain at least one key.
+  - This property **MUST NOT** appear in later [[ref: log entries]]. Later entries are authorized by `prerotationHashes`.
+  - The keys in `updateKeys` are [[ref: used keys]]: none of them can sign a later entry.
+- `prerotationHashes`: A JSON array of strings that are hashes of [[ref: multikey]] formatted public keys. The next [[ref: log entry]] **MUST** be signed by a key whose hash is in this array.
+  - This property **MUST** appear in **every** [[ref: log entry]]. Its value is never inherited from an earlier entry.
   - The process for generating the hashes and additional details for using [[ref: pre-rotation]] are defined in the [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification) section of this specification.
-  - If not set in the first [[ref: log entry]], its value defaults to an empty array (`[]`).
-  - If not set in other [[ref: log entries]], its value is retained from the most recent prior value.
-  - Once `nextKeyHashes` has been set to a non-empty array, [[ref: Key Pre-Rotation]] is active. While active, **both** `nextKeyHashes` **AND** `updateKeys` **MUST** be present as explicit properties in every subsequent [[ref: log entry]] until pre-rotation is deactivated (by setting `nextKeyHashes` to `[]`). A subsequent entry that omits `updateKeys` **MUST** be rejected by resolvers, even if the omission would otherwise inherit the previous value. Inheritance of `updateKeys` is **never** permitted while pre-rotation is active — that bypass would defeat the pre-rotation commitment.
-  - While [[ref: Key Pre-Rotation]] is active, **every** [[ref: multikey]] in the current entry's `updateKeys` (not only those that appear new) **MUST** have its hash in the previous entry's `nextKeyHashes`.
-  - A [[ref: DID Controller]] **MAY** include extra hashes in the `nextKeyHashes` array that are not subsequently used in an `updateKeys` entry. Any unused hashes in `nextKeyHashes` arrays are ignored.
-  - The value of `nextKeyHashes` **MAY** be set to an empty array (`[]`) to deactivate [[ref: pre-rotation]]. For additional details about turning off [[ref: pre-rotation]], see the [Pre-Rotation Key Hash Generation and Verification](#pre-rotation-key-hash-generation-and-verification) section of this specification.
+  - A [[ref: DID Controller]] **MAY** include hashes that are not used to sign the next entry, and **MAY** include a hash in the `prerotationHashes` of more than one entry — for example, the hash of a recovery key held in cold storage. Unused hashes are ignored. A key whose hash is listed again can still sign only one entry, as it is a [[ref: used key]] once it has signed.
+  - The value **MAY** be an empty array (`[]`) to stop further updates without deactivating the DID. Any [[ref: log entry]] after one whose `prerotationHashes` is `[]` **MUST** be rejected, as defined in [Authorized Keys](#authorized-keys). See the [deactivate](#deactivate-revoke) section of this specification for more details.
+  - This parameter replaces the v1.0 `nextKeyHashes` [[ref: parameter]], which **MUST NOT** appear in a [[ref: log entry]] processed under v2.0. See [Upgrading from v1.0 to v2.0](#upgrading-from-v10-to-v20).
 - `witness`: A JSON object declaring the set of witnesses and threshold number of witness proofs required to update the DID. For details of this data and its usage in the DID update approval process, see the [DID Witnesses](#did-witnesses) section of this specification.
   - Defaults to `{}` if not set in the first [[ref: log entry]].
   - If not set in other [[ref: log entries]], its value is retained from the most recent prior value.
@@ -1019,11 +1035,10 @@ produce an [[ref: entry hash]]. As this is a first entry in a [[ref: DID Log]], 
 `versionId` is the [[ref: SCID]] of the DID.
 
 ```json
-{"versionId": "QmdmPkUdYzbr9txmx8gM2rsHPgr5L6m3gHjJGAf4vUFoGE", "versionTime": "2025-04-01T17:39:50Z", "parameters": {"witness": {"threshold": 2, "witnesses": [{"id": "did:key:z6Mkkc51mg2vpQzKWAbWQZupeGYhowaBjYkmvcKMTqteqHB4", "weight": 1}, {"id": "did:key:z6MkuDdJdKLCgwZuQuEi9xG6LVgJJ9Tebr74CXPYPSumqgJs", "weight": 1}, {"id": "did:key:z6MkoSWmQyp4fTk4ZQy4KUsss9dFX51XfEUzKKKj1J1JUsrF", "weight": 1}]}, "updateKeys": ["z6MkgzBDcBFV3sk4ypPE5YXMZHmS213A3HpYY2LmcVKV15jr"], "nextKeyHashes": ["QmZreDcjvWEpyRFznQeExWNCsvMLk5i59AcRJJuQC8UodJ"], "method": "did:webvh:0.5", "scid": "QmdmPkUdYzbr9txmx8gM2rsHPgr5L6m3gHjJGAf4vUFoGE"}, "state": {"@context": ["https://www.w3.org/ns/did/v1"], "id": "did:webvh:QmdmPkUdYzbr9txmx8gM2rsHPgr5L6m3gHjJGAf4vUFoGE:domain.example"}}
-
+{"versionId": "QmYxuX84PnJBfdS7da9hHhe5NRreXC9AjibTGTw98DsVBj", "versionTime": "2025-04-01T17:39:50Z", "parameters": {"witness": {"threshold": 2, "witnesses": [{"id": "did:key:z6Mkkc51mg2vpQzKWAbWQZupeGYhowaBjYkmvcKMTqteqHB4"}, {"id": "did:key:z6MkuDdJdKLCgwZuQuEi9xG6LVgJJ9Tebr74CXPYPSumqgJs"}, {"id": "did:key:z6MkoSWmQyp4fTk4ZQy4KUsss9dFX51XfEUzKKKj1J1JUsrF"}]}, "updateKeys": ["z6MkgzBDcBFV3sk4ypPE5YXMZHmS213A3HpYY2LmcVKV15jr"], "prerotationHashes": ["QmZreDcjvWEpyRFznQeExWNCsvMLk5i59AcRJJuQC8UodJ"], "method": "did:webvh:2.0", "scid": "QmYxuX84PnJBfdS7da9hHhe5NRreXC9AjibTGTw98DsVBj"}, "state": {"@context": ["https://www.w3.org/ns/did/v1"], "id": "did:webvh:QmYxuX84PnJBfdS7da9hHhe5NRreXC9AjibTGTw98DsVBj:domain.example"}}
 ```
 
-Resulting [[ref: entryHash]]: `QmQ6FJ4fk2xheSSQoEjVpTgx9AQPKhJgtR9hn1nr4EeCrZ`
+Resulting [[ref: entryHash]]: `QmeBMQkuiRVy8f4msw2HtmmzBdpjB4oVeGmVqJUKceSwCE`
 
 ##### Verify The Entry Hash
 
@@ -1066,42 +1081,55 @@ Each entry in the [[ref: DID Log]] **MUST** include a [[ref: Data Integrity]] `p
    `did:webvh` specification being used by the [[ref: DID Controller]] based on the active
    `method` [[ref: parameters]] property.
 3. `proofPurpose` is `assertionMethod`,
-4. `verificationMethod` resolves to a [[ref: multikey]] that appears verbatim in the **active** `updateKeys`.
+4. `verificationMethod` resolves to a [[ref: multikey]] that is an **authorized key** for the entry, as defined below.
 
 Resolvers **MUST** reject an entry whose proof fails *any* check. A structurally-valid signature over a *different* cryptosuite than allowed by the active `method` parameter **MUST NOT** be accepted.
 
-The authorized verification keys for `did:webvh` are the [[ref: multikey]]-formatted
-public keys in the **active** `updateKeys` list from the `parameters` property of
-the [[ref: log entries]]. Any of the authorized verification keys may be referenced
-in the [[ref: Data Integrity]] proof.
+`did:webvh` requires [[ref: key pre-rotation]]. Each entry commits, in its
+`prerotationHashes` [[ref: parameter]], to the keys that can sign the next
+entry, without revealing them. The authorized keys for an entry are:
 
-For the first [[ref: log entry]] the **active** `updateKeys` list is the one in
-that first [[ref: log entry]].
+- **First entry:** the [[ref: multikeys]] in the entry's own `updateKeys`
+  [[ref: parameter]].
+- **Every later entry:** each [[ref: multikey]] whose hash, calculated as
+  defined in [Pre-Rotation Key Hash Generation and
+  Verification](#pre-rotation-key-hash-generation-and-verification), is in
+  the `prerotationHashes` of the **previous** entry, and that is not a
+  [[ref: used key]].
+- **An entry that upgrades a DID from v1.0:** as defined in [Upgrading from
+  v1.0 to v2.0](#upgrading-from-v10-to-v20).
 
-A resolver of the DID **MUST** verify the signature and the key used for signing
-each [[ref: DID Log]] entry **MUST** be one from the list of active
-`updateKeys`. If not, terminate the resolution process with an error.
+The [[ref: used keys]] for an entry are the keys in the first entry's
+`updateKeys` and the key that signed the proof of each later entry before it.
+For a DID upgraded from v1.0, they also include the keys in the `updateKeys`
+of every v1.0 entry. A key **MUST** sign the proof of at most one entry: a
+resolver **MUST** keep the used keys (or their hashes) while processing the
+log, and an entry signed by a used key **MUST** be rejected, even if its hash
+is in the previous entry's `prerotationHashes`. A hash **MAY** appear in the
+`prerotationHashes` of several entries, such as the hash of a recovery key
+held in cold storage; this rule only means that once the key signs an entry,
+it cannot sign another.
+
+A resolver of the DID **MUST** verify the signature, and the key used for
+signing each [[ref: DID Log]] entry **MUST** be an authorized key for that
+entry. If not, terminate the resolution process with an error. If an entry
+has no authorized keys — because the previous entry set `prerotationHashes`
+to `[]` — every signature fails this check, so no entry can follow it.
 
 The `did:webvh` Implementation Guide contains further discussion on the management
 of keys authorized to update the DID.
 
-The **active** `updateKeys` for subsequent [[ref: entries]] depends on whether [[ref: Pre-Rotation]] is active or not.
-
-##### No Key Prerotation
-
-For all subsequent [[ref: entries]], the **active** list
-is the most recent `updateKeys` **before** the [[ref: log entry]] to be verified. Thus,
-the general case is that each [[ref: log entry]] is signed by the keys from the
-**previous** [[ref: log entry]]. Once a [[ref: log entry]] containing an `updateKeys` list is
-published, that `updateKeys` becomes the active list, and previous
-`updateKeys` are ignored.
-
-##### Pre-rotation
-
-For all subsequent [[ref: entries]], the **active** list
-is the `updateKeys` from the  **current** [[ref: log entry]] to be verified. Thus,
-the general case is that each [[ref: log entry]] is signed by the keys from the
-**current** [[ref: log entry]].
+::: note
+**Why the first entry lists its keys.** The proof of an entry is not part of
+the input to the [[ref: SCID]] or the [[ref: entry hash]], so on its own it
+does not bind who signed the first entry. Listing the first entry's signing
+keys in `updateKeys` makes them part of the [[ref: SCID]] input, so the first
+entry's proof can be verified against keys fixed by the DID itself, and a
+party that knows the first entry cannot re-sign it with a key of its own.
+Later entries need no such list: the key that signs each one is fixed by the
+hashes committed in the entry before it, which are covered by the chain of
+[[ref: entry hashes]].
+:::
 
 #### DID Portability
 
@@ -1127,34 +1155,21 @@ When using portability, a `did:webvh` identifier may include a domain component 
 Pre-rotation requires a [[ref: DID Controller]] to commit to the authorization
 keys that will be used ("rotated to") in the next [[ref: log entry]] for updating the [[ref: DIDDoc]]. The purpose
 of committing to future keys is that if the currently authorized keys are
-compromised by an attacker, the attacker should not be able to take control of
+compromised by an attacker, the attacker cannot take control of
 the DID by using the compromised keys to rotate to new keys the attacker
 controls. Assuming the attacker has not also compromised the committed key
-pairs, they cannot rotate the authorization keys without detection. See the
+pairs, they cannot sign the next entry. See the
 non-normative section about [Using Pre-Rotation Keys](https://didwebvh.info/latest/implementers-guide/prerotation-keys/)
 in the `did:webvh` Implementer's Guide for additional guidance.
 
-As described in the [parameters](#didwebvh-did-method-parameters) section of
-this specification, a [[ref: DID Controller]] **MAY** include the [[ref: parameter]]
-`nextKeyHashes` with a non-empty list in any [[ref: DID log entry]] to activate
-the [[ref: pre-rotation]] feature. When [[ref: pre-rotation]] is active, all
-[[ref: multikey]] representations of the public keys in the `updateKeys` [[ref: parameters]] property in other than the initial version of the [[ref: DID log entry]] **MUST** have their hash in the `nextKeyHashes` array from the previous
-[[ref: DID log entry]]. If not, terminate the resolution process with an error.
-
-A [[ref: DID Controller]] may turn off the use of pre-rotation by setting the
-[[ref: parameter]] `nextKeyHashes` to `[]` (empty array) in any [[ref: DID log entry]]. If
-there is an active set of `nextKeyHashes` at the time, the pre-rotation
-requirements remain in effect for the [[ref: DID Log entry]]. The subsequent
-[[ref: DID Log entry]] **MUST** use the non-pre-rotation rules.
-
-To create a hash to be included in the `nextKeyHashes` array, the [[ref: DID Controller]] **MUST** execute the following process for each possible future
+To create a hash to be included in the `prerotationHashes` array, the [[ref: DID Controller]] **MUST** execute the following process for each possible future
 authorization key.
 
 1. Generate a new key pair. The key type **MUST** be one that can be used as a
    `did:webvh` authorization key.
 2. Generate a [[ref: multikey]] representation of the public key of the new key
    pair.
-3. Calculate the hash string as `base58btc(multihash(multikey))`, where:
+3. Calculate the hash string as `base58btc(multihash(multikey, <hash algorithm>))`, where:
    1. `multikey` is the [[ref: multikey]] representation of the public key from Step 2.
    2. `multihash` is an implementation of the [[ref: multihash]] specification.
       Its output is a hash of the input using the associated `<hash algorithm>`,
@@ -1164,37 +1179,40 @@ authorization key.
       [parameters](#didwebvh-did-method-parameters) defined by the version of the
       `did:webvh` specification being used by the [[ref: DID Controller]].
    4. `base58btc` is an implementation of the [[ref: base58btc]] function.
-      Its output is the base58 encoded string of its input.
-4. Insert the calculated hash into the `nextKeyHashes` array being built up within
+      Its output is the plain base58btc encoding of its input, without a
+      [[ref: multibase]] prefix.
+4. Insert the calculated hash into the `prerotationHashes` array being built up within
    the [[ref: parameters]] property.
-5. The generated key pair **SHOULD** be safely stored so that it can be used in
-   the next [[ref: log entry]] to become a DID authorization key. At that time, the
-   [[ref: multikey]] representation of the public key will be inserted into the
-   `updateKeys` property in the [[ref: parameters]] and the private key can be used to sign the [[ref: log entry]]'s DID update authorizations
-   proofs.
+5. The generated key pair **SHOULD** be safely stored so that it can be used
+   to sign a later [[ref: log entry]].
 
 A [[ref: DID Controller]] **MAY** include extra entries (for keys or just random
-strings) in a `nextKeyHashes` array.
+strings) in a `prerotationHashes` array.
 
-After rotating from a pre‑rotation public key, the corresponding private key
-**SHOULD** be treated as **spent** and **securely destroyed**. Reusing a
-revealed pre‑rotation key is strongly discouraged because it weakens the
-intended containment and forward‑security properties of pre‑rotation.
+After a pre-rotation key has signed an entry, it is **spent**: it **MUST
+NOT** sign another entry, which resolvers enforce (see [Authorized
+Keys](#authorized-keys)). Its private key **SHOULD** be **securely
+destroyed**, so that it cannot be misused if the key store is later
+compromised.
 
-When processing other than the first [[ref: DID log entry]] where
-[[ref: pre-rotation]] feature is active, a `did:webvh` resolver **MUST**:
+When processing a [[ref: DID log entry]] other than the first, a `did:webvh`
+resolver **MUST**:
 
-1. For each [[ref: multikey]] in the `updateKeys` property in the `parameters` of
-   the [[ref: log entry]], calculate the hash and hash algorithm for the [[ref: multihash]]
-   [[ref: multikey]].
+1. Calculate the hash of the [[ref: multikey]] that signed the entry's proof,
+   as defined in step 3 above.
 2. The hash algorithm **MUST** be one listed in the
    [parameters](#didwebvh-did-method-parameters) defined by the version of the
    `did:webvh` specification being used by the [[ref: DID Controller]].
-3. The resultant hash **MUST** be in the `nextKeyHashes` array from the previous [[ref: log entry]] prior to
-   being processed. If not, terminate the resolution
+3. The resultant hash **MUST** be in the `prerotationHashes` array from the
+   previous [[ref: log entry]] (or, for an entry that upgrades a DID from
+   v1.0, as defined in [Upgrading from v1.0 to
+   v2.0](#upgrading-from-v10-to-v20)). If not, terminate the resolution
    process with an error.
-4. A new `nextKeyHashes` list **MUST** be in the `parameters` of the [[ref: log entry]]
-   currently being processed. If not, terminate the resolution process with an error.
+4. The [[ref: multikey]] **MUST NOT** be a [[ref: used key]]. If it is,
+   terminate the resolution process with an error.
+5. A `prerotationHashes` array **MUST** be in the `parameters` of the
+   [[ref: log entry]] currently being processed. If not, terminate the
+   resolution process with an error.
 
 #### DID Witnesses
 

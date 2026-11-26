@@ -57,12 +57,72 @@ specification that affect a DID being upgraded, and what a
 [[ref: DID Controller]] needs to do about each. Other changes made in v2.0
 are listed in the [Version Changelog](#didwebvh-version-changelog).
 
+**DIDs that cannot be upgraded.** A v1.0 DID cannot be upgraded to v2.0, and
+remains a v1.0 DID, if any of the following applies:
+
+- Its domain name contains U-labels and `portable` is not `true`. See item 5
+  (Internationalized domain names) below.
+- Updates have been stopped: the `updateKeys` in effect is `[]` and
+  [[ref: pre-rotation]] is not active, so no key can sign the upgrading
+  entry. See item 2 (Required pre-rotation) below.
+- It has been deactivated, so no entry can follow the deactivating entry. See
+  [Deactivate (Revoke)](#deactivate-revoke).
+
+A v1.0 DID whose `nextKeyHashes` commits only to keys already revealed in
+`updateKeys` can be upgraded, but only after an additional v1.0 entry, as
+described in item 2.
+
 1. **`method` value.** The upgrading entry **MUST** set the `method`
    [[ref: parameter]] to `did:webvh:2.0`. No change to the permitted hash
    algorithm or [[ref: Data Integrity]] cryptosuite is made in v2.0, so no
-   key rotation is needed to upgrade.
+   key rotation is needed to meet the algorithm requirements of rule 3
+   above. Which keys can sign the upgrading entry is defined in the next
+   item.
 
-2. **Implicit services removed.** Under v1.0, resolvers add two implicit
+2. **Required pre-rotation.** In v1.0, the keys authorized to sign entries
+   are listed in `updateKeys`, which can appear in any entry, and
+   [[ref: pre-rotation]] is optional, using the `nextKeyHashes`
+   [[ref: parameter]]. v2.0 requires pre-rotation: `updateKeys` appears only
+   in the first entry, `nextKeyHashes` is replaced by `prerotationHashes`, and
+   every entry commits in `prerotationHashes` to the keys that can sign the
+   next entry, as defined in [Authorized Keys](#authorized-keys). Because the
+   entry before the upgrading entry is a v1.0 entry, the keys authorized to
+   sign the upgrading entry are determined from the v1.0
+   [[ref: parameters]] in effect before it, as follows.
+   - The upgrading entry **MUST** include `prerotationHashes`, committing to
+     the keys that can sign the next entry, and **MUST NOT** include
+     `updateKeys` or `nextKeyHashes`.
+   - **Pre-rotation not active under v1.0.** If the `nextKeyHashes` in
+     effect before the upgrading entry is empty, the upgrading entry **MUST**
+     be signed by a key in the `updateKeys` in effect before it — the same
+     key that could sign the entry under v1.0. For the upgrading entry, that
+     `updateKeys` plays the role that the first entry's `updateKeys` plays in
+     v2.0. If it is `[]`, no entry can follow it, and the DID cannot be
+     upgraded.
+   - **Pre-rotation active under v1.0.** If the `nextKeyHashes` in effect
+     before the upgrading entry is non-empty, it is treated as the previous
+     entry's `prerotationHashes`: the upgrading entry **MUST** be signed by a
+     key whose hash, calculated as defined in [Pre-Rotation Key Hash
+     Generation and
+     Verification](#pre-rotation-key-hash-generation-and-verification), is in
+     it. Under v1.0, that key would be listed in the entry's `updateKeys`;
+     under v2.0, it is not listed, and is identified only by the proof's
+     `verificationMethod`.
+   - **Used keys.** Every key in the `updateKeys` of any v1.0 entry is a
+     [[ref: used key]], and cannot sign the upgrading entry or any later
+     entry, with one exception: when pre-rotation is not active under v1.0, a
+     key in the `updateKeys` in effect before the upgrading entry can sign
+     the upgrading entry. The key that signs the upgrading entry is then a
+     used key as well.
+   - v1.0 permits, but discourages, committing in `nextKeyHashes` to a key
+     that has already been revealed in `updateKeys`. A
+     [[ref: DID Controller]] whose `nextKeyHashes` commits only to such keys
+     **MUST**, before upgrading, publish a v1.0 entry whose `nextKeyHashes`
+     commits to keys not yet revealed.
+   - Every entry after the upgrading entry is signed as defined in
+     [Authorized Keys](#authorized-keys).
+
+3. **Implicit services removed.** Under v1.0, resolvers add two implicit
    services, `#files` and `#whois`, to every resolved [[ref: DIDDoc]] that
    does not define them, so that `<did>/path/to/file` and `<did>/whois` DID
    URLs are dereferenced to locations relative to the [[ref: DID Log]]. In
@@ -82,7 +142,7 @@ are listed in the [Version Changelog](#didwebvh-version-changelog).
      entry still returns the v1.0 implicit services, as required in
      [Resolving an upgraded DID](#upgrading-a-did) above.
 
-3. **DID URL path handling.** The implicit services defined in v1.0 were based
+4. **DID URL path handling.** The implicit services defined in v1.0 were based
    on DID URL path handling that is not aligned with the latest DID URL
    dereferencing algorithm, and in particular the `PathHandler` part of that
    algorithm in the current DID Resolution specification
@@ -92,7 +152,7 @@ are listed in the [Version Changelog](#didwebvh-version-changelog).
    [Common DID URL Path Services](#common-did-url-path-services) section and update their
    services accordingly.
 
-4. **Internationalized domain names.** v1.0 permits a domain name in the DID
+5. **Internationalized domain names.** v1.0 permits a domain name in the DID
    to contain Unicode characters (percent-encoded U-labels), which resolvers
    convert during the DID-to-HTTPS transformation. v2.0 requires the domain
    name to be ASCII, with non-ASCII labels written as A-labels, as defined in
@@ -114,6 +174,6 @@ are listed in the [Version Changelog](#didwebvh-version-changelog).
      [[ref: DID Log]]. Every [[ref: log entry]] whose `state.id` is such a
      DID **MUST** have a v1.0 `method` active.
 
-5. **Log entry schema.** [[ref: Log entries]] from the upgrading entry
+6. **Log entry schema.** [[ref: Log entries]] from the upgrading entry
    onward can be validated against the v2.0 [log entry
    schema](https://raw.githubusercontent.com/decentralized-identity/didwebvh/refs/heads/main/schemas/v2.0/log_entry.json).

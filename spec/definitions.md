@@ -4,6 +4,10 @@
 
 ~ Applies [[spec:draft-msporny-base58-03]] to convert
 data to a `base58` encoding. Used in `did:webvh` for encoding hashes for [[ref: SCIDs]] and [[ref: entry hashes]].
+`did:webvh` uses the plain base58btc encoding, without a [[ref: multibase]]
+prefix, for [[ref: SCIDs]], [[ref: entry hashes]] and `prerotationHashes`
+values: for example, a SHA-256 [[ref: multihash]] encodes to a string
+beginning `Qm`, not `zQm`.
 
 [[def: Data Integrity]]
 
@@ -115,7 +119,9 @@ streaming JSON data or log files.
 ~ A technique for a controller of a cryptographic key to commit to the public
 key it will rotate to next, without exposing that actual public key. It protects
 from an attacker that gains knowledge of the current private key from being
-able to rotate to a new key known only to the attacker.
+able to rotate to a new key known only to the attacker. `did:webvh` requires
+pre-rotation: each [[ref: log entry]] commits, in its `prerotationHashes`
+[[ref: parameter]], to the keys that can sign the next entry.
 
 [[def: Linked-VP, Linked Verifiable Presentation]]
 
@@ -131,7 +137,7 @@ service](#common-did-url-path-services).
 ~ A specification for encoding binary data as a string using a prefix that
 indicates the encoding.
 
-[[def: multikey]]
+[[def: multikey, multikeys]]
 
 ~ A verification method that encodes key types into a single binary stream that
 is then encoded as a [[ref: multibase]] value.
@@ -159,6 +165,14 @@ cryptosuites. This enables support for very long lasting identifiers -- decades.
 create a new object with the same identifier. The input for a `did:webvh` SCID is
 the initial [[ref: DIDDoc]] with the placeholder `{SCID}` wherever the SCID is to be
 placed.
+
+[[def: used key, used keys]]
+
+~ A key that can no longer authorize a [[ref: log entry]]: a key in the first
+entry's `updateKeys`, a key that signed a later entry, or, for a DID upgraded
+from v1.0, a key in the `updateKeys` of any v1.0 entry. See [Authorized
+Keys](#authorized-keys) and, for the one entry where a v1.0 `updateKeys` key
+can still sign, [Upgrading from v1.0 to v2.0](#upgrading-from-v10-to-v20).
 
 [[def: Verifiable Credential, Verifiable Credentials]]
 
