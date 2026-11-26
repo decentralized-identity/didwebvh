@@ -2,7 +2,18 @@
 
 The following lists the substantive changes in each version of the specification.
 
-- Next version (editor's draft)
+- Version 2.0 (Editors Draft)
+  - Adds the `method` [[ref: parameter]] value `did:webvh:2.0`. New DIDs
+    **SHOULD** use it, and resolvers **SHOULD** continue to support
+    [[ref: DID Logs]] that use v1.0. See [Upgrading a DID](#upgrading-a-did).
+  - Adds the [Upgrading a DID](#upgrading-a-did) section, defining the
+    general process for upgrading a DID to a later version of this
+    specification and the specific changes for upgrading from v1.0 to v2.0.
+  - Removes the implicit `#files` and `#whois` services. Resolvers no longer
+    add services to the resolved [[ref: DIDDoc]], and DID URL paths are
+    dereferenced only through `PathHandler`-typed services in the
+    [[ref: DIDDoc]]. The `/whois` and `#files` services are described in a
+    non-normative section, [Common DID URL Path Services](#common-did-url-path-services).
   - Specifies that internationalized domain names are carried in the DID as
     IDNA2008 A-labels converted by the [[ref: DID Controller]], removes Unicode
     normalization and IDNA processing from the

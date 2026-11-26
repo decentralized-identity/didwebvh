@@ -29,18 +29,22 @@ limitations as a long-lasting DID. `did:webvh` features include:
   cryptographically over time.
 - An optional mechanism for publishing the location of `did:webvh` [[ref: watchers]] in the [[ref: DID log]] that resolvers can use as another
   source of DID data for long term resolution or detection of malicious [[ref: DID Controllers]].
-- DID URL path handling that defaults (but can be overridden) to automatically
-  dereferencing `<did>/path/to/file` by using a comparable DID-to-HTTPS translation
-  as for the [[ref: DIDDoc]].
-- A DID URL path `<did>/whois` that defaults to automatically returning (if
-  published by the [[ref: DID controller]]) a [[ref: Verifiable Presentation]]
-  containing [[ref: Verifiable Credentials]] with the DID as the
-  `credentialSubject`, signed by the DID. It draws inspiration from the
-  traditional WHOIS protocol [[spec:rfc3912]], offering an easy-to-use,
-  decentralized, trust registry.
+- DID URL path handling (such as `<did>/path/to/file` and `<did>/whois`)
+  through services that the [[ref: DID Controller]] declares in the
+  [[ref: DIDDoc]].
 
 Combined, the additional features enable greater trust, security and verifiability without
 compromising the simplicity of `did:web`.
+
+A companion DID method, `did:vh` (DID + Verifiable History), is derived from
+`did:webvh` and is specified in [The `did:vh` DID
+Method](https://identity.foundation/didvh/). It uses the same
+[[ref: DID Log]], [[ref: SCID]], key authorization, [[ref: pre-rotation]],
+[[ref: witnesses]] and [[ref: watchers]] as `did:webvh`. However, a `did:vh`
+DID contains no domain name or path, so it is not bound to the location where
+its [[ref: DID Log]] is published. `did:vh` suits DIDs that are not tied to a
+web location. `did:webvh` remains the choice where resolution from the DID
+alone, through the DID-to-HTTPS transformation, is wanted.
 
 For information beyond this specification about the (`did:webvh`) DID method and how (and
 where) it is used in practice, please visit
